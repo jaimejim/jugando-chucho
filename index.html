@@ -188,11 +188,13 @@
       align-items: center;
     }
 
-    .level-image {
+    .level-image,
+    .level-video {
       max-width: 320px;
       max-height: 380px;
       object-fit: contain;
       transition: transform 0.3s ease;
+      border-radius: 12px;
     }
 
     .level-image.waiting {
@@ -369,7 +371,8 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
-    .story-card img {
+    .story-card img,
+    .story-card video {
       width: 100%;
       height: 180px;
       object-fit: cover;
@@ -444,11 +447,13 @@
       letter-spacing: 1px;
     }
 
-    .complete-image {
+    .complete-image,
+    .complete-video {
       max-width: 300px;
       max-height: 350px;
       object-fit: contain;
       margin: 25px 0;
+      border-radius: 12px;
     }
 
     .complete-rhyme {
@@ -559,8 +564,9 @@
 
     <div class="game-container">
       <div class="rhyme-container" id="rhyme-container"></div>
-      <div class="image-container">
+      <div class="image-container" id="media-container">
         <img id="game-image" class="level-image waiting" src="" alt="Ilustración">
+        <video id="game-video" class="level-video" src="" autoplay loop muted playsinline style="display:none;"></video>
       </div>
     </div>
 
@@ -572,6 +578,7 @@
     <h2 class="congrats-title">¡muy bien!</h2>
     <div class="decorative-line"></div>
     <img id="complete-image" class="complete-image" src="" alt="Felicidades">
+    <video id="complete-video" class="complete-video" src="" autoplay loop muted playsinline style="display:none;"></video>
     <div class="complete-rhyme" id="complete-rhyme"></div>
     <div class="button-group">
       <button class="play-btn" id="replay-btn">jugar de nuevo</button>
@@ -608,6 +615,35 @@
           { lineIndex: 6, word: 'deprisa', options: ['deprisa', 'despacio', 'sonrisa'] },
           { lineIndex: 7, word: 'risa', options: ['risa', 'prisa', 'brisa'] },
           { lineIndex: 8, word: 'nieve', options: ['nieve', 'llueve', 'nueve'] },
+          { type: 'review' }
+        ]
+      },
+      bird: {
+        id: 'bird',
+        title: 'el pájaro rojo',
+        description: 'un pájaro entre las rosas',
+        video: 'https://cdn.midjourney.com/video/bb3d7acc-dfc4-49ae-b8ac-c5fd4d3bfc57/0.mp4',
+        lines: [
+          { text: 'un pájaro', word: 'rojo' },
+          { text: 'vive entre las', word: 'rosas' },
+          { text: 'tiene las', word: 'plumas', suffix: ' brillantes' },
+          { text: 'canta una', word: 'canción', suffix: ' muy bonita' },
+          { text: 'vuela de', word: 'flor', suffix: ' en flor' },
+          { text: 'busca', word: 'semillas', suffix: ' para comer' },
+          { text: 'descansa en las', word: 'ramas' },
+          { text: 'el jardín es su', word: 'hogar' },
+          { text: '¡qué', word: 'bonito', suffix: '!' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'rojo', options: ['rojo', 'azul', 'verde'] },
+          { lineIndex: 1, word: 'rosas', options: ['rosas', 'casas', 'cosas'] },
+          { lineIndex: 2, word: 'plumas', options: ['plumas', 'brumas', 'espumas'] },
+          { lineIndex: 3, word: 'canción', options: ['canción', 'camión', 'avión'] },
+          { lineIndex: 4, word: 'flor', options: ['flor', 'color', 'calor'] },
+          { lineIndex: 5, word: 'semillas', options: ['semillas', 'sillas', 'orillas'] },
+          { lineIndex: 6, word: 'ramas', options: ['ramas', 'camas', 'llamas'] },
+          { lineIndex: 7, word: 'hogar', options: ['hogar', 'lugar', 'jugar'] },
+          { lineIndex: 8, word: 'bonito', options: ['bonito', 'bendito', 'finito'] },
           { type: 'review' }
         ]
       },
@@ -684,7 +720,9 @@
     const rhymeContainer = document.getElementById('rhyme-container');
     const answersContainer = document.getElementById('answers-container');
     const gameImage = document.getElementById('game-image');
+    const gameVideo = document.getElementById('game-video');
     const completeImage = document.getElementById('complete-image');
+    const completeVideo = document.getElementById('complete-video');
     const completeRhyme = document.getElementById('complete-rhyme');
     const backBtn = document.getElementById('back-btn');
     const replayBtn = document.getElementById('replay-btn');
@@ -704,8 +742,11 @@
       Object.values(STORIES).forEach(story => {
         const card = document.createElement('div');
         card.className = 'story-card';
+        const mediaHTML = story.video
+          ? `<video src="${story.video}" autoplay loop muted playsinline></video>`
+          : `<img src="${story.image}" alt="${story.title}">`;
         card.innerHTML = `
-          <img src="${story.image}" alt="${story.title}">
+          ${mediaHTML}
           <h3>${story.title}</h3>
           <p>${story.description}</p>
         `;
@@ -751,8 +792,24 @@
     function startStory(storyId) {
       currentStory = STORIES[storyId];
       storyTitle.textContent = currentStory.title;
-      gameImage.src = currentStory.image;
-      completeImage.src = currentStory.image;
+
+      // Handle video vs image
+      if (currentStory.video) {
+        gameImage.style.display = 'none';
+        gameVideo.style.display = 'block';
+        gameVideo.src = currentStory.video;
+        completeImage.style.display = 'none';
+        completeVideo.style.display = 'block';
+        completeVideo.src = currentStory.video;
+      } else {
+        gameImage.style.display = 'block';
+        gameVideo.style.display = 'none';
+        gameImage.src = currentStory.image;
+        completeImage.style.display = 'block';
+        completeVideo.style.display = 'none';
+        completeImage.src = currentStory.image;
+      }
+
       resetGame();
       showScreen('game');
       renderLevel();
