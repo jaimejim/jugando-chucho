@@ -60,20 +60,18 @@
       position: absolute;
       left: 20px;
       top: 15px;
-      font-family: 'Borel', cursive;
-      font-size: 16px;
-      padding: 6px 14px;
+      font-size: 24px;
+      padding: 0;
       background: none;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      border: none;
       cursor: pointer;
-      color: #888;
+      color: #ccc;
       transition: all 0.2s ease;
     }
 
     .back-btn:hover {
-      border-color: #999;
-      color: #333;
+      color: #888;
+      transform: translateX(-3px);
     }
 
     .title {
@@ -566,7 +564,7 @@
       .title-image { max-width: 200px; max-height: 240px; }
       .header { padding: 12px 10px 8px; }
       .title { font-size: 22px; margin-bottom: 8px; }
-      .back-btn { font-size: 12px; padding: 4px 10px; left: 10px; top: 10px; }
+      .back-btn { font-size: 20px; left: 10px; top: 10px; }
       .progress-dot { width: 8px; height: 8px; }
       .story-card { width: 140px; padding: 10px; }
       .story-card img, .story-card video { height: 100px; }
@@ -594,7 +592,7 @@
   <!-- Game Screen -->
   <div class="screen game-screen" id="game-screen">
     <div class="header">
-      <button class="back-btn" id="back-btn">&lt;</button>
+      <button class="back-btn" id="back-btn">☜</button>
       <div class="title" id="story-title">jugando con chucho</div>
       <div class="progress" id="progress"></div>
     </div>
