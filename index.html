@@ -59,18 +59,18 @@
     .back-btn {
       position: absolute;
       left: 20px;
-      top: 15px;
-      font-size: 24px;
+      top: 12px;
+      font-size: 32px;
       padding: 0;
       background: none;
       border: none;
       cursor: pointer;
-      color: #ccc;
+      color: #3a3a3a;
       transition: all 0.2s ease;
     }
 
     .back-btn:hover {
-      color: #888;
+      color: #000;
       transform: translateX(-3px);
     }
 
@@ -564,7 +564,7 @@
       .title-image { max-width: 200px; max-height: 240px; }
       .header { padding: 12px 10px 8px; }
       .title { font-size: 22px; margin-bottom: 8px; }
-      .back-btn { font-size: 20px; left: 10px; top: 10px; }
+      .back-btn { font-size: 26px; left: 10px; top: 8px; }
       .progress-dot { width: 8px; height: 8px; }
       .story-card { width: 140px; padding: 10px; }
       .story-card img, .story-card video { height: 100px; }
@@ -577,7 +577,7 @@
 <body>
   <div class="stars-container" id="stars-container"></div>
   <div class="confetti-container" id="confetti-container"></div>
-  <button class="speak-btn" id="speak-btn" title="Leer en voz alta">🔊</button>
+  <button class="speak-btn" id="speak-btn" title="Leer en voz alta">♪</button>
 
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
@@ -1112,12 +1112,17 @@
 
     function getSpanishVoice() {
       const voices = speechSynth.getVoices();
-      // Prefer Spanish voices, especially iOS/Mac ones
-      const spanishVoice = voices.find(v => v.lang.startsWith('es') && v.name.includes('Mónica')) ||
-                           voices.find(v => v.lang.startsWith('es') && v.name.includes('Monica')) ||
-                           voices.find(v => v.lang.startsWith('es') && v.name.includes('Paulina')) ||
-                           voices.find(v => v.lang.startsWith('es-ES')) ||
-                           voices.find(v => v.lang.startsWith('es'));
+      // Prefer Siri/enhanced Spanish voices (iOS/macOS)
+      const spanishVoice =
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Marisol')) ||  // Siri Spanish (Spain)
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Paulina')) ||  // Siri Spanish (Mexico)
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Enhanced')) || // Enhanced voices
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Mónica')) ||
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Monica')) ||
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Jorge')) ||    // Siri male
+        voices.find(v => v.lang.startsWith('es-ES')) ||
+        voices.find(v => v.lang.startsWith('es-MX')) ||
+        voices.find(v => v.lang.startsWith('es'));
       return spanishVoice || voices[0];
     }
 
@@ -1134,7 +1139,7 @@
 
       isSpeaking = true;
       speakBtn.classList.add('speaking');
-      speakBtn.textContent = '⏹';
+      speakBtn.textContent = '■';
 
       const lines = currentStory.lines;
       let lineIndex = 0;
@@ -1177,7 +1182,7 @@
       isSpeaking = false;
       speechSynth.cancel();
       speakBtn.classList.remove('speaking');
-      speakBtn.textContent = '🔊';
+      speakBtn.textContent = '♪';
 
       // Remove all highlights
       const rhymeLines = document.querySelectorAll('.rhyme-line');
