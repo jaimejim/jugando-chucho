@@ -586,8 +586,7 @@
 
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
-    <h1 class="main-title">jugando con chucho</h1>
-    <p class="subtitle">elige una historia</p>
+    <h1 class="main-title">elige una historia</h1>
     <div class="decorative-line"></div>
 
     <div class="story-selection" id="story-selection">
@@ -598,7 +597,7 @@
   <!-- Game Screen -->
   <div class="screen game-screen" id="game-screen">
     <div class="header">
-      <button class="back-btn" id="back-btn">← volver</button>
+      <button class="back-btn" id="back-btn">&lt;</button>
       <div class="title" id="story-title">jugando con chucho</div>
       <div class="progress" id="progress"></div>
     </div>
@@ -1065,7 +1064,7 @@
     }
 
     function showConfetti() {
-      const colors = ['#4a4a4a', '#888', '#aaa', '#ccc', '#ddd'];
+      const colors = ['#D4A017', '#E5B82A', '#C4930F', '#F0C93D', '#B8860B'];
       for (let i = 0; i < 40; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
