@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Icon</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; text-align: center; }
+    canvas { border: 1px solid #ccc; margin: 20px; }
+    a { display: inline-block; margin: 10px; padding: 15px 30px; background: #D4A017; color: white; text-decoration: none; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Icon Generator for Cuentos</h1>
+  <p>Right-click on each icon and "Save Image As" or use the download links below:</p>
+
+  <h3>192x192</h3>
+  <canvas id="canvas192" width="192" height="192"></canvas>
+  <br>
+  <a id="download192" download="icon-192.png">Download 192x192</a>
+
+  <h3>512x512</h3>
+  <canvas id="canvas512" width="512" height="512"></canvas>
+  <br>
+  <a id="download512" download="icon-512.png">Download 512x512</a>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+
+      // White background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+
+      // Draw the ❦ symbol
+      ctx.fillStyle = '#3a3a3a';
+      ctx.font = `${size * 0.55}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('❦', size/2, size/2 + size*0.02);
+
+      return canvas.toDataURL('image/png');
+    }
+
+    const canvas192 = document.getElementById('canvas192');
+    const canvas512 = document.getElementById('canvas512');
+
+    const data192 = drawIcon(canvas192, 192);
+    const data512 = drawIcon(canvas512, 512);
+
+    document.getElementById('download192').href = data192;
+    document.getElementById('download512').href = data512;
+  </script>
+</body>
+</html>
