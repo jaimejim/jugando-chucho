@@ -115,30 +115,54 @@
 
     .rhyme-line {
       margin: 8px 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
     }
+
+    /* Colorful letter classes */
+    .letter-red { color: #E53935; }
+    .letter-blue { color: #1E88E5; }
+    .letter-green { color: #43A047; }
+    .letter-orange { color: #FB8C00; }
+    .letter-purple { color: #8E24AA; }
+    .letter-brown { color: #8B4513; }
 
     /* Blank word styling */
     .blank {
       display: inline-block;
-      min-width: 100px;
-      padding: 5px 15px;
+      min-width: 80px;
+      padding: 2px 10px;
       border-bottom: 4px dashed #2E5090;
       margin: 0 5px;
       text-align: center;
       animation: pulse-blank 1.5s ease-in-out infinite;
+      background: rgba(255,255,255,0.3);
+      border-radius: 5px 5px 0 0;
+    }
+
+    .blank .letter-red,
+    .blank .letter-blue,
+    .blank .letter-green,
+    .blank .letter-orange,
+    .blank .letter-purple,
+    .blank .letter-brown {
       color: transparent;
     }
 
     .blank.filled {
       border-bottom: 4px solid #4CAF50;
-      color: #4CAF50;
       animation: none;
+      background: rgba(76, 175, 80, 0.15);
     }
 
-    .blank.filled-review {
-      border-bottom: 4px solid #4CAF50;
+    .blank.filled .letter-red,
+    .blank.filled .letter-blue,
+    .blank.filled .letter-green,
+    .blank.filled .letter-orange,
+    .blank.filled .letter-purple,
+    .blank.filled .letter-brown {
       color: #4CAF50;
-      animation: none;
     }
 
     @keyframes pulse-blank {
@@ -260,15 +284,31 @@
     .answer-btn.correct {
       background-color: #4CAF50;
       border-color: #388E3C;
-      color: white;
       animation: success-pop 0.3s ease-out;
+    }
+
+    .answer-btn.correct .letter-red,
+    .answer-btn.correct .letter-blue,
+    .answer-btn.correct .letter-green,
+    .answer-btn.correct .letter-orange,
+    .answer-btn.correct .letter-purple,
+    .answer-btn.correct .letter-brown {
+      color: white;
     }
 
     .answer-btn.wrong {
       background-color: #E57373;
       border-color: #D32F2F;
-      color: white;
       animation: shake 0.5s ease-in-out;
+    }
+
+    .answer-btn.wrong .letter-red,
+    .answer-btn.wrong .letter-blue,
+    .answer-btn.wrong .letter-green,
+    .answer-btn.wrong .letter-orange,
+    .answer-btn.wrong .letter-purple,
+    .answer-btn.wrong .letter-brown {
+      color: white;
     }
 
     .answer-btn:disabled {
@@ -437,14 +477,24 @@
     /* Review mode styling */
     .review-blank {
       display: inline-block;
-      min-width: 80px;
-      padding: 3px 10px;
+      min-width: 70px;
+      padding: 2px 8px;
       border-bottom: 3px dashed #2E5090;
       margin: 0 3px;
       text-align: center;
-      color: transparent;
       cursor: pointer;
       transition: all 0.3s ease;
+      background: rgba(255,255,255,0.3);
+      border-radius: 5px 5px 0 0;
+    }
+
+    .review-blank .letter-red,
+    .review-blank .letter-blue,
+    .review-blank .letter-green,
+    .review-blank .letter-orange,
+    .review-blank .letter-purple,
+    .review-blank .letter-brown {
+      color: transparent;
     }
 
     .review-blank.active {
@@ -454,9 +504,18 @@
 
     .review-blank.filled {
       border-bottom: 3px solid #4CAF50;
-      color: #4CAF50;
       cursor: default;
       animation: none;
+      background: rgba(76, 175, 80, 0.15);
+    }
+
+    .review-blank.filled .letter-red,
+    .review-blank.filled .letter-blue,
+    .review-blank.filled .letter-green,
+    .review-blank.filled .letter-orange,
+    .review-blank.filled .letter-purple,
+    .review-blank.filled .letter-brown {
+      color: #4CAF50;
     }
 
     /* Responsive */
@@ -719,17 +778,41 @@
     ];
 
     const LEVELS = [
-      { lineIndex: 0, word: 'caza', options: ['caza', 'casa'] },
-      { lineIndex: 1, word: 'conejo', options: ['conejo', 'gato'] },
-      { lineIndex: 3, word: 'daño', options: ['daño', 'baño'] },
-      { lineIndex: 4, word: 'dedo', options: ['dedo', 'diente'] },
+      { lineIndex: 0, word: 'caza', options: ['caza', 'casa', 'cara'] },
+      { lineIndex: 1, word: 'conejo', options: ['conejo', 'gato', 'perro'] },
+      { lineIndex: 3, word: 'daño', options: ['daño', 'baño', 'año'] },
+      { lineIndex: 4, word: 'dedo', options: ['dedo', 'diente', 'pelo'] },
       { lineIndex: 5, word: 'dedito', options: ['dedito', 'perrito', 'gatito'] },
       { lineIndex: 7, word: 'gato', options: ['gato', 'pato', 'rato'] },
-      { lineIndex: 8, word: 'mamá', options: ['mamá', 'papá'] },
+      { lineIndex: 8, word: 'mamá', options: ['mamá', 'papá', 'abuela'] },
       { lineIndex: 8, word: 'curó', wordInSuffix: true, options: ['curó', 'cuidó', 'miró'] },
       { lineIndex: 9, word: 'llorar', options: ['llorar', 'jugar', 'cantar'] },
       { type: 'review' }
     ];
+
+    // Letter colors for colorful text
+    const LETTER_COLORS = ['letter-red', 'letter-blue', 'letter-green', 'letter-orange', 'letter-purple', 'letter-brown'];
+
+    // Colorize text with alternating colors
+    function colorizeText(text) {
+      let colorIndex = 0;
+      return text.split('').map(char => {
+        if (char === ' ' || char === '!' || char === '¡' || char === '¿' || char === '?') {
+          return char;
+        }
+        const colorClass = LETTER_COLORS[colorIndex % LETTER_COLORS.length];
+        colorIndex++;
+        return `<span class="${colorClass}">${char}</span>`;
+      }).join('');
+    }
+
+    // Colorize a word (for blanks)
+    function colorizeWord(word) {
+      return word.split('').map((char, i) => {
+        const colorClass = LETTER_COLORS[i % LETTER_COLORS.length];
+        return `<span class="${colorClass}">${char}</span>`;
+      }).join('');
+    }
 
     // State
     let gameState = {
@@ -898,28 +981,18 @@
         if (index === level.lineIndex) {
           if (level.wordInSuffix) {
             // Word is in suffix (like "curó" in "su mamá se lo curó")
-            lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' +
-              line.suffix.replace(level.word, `<span class="blank" id="blank">${level.word}</span>`);
+            const suffixWithBlank = line.suffix.replace(level.word, `<span class="blank" id="blank">${colorizeWord(level.word)}</span>`);
+            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank.replace(/ se lo /g, colorizeText(' se lo '));
           } else {
             // Normal case
-            lineDiv.innerHTML = line.text + ' <span class="blank" id="blank">' + line.word + '</span>' + (line.suffix || '');
+            lineDiv.innerHTML = colorizeText(line.text) + ' <span class="blank" id="blank">' + colorizeWord(line.word) + '</span>' + colorizeText(line.suffix || '');
           }
         } else {
           // Show completed words or full lines
           if (line.word) {
-            const isCompleted = gameState.completedLevels.some(lvl => {
-              const lvlConfig = LEVELS[lvl - 1];
-              return lvlConfig && lvlConfig.lineIndex === index && lvlConfig.word === line.word;
-            });
-
-            if (isCompleted || index < level.lineIndex ||
-                (gameState.completedLevels.includes(gameState.currentLevel - 1) && index < level.lineIndex)) {
-              lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' + (line.suffix || '');
-            } else {
-              lineDiv.innerHTML = line.text + ' ' + line.word + (line.suffix || '');
-            }
+            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + colorizeText(line.suffix || '');
           } else {
-            lineDiv.textContent = line.text;
+            lineDiv.innerHTML = colorizeText(line.text);
           }
         }
 
@@ -956,17 +1029,18 @@
             gameState.reviewBlanks.indexOf(reviewBlank);
 
           if (reviewBlank.wordInSuffix) {
-            lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' +
-              line.suffix.replace(reviewBlank.word,
-                `<span class="review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}" data-word="${reviewBlank.word}">${reviewBlank.word}</span>`);
+            const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
+            const suffixWithBlank = line.suffix.replace(reviewBlank.word,
+              `<span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>`);
+            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank.replace(/ se lo /g, colorizeText(' se lo '));
           } else {
             const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
-            lineDiv.innerHTML = line.text + ` <span class="${blankClass}" data-word="${reviewBlank.word}">${reviewBlank.word}</span>` + (line.suffix || '');
+            lineDiv.innerHTML = colorizeText(line.text) + ` <span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>` + colorizeText(line.suffix || '');
           }
         } else if (line.word) {
-          lineDiv.innerHTML = line.text + ' ' + line.word + (line.suffix || '');
+          lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + colorizeText(line.suffix || '');
         } else {
-          lineDiv.textContent = line.text;
+          lineDiv.innerHTML = colorizeText(line.text);
         }
 
         rhymeContainer.appendChild(lineDiv);
@@ -990,7 +1064,8 @@
       shuffled.forEach(option => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
-        btn.textContent = option;
+        btn.innerHTML = colorizeWord(option);
+        btn.dataset.word = option;
         btn.onclick = () => handleAnswer(option, correctWord, isReview);
         answersContainer.appendChild(btn);
       });
@@ -999,7 +1074,7 @@
     // Handle answer
     function handleAnswer(selected, correct, isReview = false) {
       const buttons = answersContainer.querySelectorAll('.answer-btn');
-      const clickedBtn = Array.from(buttons).find(btn => btn.textContent === selected);
+      const clickedBtn = Array.from(buttons).find(btn => btn.dataset.word === selected);
 
       if (selected === correct) {
         // Correct answer
@@ -1113,9 +1188,9 @@
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
         if (line.word) {
-          lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' + (line.suffix || '');
+          lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + colorizeText(line.suffix || '');
         } else {
-          lineDiv.textContent = line.text;
+          lineDiv.innerHTML = colorizeText(line.text);
         }
         completeRhyme.appendChild(lineDiv);
       });
