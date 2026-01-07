@@ -552,6 +552,78 @@
       50% { transform: scale(1.05); }
     }
 
+    /* Voice selector */
+    .voice-selector {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      padding: 15px;
+      z-index: 250;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+      min-width: 220px;
+    }
+
+    .voice-selector.active {
+      display: block;
+    }
+
+    .voice-selector h4 {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+      font-weight: normal;
+    }
+
+    .voice-option {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      margin: 4px 0;
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Borel', cursive;
+      font-size: 14px;
+      color: #555;
+      transition: all 0.2s ease;
+    }
+
+    .voice-option:hover {
+      background: #f0f0f0;
+      border-color: #ddd;
+    }
+
+    .voice-option.selected {
+      background: #D4A017;
+      border-color: #D4A017;
+      color: #fff;
+    }
+
+    .voice-option .voice-quality {
+      font-size: 11px;
+      opacity: 0.7;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .voice-selector-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+    }
+
     /* Mode toggle */
     .mode-toggle {
       position: absolute;
@@ -613,6 +685,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding-top: 8px;
+      line-height: 1;
     }
 
     .letter-btn:hover:not(:disabled) {
@@ -837,8 +911,10 @@
       .mode-toggle-switch { width: 30px; height: 16px; }
       .mode-toggle-switch::after { width: 12px; height: 12px; }
       .mode-toggle.active .mode-toggle-switch::after { transform: translateX(14px); }
-      .letter-btn { width: 40px; height: 40px; font-size: 22px; }
+      .letter-btn { width: 40px; height: 40px; font-size: 22px; padding-top: 6px; }
       .spelling-slot { min-width: 28px; height: 38px; font-size: 22px; }
+      .voice-selector { bottom: 70px; right: 15px; min-width: 200px; max-height: 250px; }
+      .voice-option { font-size: 13px; padding: 8px 10px; }
     }
   </style>
 </head>
@@ -846,6 +922,13 @@
   <div class="stars-container" id="stars-container"></div>
   <div class="confetti-container" id="confetti-container"></div>
   <button class="speak-btn" id="speak-btn" title="Leer en voz alta">♪</button>
+
+  <!-- Voice Selector -->
+  <div class="voice-selector" id="voice-selector">
+    <button class="voice-selector-close" id="voice-close">×</button>
+    <h4>seleccionar voz</h4>
+    <div id="voice-list"></div>
+  </div>
 
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
@@ -1646,26 +1729,129 @@
 
     // ============ TEXT-TO-SPEECH ============
     const speakBtn = document.getElementById('speak-btn');
+    const voiceSelector = document.getElementById('voice-selector');
+    const voiceList = document.getElementById('voice-list');
+    const voiceClose = document.getElementById('voice-close');
     let isSpeaking = false;
     let speechSynth = window.speechSynthesis;
     let currentUtterance = null;
+    let selectedVoiceName = localStorage.getItem('cuentos-voice') || null;
+    let longPressTimer = null;
+
+    function getSpanishVoices() {
+      return speechSynth.getVoices().filter(v => v.lang.startsWith('es'));
+    }
+
+    function sortVoices(voices) {
+      // Sort by priority: Spain Spanish + Enhanced first, then Spain, then Enhanced, then others
+      return voices.sort((a, b) => {
+        const aScore = getVoiceScore(a);
+        const bScore = getVoiceScore(b);
+        return bScore - aScore;
+      });
+    }
+
+    function getVoiceScore(voice) {
+      let score = 0;
+      const name = voice.name.toLowerCase();
+      const lang = voice.lang;
+
+      // Highest priority: Monica Enhanced (Spain) or Siri Spanish (Spain)
+      if (lang === 'es-ES') score += 100;
+      if (name.includes('enhanced') || name.includes('(enhanced)')) score += 50;
+      if (name.includes('mónica') || name.includes('monica')) score += 30;
+      if (name.includes('siri')) score += 25;
+      if (name.includes('marisol')) score += 20;
+      if (name.includes('paulina')) score += 15;
+      if (name.includes('jorge')) score += 10;
+
+      return score;
+    }
 
     function getSpanishVoice() {
-      const voices = speechSynth.getVoices();
-      // Prioritize Enhanced voices, then Siri voices (iOS/macOS)
-      const spanishVoice =
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('(Enhanced)')) || // Enhanced first!
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Enhanced')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Marisol')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Paulina')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Mónica')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Monica')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Jorge')) ||
-        voices.find(v => v.lang.startsWith('es-ES')) ||
-        voices.find(v => v.lang.startsWith('es-MX')) ||
-        voices.find(v => v.lang.startsWith('es'));
-      return spanishVoice || voices[0];
+      const voices = getSpanishVoices();
+
+      // If user has selected a specific voice, use it
+      if (selectedVoiceName) {
+        const selected = voices.find(v => v.name === selectedVoiceName);
+        if (selected) return selected;
+      }
+
+      // Otherwise, use the best available voice
+      const sorted = sortVoices([...voices]);
+      return sorted[0] || speechSynth.getVoices()[0];
     }
+
+    function getVoiceQuality(voice) {
+      const name = voice.name.toLowerCase();
+      if (name.includes('enhanced') || name.includes('(enhanced)')) return 'mejorada';
+      if (name.includes('siri')) return 'siri';
+      if (name.includes('premium')) return 'premium';
+      return '';
+    }
+
+    function populateVoiceList() {
+      const voices = sortVoices(getSpanishVoices());
+      voiceList.innerHTML = '';
+
+      if (voices.length === 0) {
+        voiceList.innerHTML = '<p style="color:#888;font-size:14px;">Cargando voces...</p>';
+        return;
+      }
+
+      voices.forEach(voice => {
+        const btn = document.createElement('button');
+        btn.className = 'voice-option';
+        const currentVoice = getSpanishVoice();
+        if (voice.name === currentVoice.name) {
+          btn.classList.add('selected');
+        }
+
+        const quality = getVoiceQuality(voice);
+        const langLabel = voice.lang === 'es-ES' ? 'España' : voice.lang === 'es-MX' ? 'México' : voice.lang.replace('es-', '');
+
+        btn.innerHTML = `
+          ${voice.name.replace('(Spanish (Spain))', '').replace('(Spanish (Mexico))', '').trim()}
+          <span class="voice-quality">${langLabel}${quality ? ' · ' + quality : ''}</span>
+        `;
+
+        btn.onclick = () => selectVoice(voice);
+        voiceList.appendChild(btn);
+      });
+    }
+
+    function selectVoice(voice) {
+      selectedVoiceName = voice.name;
+      localStorage.setItem('cuentos-voice', voice.name);
+
+      // Update selected state
+      voiceList.querySelectorAll('.voice-option').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      event.target.closest('.voice-option').classList.add('selected');
+
+      // Preview the voice
+      speechSynth.cancel();
+      const preview = new SpeechSynthesisUtterance('Hola');
+      preview.voice = voice;
+      preview.lang = 'es-ES';
+      preview.rate = 0.9;
+      speechSynth.speak(preview);
+
+      // Close selector after short delay
+      setTimeout(() => {
+        voiceSelector.classList.remove('active');
+      }, 800);
+    }
+
+    function toggleVoiceSelector() {
+      voiceSelector.classList.toggle('active');
+      if (voiceSelector.classList.contains('active')) {
+        populateVoiceList();
+      }
+    }
+
+    voiceClose.onclick = () => voiceSelector.classList.remove('active');
 
     function getLineText(line) {
       return (line.text + ' ' + line.word + (line.suffix || '')).trim();
@@ -1731,9 +1917,46 @@
     }
 
     // Load voices (needed for some browsers)
-    speechSynth.onvoiceschanged = () => getSpanishVoice();
+    speechSynth.onvoiceschanged = () => {
+      getSpanishVoice();
+      populateVoiceList();
+    };
 
-    speakBtn.onclick = speakStory;
+    // Speak button: tap to play/stop, long press for voice selector
+    speakBtn.addEventListener('mousedown', startLongPress);
+    speakBtn.addEventListener('touchstart', startLongPress, { passive: true });
+    speakBtn.addEventListener('mouseup', endLongPress);
+    speakBtn.addEventListener('mouseleave', endLongPress);
+    speakBtn.addEventListener('touchend', endLongPress);
+
+    function startLongPress(e) {
+      longPressTimer = setTimeout(() => {
+        toggleVoiceSelector();
+        longPressTimer = 'triggered';
+      }, 500);
+    }
+
+    function endLongPress(e) {
+      if (longPressTimer === 'triggered') {
+        // Long press was triggered, don't do anything else
+        longPressTimer = null;
+        return;
+      }
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+
+      // Only trigger speakStory on short tap
+      if (!voiceSelector.classList.contains('active')) {
+        speakStory();
+      }
+    }
+
+    // Close voice selector when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!voiceSelector.contains(e.target) && !speakBtn.contains(e.target)) {
+        voiceSelector.classList.remove('active');
+      }
+    });
 
     // Stop speaking when changing screens
     const originalShowScreen = showScreen;
