@@ -16,14 +16,14 @@
 
     body {
       font-family: 'Borel', cursive;
-      background-color: #F5E6C8;
-      color: #8B4513;
+      background-color: #ffffff;
+      color: #2c2c2c;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      font-size: 28px;
+      font-size: 26px;
       text-transform: lowercase;
     }
 
@@ -31,7 +31,7 @@
     .screen {
       display: none;
       width: 100%;
-      max-width: 900px;
+      max-width: 1000px;
       flex-direction: column;
       align-items: center;
     }
@@ -46,49 +46,49 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 10px 20px;
-      margin-bottom: 20px;
+      padding: 15px 30px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
     }
 
     .title {
-      font-size: 32px;
-      color: #2E5090;
+      font-size: 28px;
+      color: #3a3a3a;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      letter-spacing: 1px;
     }
 
     .title .paw {
-      font-size: 24px;
+      font-size: 22px;
+      opacity: 0.7;
     }
 
     /* Progress dots */
     .progress {
       display: flex;
-      gap: 8px;
+      gap: 10px;
     }
 
     .progress-dot {
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      background-color: #FFE4B5;
-      border: 2px solid #8B4513;
-      transition: background-color 0.3s ease;
+      background-color: #e8e8e8;
+      border: 2px solid #ccc;
+      transition: all 0.3s ease;
     }
 
     .progress-dot.completed {
-      background-color: #4CAF50;
+      background-color: #4a4a4a;
+      border-color: #4a4a4a;
     }
 
     .progress-dot.current {
-      background-color: #D2691E;
-      animation: pulse-dot 1s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+      background-color: #888;
+      border-color: #666;
+      transform: scale(1.2);
     }
 
     /* Game container */
@@ -96,63 +96,61 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 40px;
+      align-items: flex-start;
+      gap: 60px;
       width: 100%;
-      padding: 20px;
+      padding: 30px;
     }
 
     /* Rhyme container */
     .rhyme-container {
       flex: 1;
-      min-width: 300px;
-      max-width: 500px;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 20px;
-      padding: 30px;
-      line-height: 1.8;
-      font-size: 30px;
+      min-width: 320px;
+      max-width: 450px;
+      padding: 40px;
+      line-height: 2;
+      font-size: 28px;
+      border-right: 1px solid #e0e0e0;
     }
 
     .rhyme-line {
-      margin: 8px 0;
+      margin: 10px 0;
     }
 
     /* Colorful letter classes - consonants only */
-    .letter-m { color: #E53935; }  /* red */
-    .letter-r { color: #1E88E5; }  /* blue */
-    .letter-t { color: #43A047; }  /* green */
-    .letter-s { color: #FB8C00; }  /* orange */
-    .letter-n { color: #8E24AA; }  /* purple */
-    .letter-l { color: #00ACC1; }  /* cyan */
-    .letter-d { color: #F4511E; }  /* deep orange */
-    .letter-c { color: #7CB342; }  /* light green */
-    .letter-p { color: #5E35B1; }  /* deep purple */
-    .letter-g { color: #039BE5; }  /* light blue */
-    .letter-b { color: #D81B60; }  /* pink */
-    .letter-v { color: #00897B; }  /* teal */
-    .letter-f { color: #6D4C41; }  /* brown */
-    .letter-j { color: #C0CA33; }  /* lime */
-    .letter-h { color: #3949AB; }  /* indigo */
-    .letter-q { color: #8D6E63; }  /* brown grey */
-    .letter-z { color: #546E7A; }  /* blue grey */
-    .letter-x { color: #757575; }  /* grey */
-    .letter-k { color: #EC407A; }  /* pink */
-    .letter-w { color: #26A69A; }  /* teal */
-    .letter-y { color: #AB47BC; }  /* purple */
-    .letter-ñ { color: #FF7043; }  /* deep orange */
-    .letter-vowel { color: #8B4513; }  /* brown - vowels uncolored */
+    .letter-m { color: #E53935; }
+    .letter-r { color: #1E88E5; }
+    .letter-t { color: #43A047; }
+    .letter-s { color: #FB8C00; }
+    .letter-n { color: #8E24AA; }
+    .letter-l { color: #00ACC1; }
+    .letter-d { color: #F4511E; }
+    .letter-c { color: #7CB342; }
+    .letter-p { color: #5E35B1; }
+    .letter-g { color: #039BE5; }
+    .letter-b { color: #D81B60; }
+    .letter-v { color: #00897B; }
+    .letter-f { color: #6D4C41; }
+    .letter-j { color: #C0CA33; }
+    .letter-h { color: #3949AB; }
+    .letter-q { color: #8D6E63; }
+    .letter-z { color: #546E7A; }
+    .letter-x { color: #757575; }
+    .letter-k { color: #EC407A; }
+    .letter-w { color: #26A69A; }
+    .letter-y { color: #AB47BC; }
+    .letter-ñ { color: #FF7043; }
+    .letter-vowel { color: #3a3a3a; }
 
     /* Blank word styling */
     .blank {
       display: inline-block;
-      min-width: 80px;
-      padding: 2px 10px;
-      border-bottom: 4px dashed #2E5090;
-      margin: 0 5px;
+      min-width: 90px;
+      padding: 4px 12px;
+      border-bottom: 3px solid #ccc;
+      margin: 0 6px;
       text-align: center;
-      animation: pulse-blank 1.5s ease-in-out infinite;
-      background: rgba(255,255,255,0.3);
-      border-radius: 5px 5px 0 0;
+      transition: all 0.3s ease;
     }
 
     .blank span {
@@ -160,83 +158,55 @@
     }
 
     .blank.filled {
-      border-bottom: 4px solid #4CAF50;
-      animation: none;
-      background: rgba(76, 175, 80, 0.15);
+      border-bottom-color: #4a4a4a;
     }
 
     .blank.filled span {
-      color: #4CAF50;
+      color: #4a4a4a;
     }
 
-    @keyframes pulse-blank {
-      0%, 100% { border-color: #2E5090; }
-      50% { border-color: #D2691E; }
-    }
-
-    /* Chucho container */
-    .chucho-container {
-      width: 220px;
-      height: 280px;
+    /* Image container */
+    .image-container {
+      flex: 0 0 auto;
       display: flex;
-      align-items: center;
-      justify-content: center;
       flex-direction: column;
+      align-items: center;
     }
 
-    /* Chucho image */
-    .chucho-img {
-      width: 200px;
-      height: 240px;
+    .level-image {
+      max-width: 350px;
+      max-height: 400px;
       object-fit: contain;
-      border-radius: 15px;
       transition: transform 0.3s ease;
+      filter: grayscale(0%);
     }
 
-    .chucho-img.waiting {
-      animation: tilt-img 2s ease-in-out infinite;
+    .level-image.waiting {
+      animation: gentle-float 3s ease-in-out infinite;
     }
 
-    .chucho-img.correct {
-      animation: jump-img 0.5s ease-in-out;
+    .level-image.correct {
+      animation: celebrate-bounce 0.6s ease-out;
     }
 
-    .chucho-img.wrong {
-      animation: shake-img 0.5s ease-in-out;
+    .level-image.wrong {
+      animation: gentle-shake 0.4s ease-in-out;
     }
 
-    .chucho-img.complete {
-      animation: celebrate-img 0.5s ease-in-out infinite;
-    }
-
-    @keyframes tilt-img {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-3deg); }
-      75% { transform: rotate(3deg); }
-    }
-
-    @keyframes jump-img {
+    @keyframes gentle-float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
+      50% { transform: translateY(-8px); }
     }
 
-    @keyframes shake-img {
+    @keyframes celebrate-bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes gentle-shake {
       0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-
-    @keyframes celebrate-img {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-10px) scale(1.05); }
-    }
-
-    /* Hint text under image */
-    .hint-text {
-      font-size: 18px;
-      color: #8B4513;
-      margin-top: 8px;
-      opacity: 0.7;
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
     }
 
     /* Answer buttons container */
@@ -247,52 +217,52 @@
       gap: 20px;
       width: 100%;
       padding: 30px;
+      border-top: 1px solid #e0e0e0;
       margin-top: 20px;
     }
 
     /* Answer buttons */
     .answer-btn {
       font-family: 'Borel', cursive;
-      font-size: 32px;
-      padding: 20px 40px;
-      min-width: 150px;
-      min-height: 70px;
-      background-color: #FFE4B5;
-      border: 4px solid #8B4513;
-      border-radius: 15px;
-      color: #8B4513;
+      font-size: 28px;
+      padding: 16px 36px;
+      min-width: 140px;
+      background-color: #fff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
       text-transform: lowercase;
     }
 
     .answer-btn:hover:not(:disabled) {
-      transform: scale(1.05);
-      background-color: #FFD699;
+      border-color: #999;
+      background-color: #fafafa;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .answer-btn:active:not(:disabled) {
-      transform: scale(0.98);
+      transform: translateY(0);
     }
 
     .answer-btn.correct {
-      background-color: #4CAF50;
-      border-color: #388E3C;
-      animation: success-pop 0.3s ease-out;
+      background-color: #4a4a4a;
+      border-color: #4a4a4a;
     }
 
     .answer-btn.correct span {
-      color: white;
+      color: white !important;
     }
 
     .answer-btn.wrong {
-      background-color: #E57373;
-      border-color: #D32F2F;
-      animation: shake 0.5s ease-in-out;
+      background-color: #f5f5f5;
+      border-color: #ccc;
+      animation: shake 0.4s ease-in-out;
     }
 
     .answer-btn.wrong span {
-      color: white;
+      color: #bbb !important;
     }
 
     .answer-btn:disabled {
@@ -300,18 +270,12 @@
       cursor: not-allowed;
     }
 
-    @keyframes success-pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-10px); }
-      40% { transform: translateX(10px); }
-      60% { transform: translateX(-10px); }
-      80% { transform: translateX(10px); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
     }
 
     /* Stars animation */
@@ -327,71 +291,92 @@
 
     .star {
       position: absolute;
-      font-size: 40px;
-      animation: star-fly 1s ease-out forwards;
+      font-size: 30px;
+      animation: star-fly 1.2s ease-out forwards;
+      opacity: 0.8;
     }
 
     @keyframes star-fly {
       0% {
-        opacity: 1;
-        transform: translateY(0) scale(0);
+        opacity: 0.8;
+        transform: translateY(0) scale(0) rotate(0deg);
       }
       50% {
         opacity: 1;
-        transform: translateY(-50px) scale(1.2);
+        transform: translateY(-40px) scale(1.1) rotate(180deg);
       }
       100% {
         opacity: 0;
-        transform: translateY(-100px) scale(0.5);
+        transform: translateY(-80px) scale(0.5) rotate(360deg);
       }
     }
 
     /* Title screen */
     .title-screen {
       text-align: center;
-      padding-top: 50px;
+      padding-top: 40px;
     }
 
     .main-title {
-      font-size: 56px;
-      color: #2E5090;
-      margin-bottom: 30px;
-      text-shadow: 3px 3px 0 #D2691E;
+      font-size: 52px;
+      color: #3a3a3a;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      font-weight: normal;
     }
 
-    .title-chucho {
-      margin: 40px 0;
+    .subtitle {
+      font-size: 20px;
+      color: #888;
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    .title-image-container {
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .title-image {
+      max-width: 400px;
+      max-height: 480px;
+      object-fit: contain;
+      filter: grayscale(0%);
     }
 
     .play-btn {
       font-family: 'Borel', cursive;
-      font-size: 40px;
-      padding: 20px 60px;
-      background-color: #4CAF50;
-      border: 4px solid #388E3C;
-      border-radius: 20px;
-      color: white;
+      font-size: 32px;
+      padding: 18px 50px;
+      background-color: #fff;
+      border: 2px solid #3a3a3a;
+      border-radius: 8px;
+      color: #3a3a3a;
       cursor: pointer;
       transition: all 0.2s ease;
       margin: 10px;
       text-transform: lowercase;
+      letter-spacing: 1px;
     }
 
     .play-btn:hover {
-      transform: scale(1.05);
-      background-color: #45a049;
+      background-color: #3a3a3a;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .play-btn.secondary {
-      background-color: #FFE4B5;
-      border-color: #8B4513;
-      color: #8B4513;
-      font-size: 32px;
-      padding: 15px 40px;
+      font-size: 24px;
+      padding: 14px 36px;
+      border-color: #ccc;
+      color: #666;
     }
 
     .play-btn.secondary:hover {
-      background-color: #FFD699;
+      background-color: #666;
+      border-color: #666;
+      color: #fff;
     }
 
     .button-group {
@@ -399,32 +384,37 @@
       flex-direction: column;
       gap: 15px;
       align-items: center;
+      margin-top: 30px;
     }
 
     /* Complete screen */
     .complete-screen {
       text-align: center;
-      padding-top: 30px;
+      padding-top: 40px;
     }
 
     .congrats-title {
-      font-size: 48px;
-      color: #4CAF50;
+      font-size: 42px;
+      color: #3a3a3a;
       margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .complete-image {
+      max-width: 350px;
+      max-height: 400px;
+      object-fit: contain;
+      margin: 30px 0;
     }
 
     .complete-rhyme {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 20px;
-      padding: 30px;
-      margin: 30px 0;
-      line-height: 1.8;
-      font-size: 28px;
+      padding: 30px 40px;
+      margin: 20px 0;
+      line-height: 2;
+      font-size: 24px;
       max-width: 500px;
-    }
-
-    .complete-chucho {
-      margin: 30px 0;
+      border-top: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
     }
 
     /* Confetti */
@@ -441,10 +431,10 @@
 
     .confetti {
       position: absolute;
-      width: 15px;
-      height: 15px;
+      width: 10px;
+      height: 10px;
       top: -20px;
-      animation: confetti-fall 3s ease-in-out forwards;
+      animation: confetti-fall 4s ease-in-out forwards;
     }
 
     @keyframes confetti-fall {
@@ -461,15 +451,13 @@
     /* Review mode styling */
     .review-blank {
       display: inline-block;
-      min-width: 70px;
-      padding: 2px 8px;
-      border-bottom: 3px dashed #2E5090;
-      margin: 0 3px;
+      min-width: 80px;
+      padding: 3px 10px;
+      border-bottom: 3px solid #ccc;
+      margin: 0 4px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      background: rgba(255,255,255,0.3);
-      border-radius: 5px 5px 0 0;
     }
 
     .review-blank span {
@@ -477,51 +465,50 @@
     }
 
     .review-blank.active {
-      border-color: #D2691E;
-      animation: pulse-blank 1.5s ease-in-out infinite;
+      border-color: #888;
     }
 
     .review-blank.filled {
-      border-bottom: 3px solid #4CAF50;
+      border-color: #4a4a4a;
       cursor: default;
-      animation: none;
-      background: rgba(76, 175, 80, 0.15);
     }
 
     .review-blank.filled span {
-      color: #4CAF50;
+      color: #4a4a4a;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
       body {
-        font-size: 24px;
+        font-size: 22px;
         padding: 10px;
       }
 
       .main-title {
-        font-size: 40px;
+        font-size: 36px;
       }
 
       .rhyme-container {
-        font-size: 26px;
+        font-size: 24px;
         padding: 20px;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
       }
 
       .answer-btn {
-        font-size: 28px;
-        padding: 15px 30px;
-        min-width: 120px;
+        font-size: 24px;
+        padding: 14px 28px;
+        min-width: 110px;
       }
 
-      .chucho-container {
-        width: 150px;
-        height: 200px;
+      .level-image {
+        max-width: 280px;
+        max-height: 320px;
       }
 
-      .chucho-svg {
-        width: 140px;
-        height: 180px;
+      .title-image {
+        max-width: 300px;
+        max-height: 360px;
       }
 
       .header {
@@ -529,10 +516,17 @@
         gap: 15px;
       }
 
-      .progress-dot {
-        width: 14px;
-        height: 14px;
+      .game-container {
+        gap: 30px;
       }
+    }
+
+    /* Decorative elements */
+    .decorative-line {
+      width: 60px;
+      height: 2px;
+      background-color: #ddd;
+      margin: 20px auto;
     }
   </style>
 </head>
@@ -546,8 +540,10 @@
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
     <h1 class="main-title">jugando con chucho</h1>
-    <div class="title-chucho">
-      <img id="title-chucho-img" class="chucho-img" src="" alt="Chucho el perrito" style="width: 250px; height: 300px;">
+    <p class="subtitle">aprende a leer jugando</p>
+    <div class="decorative-line"></div>
+    <div class="title-image-container">
+      <img id="title-chucho-img" class="title-image" src="images/chucho-portrait.jpg" alt="Chucho el perrito">
     </div>
     <div class="button-group" id="title-buttons">
       <button class="play-btn" id="play-btn">¡jugar!</button>
@@ -571,8 +567,8 @@
         <!-- Rhyme content generated by JS -->
       </div>
 
-      <div class="chucho-container">
-        <img id="game-chucho" class="chucho-img waiting" src="" alt="Chucho">
+      <div class="image-container">
+        <img id="game-image" class="level-image waiting" src="" alt="Ilustración">
       </div>
     </div>
 
@@ -583,10 +579,9 @@
 
   <!-- Complete Screen -->
   <div class="screen complete-screen" id="complete-screen">
-    <h2 class="congrats-title">¡muy bien! ¡felicidades!</h2>
-    <div class="complete-chucho">
-      <img id="complete-chucho-img" class="chucho-img complete" src="" alt="Chucho celebrando" style="width: 220px; height: 260px;">
-    </div>
+    <h2 class="congrats-title">¡muy bien!</h2>
+    <div class="decorative-line"></div>
+    <img id="complete-image" class="complete-image" src="" alt="Chucho celebrando">
     <div class="complete-rhyme" id="complete-rhyme">
       <!-- Full rhyme shown here -->
     </div>
@@ -594,52 +589,50 @@
   </div>
 
   <script>
-    // Level images - replace these URLs with AI-generated images
-    // Each image should show Chucho (golden cocker spaniel) in a pencil-drawn style
-    // hinting at the word for that level
+    // Level images - replace with your actual image paths
     const LEVEL_IMAGES = {
-      title: 'https://placehold.co/250x300/F5E6C8/8B4513?text=🐕+Chucho',
-      1: 'https://placehold.co/200x240/F5E6C8/8B4513?text=🎯+caza',      // caza (hunting)
-      2: 'https://placehold.co/200x240/F5E6C8/8B4513?text=🐰+conejo',    // conejo (rabbit)
-      3: 'https://placehold.co/200x240/F5E6C8/8B4513?text=💥+daño',      // daño (hurt)
-      4: 'https://placehold.co/200x240/F5E6C8/8B4513?text=👆+dedo',      // dedo (finger)
-      5: 'https://placehold.co/200x240/F5E6C8/8B4513?text=🩹+dedito',    // dedito (little finger)
-      6: 'https://placehold.co/200x240/F5E6C8/8B4513?text=🐱+gato',      // gato (cat)
-      7: 'https://placehold.co/200x240/F5E6C8/8B4513?text=👩+mamá',      // mamá (mom)
-      8: 'https://placehold.co/200x240/F5E6C8/8B4513?text=💊+curó',      // curó (healed)
-      9: 'https://placehold.co/200x240/F5E6C8/8B4513?text=😊+llorar',    // llorar -> not crying
-      10: 'https://placehold.co/200x240/F5E6C8/8B4513?text=📝+repaso',   // review
-      complete: 'https://placehold.co/220x260/F5E6C8/8B4513?text=🎉+¡Bravo!'
+      title: 'images/chucho-portrait.jpg',
+      1: 'images/chucho-playing.jpg',      // perro
+      2: 'images/chucho-playing.jpg',      // chucho
+      3: 'images/chucho-dinosaur.jpg',     // dinosaurio
+      4: 'images/chucho-dinosaur.jpg',     // juegan
+      5: 'images/chucho-snow.jpg',         // nieve
+      6: 'images/chucho-snow.jpg',         // trineo
+      7: 'images/chucho-snow.jpg',         // cola
+      8: 'images/chucho-portrait.jpg',     // alegría
+      9: 'images/chucho-portrait.jpg',     // amigo
+      10: 'images/chucho-portrait.jpg',    // review
+      complete: 'images/chucho-portrait.jpg'
     };
 
-    // Game configuration
+    // New rhyme that matches the images
     const RHYME_LINES = [
-      { text: 'morito va de', word: 'caza' },
-      { text: 'sale un', word: 'conejo' },
-      { text: 'dispara y' },
-      { text: 'se hace', word: 'daño' },
-      { text: 'en el', word: 'dedo' },
-      { text: '¡ay mi', word: 'dedito', suffix: '!' },
-      { text: '¡ay mi dedito! d d d' },
-      { text: 'decía el', word: 'gato' },
-      { text: 'su', word: 'mamá', suffix: ' se lo curó' },
-      { text: 'y dejó de', word: 'llorar' }
+      { text: 'pablo tiene un', word: 'perro' },
+      { text: 'se llama', word: 'chucho' },
+      { text: 'le enseña un', word: 'dinosaurio' },
+      { text: 'y', word: 'juegan', suffix: ' mucho' },
+      { text: 'salen a pasear' },
+      { text: 'por la', word: 'nieve', suffix: ' fría' },
+      { text: 'en el', word: 'trineo', suffix: ' van' },
+      { text: 'chucho mueve la', word: 'cola' },
+      { text: '¡qué', word: 'alegría', suffix: '!' },
+      { text: 'chucho es mi', word: 'amigo' }
     ];
 
     const LEVELS = [
-      { lineIndex: 0, word: 'caza', options: ['caza', 'casa', 'cara'] },
-      { lineIndex: 1, word: 'conejo', options: ['conejo', 'gato', 'perro'] },
-      { lineIndex: 3, word: 'daño', options: ['daño', 'baño', 'año'] },
-      { lineIndex: 4, word: 'dedo', options: ['dedo', 'diente', 'pelo'] },
-      { lineIndex: 5, word: 'dedito', options: ['dedito', 'perrito', 'gatito'] },
-      { lineIndex: 7, word: 'gato', options: ['gato', 'pato', 'rato'] },
-      { lineIndex: 8, word: 'mamá', options: ['mamá', 'papá', 'abuela'] },
-      { lineIndex: 8, word: 'curó', wordInSuffix: true, options: ['curó', 'cuidó', 'miró'] },
-      { lineIndex: 9, word: 'llorar', options: ['llorar', 'jugar', 'cantar'] },
+      { lineIndex: 0, word: 'perro', options: ['perro', 'gato', 'pato'] },
+      { lineIndex: 1, word: 'chucho', options: ['chucho', 'lucho', 'mucho'] },
+      { lineIndex: 2, word: 'dinosaurio', options: ['dinosaurio', 'canario', 'armario'] },
+      { lineIndex: 3, word: 'juegan', options: ['juegan', 'llegan', 'riegan'] },
+      { lineIndex: 5, word: 'nieve', options: ['nieve', 'llueve', 'nueve'] },
+      { lineIndex: 6, word: 'trineo', options: ['trineo', 'paseo', 'correo'] },
+      { lineIndex: 7, word: 'cola', options: ['cola', 'bola', 'ola'] },
+      { lineIndex: 8, word: 'alegría', options: ['alegría', 'energía', 'sandía'] },
+      { lineIndex: 9, word: 'amigo', options: ['amigo', 'abrigo', 'trigo'] },
       { type: 'review' }
     ];
 
-    // Vowels - displayed in brown (uncolored)
+    // Vowels - displayed in dark grey (uncolored)
     const VOWELS = 'aeiouáéíóúü';
 
     // Get color class for a letter
@@ -648,15 +641,14 @@
       if (VOWELS.includes(lower)) {
         return 'letter-vowel';
       }
-      // Consonants get their specific color
       if (lower === 'ñ') return 'letter-ñ';
       if (/[a-z]/.test(lower)) {
         return `letter-${lower}`;
       }
-      return 'letter-vowel'; // default for accented chars
+      return 'letter-vowel';
     }
 
-    // Colorize text - consonants get colors, vowels are brown
+    // Colorize text - consonants get colors, vowels are dark
     function colorizeText(text) {
       return text.split('').map(char => {
         if (char === ' ') {
@@ -691,13 +683,12 @@
     const gameScreen = document.getElementById('game-screen');
     const completeScreen = document.getElementById('complete-screen');
     const titleButtons = document.getElementById('title-buttons');
-    const playBtn = document.getElementById('play-btn');
     const progress = document.getElementById('progress');
     const rhymeContainer = document.getElementById('rhyme-container');
     const answersContainer = document.getElementById('answers-container');
-    const gameChucho = document.getElementById('game-chucho');
+    const gameImage = document.getElementById('game-image');
     const titleChuchoImg = document.getElementById('title-chucho-img');
-    const completeChuchoImg = document.getElementById('complete-chucho-img');
+    const completeImage = document.getElementById('complete-image');
     const completeRhyme = document.getElementById('complete-rhyme');
     const replayBtn = document.getElementById('replay-btn');
     const starsContainer = document.getElementById('stars-container');
@@ -708,9 +699,8 @@
       loadState();
       setupTitleScreen();
       setupEventListeners();
-      // Set title and complete screen images
       titleChuchoImg.src = LEVEL_IMAGES.title;
-      completeChuchoImg.src = LEVEL_IMAGES.complete;
+      completeImage.src = LEVEL_IMAGES.complete;
     }
 
     // Load state from localStorage
@@ -739,7 +729,6 @@
       titleButtons.innerHTML = '';
 
       if (gameState.currentLevel > 1 && gameState.currentLevel <= 10) {
-        // Returning player
         const continueBtn = document.createElement('button');
         continueBtn.className = 'play-btn';
         continueBtn.textContent = 'continuar';
@@ -831,7 +820,7 @@
       const level = LEVELS[gameState.currentLevel - 1];
 
       // Set level-specific image
-      gameChucho.src = LEVEL_IMAGES[gameState.currentLevel];
+      gameImage.src = LEVEL_IMAGES[gameState.currentLevel];
 
       if (level.type === 'review') {
         renderReviewLevel();
@@ -839,7 +828,7 @@
         renderNormalLevel(level);
       }
 
-      setChucho('waiting');
+      setImageState('waiting');
     }
 
     // Render normal level
@@ -852,15 +841,12 @@
 
         if (index === level.lineIndex) {
           if (level.wordInSuffix) {
-            // Word is in suffix (like "curó" in "su mamá se lo curó")
             const suffixWithBlank = line.suffix.replace(level.word, `<span class="blank" id="blank">${colorizeWord(level.word)}</span>`);
-            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank.replace(/ se lo /g, colorizeText(' se lo '));
+            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank;
           } else {
-            // Normal case
             lineDiv.innerHTML = colorizeText(line.text) + ' <span class="blank" id="blank">' + colorizeWord(line.word) + '</span>' + colorizeText(line.suffix || '');
           }
         } else {
-          // Show completed words or full lines
           if (line.word) {
             lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + colorizeText(line.suffix || '');
           } else {
@@ -871,13 +857,11 @@
         rhymeContainer.appendChild(lineDiv);
       });
 
-      // Render answer buttons
       renderAnswerButtons(level.options, level.word);
     }
 
     // Render review level (level 10)
     function renderReviewLevel() {
-      // Select 3 random blanks if not already set
       if (gameState.reviewBlanks.length === 0) {
         const availableWords = LEVELS.slice(0, 9).map((l, i) => ({ ...l, levelIndex: i }));
         const shuffled = availableWords.sort(() => Math.random() - 0.5);
@@ -891,7 +875,6 @@
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
 
-        // Check if this line has a review blank
         const reviewBlank = gameState.reviewBlanks.find(rb => rb.lineIndex === index);
 
         if (reviewBlank) {
@@ -904,7 +887,7 @@
             const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
             const suffixWithBlank = line.suffix.replace(reviewBlank.word,
               `<span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>`);
-            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank.replace(/ se lo /g, colorizeText(' se lo '));
+            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank;
           } else {
             const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
             lineDiv.innerHTML = colorizeText(line.text) + ` <span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>` + colorizeText(line.suffix || '');
@@ -918,7 +901,6 @@
         rhymeContainer.appendChild(lineDiv);
       });
 
-      // Find current active blank
       const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
       if (answeredCount < 3) {
         const currentBlank = gameState.reviewBlanks[answeredCount];
@@ -930,7 +912,6 @@
     function renderAnswerButtons(options, correctWord, isReview = false) {
       answersContainer.innerHTML = '';
 
-      // Shuffle options
       const shuffled = [...options].sort(() => Math.random() - 0.5);
 
       shuffled.forEach(option => {
@@ -949,45 +930,38 @@
       const clickedBtn = Array.from(buttons).find(btn => btn.dataset.word === selected);
 
       if (selected === correct) {
-        // Correct answer
         clickedBtn.classList.add('correct');
         buttons.forEach(btn => btn.disabled = true);
 
         if (isReview) {
-          // Mark this review blank as answered
           const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
           gameState.reviewBlanks[answeredCount].answered = true;
 
-          // Update the blank display
           const blank = document.querySelector(`.review-blank[data-word="${correct}"]`);
           if (blank) {
             blank.classList.remove('active');
             blank.classList.add('filled');
           }
         } else {
-          // Normal level - fill in the blank
           const blank = document.getElementById('blank');
           if (blank) {
             blank.classList.add('filled');
           }
         }
 
-        setChucho('correct');
+        setImageState('correct');
         showStars();
 
-        // Progress after delay
         setTimeout(() => {
           if (isReview) {
             const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
             if (answeredCount >= 3) {
-              // Review complete
               gameState.completedLevels.push(gameState.currentLevel);
               saveState();
               showCompleteScreen();
             } else {
-              // Next review question
               renderReviewLevel();
-              setChucho('waiting');
+              setImageState('waiting');
             }
           } else {
             gameState.completedLevels.push(gameState.currentLevel);
@@ -1002,33 +976,31 @@
           }
         }, 1500);
       } else {
-        // Wrong answer
         clickedBtn.classList.add('wrong');
         clickedBtn.disabled = true;
-        setChucho('wrong');
+        setImageState('wrong');
 
         setTimeout(() => {
-          setChucho('waiting');
-        }, 1000);
+          setImageState('waiting');
+        }, 800);
       }
     }
 
-    // Set Chucho state
-    function setChucho(state) {
-      gameChucho.className = 'chucho-img ' + state;
+    // Set image state
+    function setImageState(state) {
+      gameImage.className = 'level-image ' + state;
     }
 
     // Show stars animation
     function showStars() {
-      const colors = ['#FFD700', '#FFA500', '#FF6347', '#32CD32', '#4169E1'];
-
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 6; i++) {
         const star = document.createElement('div');
         star.className = 'star';
-        star.textContent = '⭐';
-        star.style.left = (30 + Math.random() * 40) + '%';
-        star.style.top = (30 + Math.random() * 20) + '%';
+        star.textContent = '✦';
+        star.style.left = (35 + Math.random() * 30) + '%';
+        star.style.top = (35 + Math.random() * 20) + '%';
         star.style.animationDelay = (Math.random() * 0.3) + 's';
+        star.style.color = '#4a4a4a';
         starsContainer.appendChild(star);
 
         setTimeout(() => star.remove(), 1500);
@@ -1037,9 +1009,9 @@
 
     // Show confetti
     function showConfetti() {
-      const colors = ['#FFD700', '#FF6347', '#32CD32', '#4169E1', '#FF69B4', '#00CED1'];
+      const colors = ['#4a4a4a', '#888', '#aaa', '#ccc', '#ddd'];
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 40; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = Math.random() * 100 + '%';
@@ -1054,7 +1026,6 @@
 
     // Show complete screen
     function showCompleteScreen() {
-      // Render complete rhyme
       completeRhyme.innerHTML = '';
       RHYME_LINES.forEach(line => {
         const lineDiv = document.createElement('div');
