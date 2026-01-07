@@ -813,7 +813,7 @@
         const card = document.createElement('div');
         card.className = 'story-card';
         const mediaHTML = story.video
-          ? `<video src="${story.video}" muted playsinline class="story-video"></video>`
+          ? `<video src="${story.video}#t=0.001" muted playsinline preload="metadata" class="story-video"></video>`
           : `<img src="${story.image}" alt="${story.title}">`;
         card.innerHTML = `
           ${mediaHTML}
