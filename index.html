@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Chucho">
+  <meta name="theme-color" content="#ffffff">
   <title>Jugando con Chucho</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>@import url('https://fonts.googleapis.com/css2?family=Borel&display=swap');</style>
@@ -515,6 +521,50 @@
       margin: 15px auto;
     }
 
+    /* Speak button */
+    .speak-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+      z-index: 200;
+    }
+
+    .speak-btn:hover {
+      transform: scale(1.1);
+      border-color: #999;
+    }
+
+    .speak-btn.speaking {
+      background: #D4A017;
+      border-color: #D4A017;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Word highlighting during speech */
+    .rhyme-line.speaking {
+      text-decoration: underline;
+      text-decoration-color: #D4A017;
+      text-underline-offset: 6px;
+      text-decoration-thickness: 3px;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       body { font-size: 22px; padding: 10px; }
@@ -533,6 +583,7 @@
 <body>
   <div class="stars-container" id="stars-container"></div>
   <div class="confetti-container" id="confetti-container"></div>
+  <button class="speak-btn" id="speak-btn" title="Leer en voz alta">🔊</button>
 
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
@@ -644,6 +695,35 @@
           { lineIndex: 6, word: 'ramas', options: ['ramas', 'camas', 'llamas'] },
           { lineIndex: 7, word: 'hogar', options: ['hogar', 'lugar', 'jugar'] },
           { lineIndex: 8, word: 'bonito', options: ['bonito', 'bendito', 'finito'] },
+          { type: 'review' }
+        ]
+      },
+      swan: {
+        id: 'swan',
+        title: 'el cisne y la moneda',
+        description: 'un cisne encuentra un tesoro',
+        image: 'https://cdn.midjourney.com/13869ac7-7d23-4e06-982e-744a64053863/0_0.jpeg',
+        lines: [
+          { text: 'un cisne', word: 'blanco' },
+          { text: 'nada en el', word: 'lago', suffix: ' tranquilo' },
+          { text: 'encuentra una', word: 'moneda', suffix: ' dorada' },
+          { text: 'brilla como el', word: 'sol' },
+          { text: 'la guarda en su', word: 'nido' },
+          { text: 'es su', word: 'tesoro', suffix: ' secreto' },
+          { text: 'el cisne está', word: 'feliz' },
+          { text: 'nada con', word: 'elegancia' },
+          { text: '¡qué', word: 'suerte', suffix: '!' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'blanco', options: ['blanco', 'franco', 'banco'] },
+          { lineIndex: 1, word: 'lago', options: ['lago', 'mago', 'pago'] },
+          { lineIndex: 2, word: 'moneda', options: ['moneda', 'vereda', 'seda'] },
+          { lineIndex: 3, word: 'sol', options: ['sol', 'col', 'mol'] },
+          { lineIndex: 4, word: 'nido', options: ['nido', 'ruido', 'sonido'] },
+          { lineIndex: 5, word: 'tesoro', options: ['tesoro', 'tesero', 'tesuro'] },
+          { lineIndex: 6, word: 'feliz', options: ['feliz', 'perdiz', 'raíz'] },
+          { lineIndex: 7, word: 'elegancia', options: ['elegancia', 'fragancia', 'distancia'] },
+          { lineIndex: 8, word: 'suerte', options: ['suerte', 'fuerte', 'muerte'] },
           { type: 'review' }
         ]
       },
@@ -1017,6 +1097,107 @@
         completeRhyme.appendChild(lineDiv);
       });
       showScreen('complete');
+    }
+
+    // ============ TEXT-TO-SPEECH ============
+    const speakBtn = document.getElementById('speak-btn');
+    let isSpeaking = false;
+    let speechSynth = window.speechSynthesis;
+    let currentUtterance = null;
+
+    function getSpanishVoice() {
+      const voices = speechSynth.getVoices();
+      // Prefer Spanish voices, especially iOS/Mac ones
+      const spanishVoice = voices.find(v => v.lang.startsWith('es') && v.name.includes('Mónica')) ||
+                           voices.find(v => v.lang.startsWith('es') && v.name.includes('Monica')) ||
+                           voices.find(v => v.lang.startsWith('es') && v.name.includes('Paulina')) ||
+                           voices.find(v => v.lang.startsWith('es-ES')) ||
+                           voices.find(v => v.lang.startsWith('es'));
+      return spanishVoice || voices[0];
+    }
+
+    function getLineText(line) {
+      return (line.text + ' ' + line.word + (line.suffix || '')).trim();
+    }
+
+    function speakStory() {
+      if (!currentStory) return;
+      if (isSpeaking) {
+        stopSpeaking();
+        return;
+      }
+
+      isSpeaking = true;
+      speakBtn.classList.add('speaking');
+      speakBtn.textContent = '⏹';
+
+      const lines = currentStory.lines;
+      let lineIndex = 0;
+
+      function speakNextLine() {
+        if (lineIndex >= lines.length || !isSpeaking) {
+          stopSpeaking();
+          return;
+        }
+
+        // Highlight current line
+        const rhymeLines = rhymeContainer.querySelectorAll('.rhyme-line');
+        rhymeLines.forEach((el, i) => {
+          el.classList.toggle('speaking', i === lineIndex);
+        });
+
+        const text = getLineText(lines[lineIndex]);
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.voice = getSpanishVoice();
+        currentUtterance.lang = 'es-ES';
+        currentUtterance.rate = 0.8; // Slower for kids
+        currentUtterance.pitch = 1.1;
+
+        currentUtterance.onend = () => {
+          lineIndex++;
+          setTimeout(speakNextLine, 300);
+        };
+
+        currentUtterance.onerror = () => {
+          stopSpeaking();
+        };
+
+        speechSynth.speak(currentUtterance);
+      }
+
+      speakNextLine();
+    }
+
+    function stopSpeaking() {
+      isSpeaking = false;
+      speechSynth.cancel();
+      speakBtn.classList.remove('speaking');
+      speakBtn.textContent = '🔊';
+
+      // Remove all highlights
+      const rhymeLines = document.querySelectorAll('.rhyme-line');
+      rhymeLines.forEach(el => el.classList.remove('speaking'));
+    }
+
+    // Load voices (needed for some browsers)
+    speechSynth.onvoiceschanged = () => getSpanishVoice();
+
+    speakBtn.onclick = speakStory;
+
+    // Stop speaking when changing screens
+    const originalShowScreen = showScreen;
+    showScreen = function(screenName) {
+      stopSpeaking();
+      originalShowScreen(screenName);
+    };
+
+    // ============ SERVICE WORKER ============
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
     }
 
     // Start
