@@ -573,7 +573,7 @@
     <div class="game-container">
       <div class="image-container" id="media-container">
         <img id="game-image" class="level-image" src="" alt="Ilustración">
-        <video id="game-video" class="level-video" src="" autoplay loop muted playsinline style="display:none;"></video>
+        <video id="game-video" class="level-video" src="" muted playsinline style="display:none;"></video>
       </div>
       <div class="rhyme-container" id="rhyme-container"></div>
     </div>
@@ -588,7 +588,7 @@
     <div class="game-container" style="margin-bottom: 20px;">
       <div class="image-container">
         <img id="complete-image" class="level-image" src="" alt="Felicidades">
-        <video id="complete-video" class="level-video" src="" autoplay loop muted playsinline style="display:none;"></video>
+        <video id="complete-video" class="level-video" src="" muted playsinline style="display:none;"></video>
       </div>
       <div class="rhyme-container" id="complete-rhyme"></div>
     </div>
@@ -634,7 +634,7 @@
         id: 'bird',
         title: 'el pájaro rojo',
         description: 'un pájaro entre las rosas',
-        video: 'https://cdn.midjourney.com/video/bb3d7acc-dfc4-49ae-b8ac-c5fd4d3bfc57/0.mp4',
+        video: 'https://cdn.midjourney.com/video/cbc92d9b-887b-4f7b-8fe8-c04129b8ac11/3.mp4',
         lines: [
           { text: 'un pájaro', word: 'rojo' },
           { text: 'vive entre las', word: 'rosas' },
@@ -692,7 +692,7 @@
         id: 'cabin',
         title: 'la cabaña del lago',
         description: 'Sara y su perro Chucho',
-        image: 'https://cdn.midjourney.com/b77f2329-c56f-490c-b307-edb5ed8132c6/0_0.jpeg',
+        video: 'https://cdn.midjourney.com/video/b1ef092f-2f7a-4fb5-8da9-68ad1f433154/1.mp4',
         lines: [
           { text: 'Sara vive en una', word: 'cabaña' },
           { text: 'en el', word: 'bosque', suffix: ' junto al lago' },
@@ -784,7 +784,7 @@
         const card = document.createElement('div');
         card.className = 'story-card';
         const mediaHTML = story.video
-          ? `<video src="${story.video}" autoplay loop muted playsinline></video>`
+          ? `<video src="${story.video}" muted playsinline class="story-video"></video>`
           : `<img src="${story.image}" alt="${story.title}">`;
         card.innerHTML = `
           ${mediaHTML}
@@ -793,6 +793,21 @@
         `;
         card.onclick = () => startStory(story.id);
         storySelection.appendChild(card);
+
+        // Setup intermittent playback for video cards
+        const video = card.querySelector('video');
+        if (video) {
+          video.addEventListener('loadeddata', () => {
+            video.pause();
+            video.currentTime = 0;
+            scheduleNextPlay(video);
+          }, { once: true });
+          video.addEventListener('ended', () => {
+            video.pause();
+            video.currentTime = 0;
+            scheduleNextPlay(video);
+          });
+        }
       });
     }
 
@@ -839,9 +854,11 @@
         gameImage.style.display = 'none';
         gameVideo.style.display = 'block';
         gameVideo.src = currentStory.video;
+        setupIntermittentVideo(gameVideo);
         completeImage.style.display = 'none';
         completeVideo.style.display = 'block';
         completeVideo.src = currentStory.video;
+        setupIntermittentVideo(completeVideo);
       } else {
         gameImage.style.display = 'block';
         gameVideo.style.display = 'none';
@@ -1159,6 +1176,45 @@
           .then(reg => console.log('Service Worker registered'))
           .catch(err => console.log('Service Worker registration failed:', err));
       });
+    }
+
+    // ============ INTERMITTENT VIDEO PLAYBACK ============
+    // Videos play occasionally as a surprise, not constantly
+    function setupIntermittentVideo(video) {
+      if (!video) return;
+
+      // Clear any existing timeout
+      if (video._playTimeout) clearTimeout(video._playTimeout);
+
+      // Remove old listener if exists
+      if (video._endHandler) video.removeEventListener('ended', video._endHandler);
+
+      // Pause at first frame initially
+      video.pause();
+      video.currentTime = 0;
+
+      // When video ends, pause and wait for next surprise
+      video._endHandler = () => {
+        video.pause();
+        video.currentTime = 0;
+        scheduleNextPlay(video);
+      };
+      video.addEventListener('ended', video._endHandler);
+
+      // Schedule first play
+      scheduleNextPlay(video);
+    }
+
+    function scheduleNextPlay(video) {
+      // Random delay between 5-15 seconds
+      const delay = 5000 + Math.random() * 10000;
+      video._playTimeout = setTimeout(() => {
+        if (video.offsetParent !== null) { // Only play if visible
+          video.play().catch(() => {}); // Ignore autoplay errors
+        } else {
+          scheduleNextPlay(video); // Reschedule if not visible
+        }
+      }, delay);
     }
 
     // Start
