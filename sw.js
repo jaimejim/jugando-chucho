@@ -1,8 +1,9 @@
-const CACHE_NAME = 'chucho-v1';
+const CACHE_NAME = 'cuentos-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/icon.svg'
 ];
 
 // External resources to cache on first use
