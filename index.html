@@ -50,9 +50,9 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 15px 30px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #e0e0e0;
+      max-width: 700px;
+      padding: 12px 20px;
+      margin-bottom: 15px;
     }
 
     .title {
@@ -112,30 +112,67 @@
       transform: scale(1.2);
     }
 
-    /* Game container */
+    /* Game container - Book style */
     .game-container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 50px;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      padding: 30px;
+      max-width: 700px;
+      padding: 0;
+      position: relative;
     }
 
-    /* Rhyme container */
+    /* Book page wrapper */
+    .book-page {
+      position: relative;
+      width: 100%;
+      background: #faf9f7;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    /* Image container - Hero style */
+    .image-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #f5f5f5 0%, #faf9f7 100%);
+      padding: 20px;
+      min-height: 300px;
+    }
+
+    .level-image,
+    .level-video {
+      max-width: 100%;
+      max-height: 400px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    /* Rhyme container - Overlay caption style */
     .rhyme-container {
-      flex: 1;
-      min-width: 300px;
-      max-width: 420px;
-      padding: 30px;
-      line-height: 2;
-      font-size: 26px;
-      border-right: 1px solid #e0e0e0;
+      width: 100%;
+      padding: 25px 30px;
+      line-height: 1.9;
+      font-size: 24px;
+      background: #fff;
+      border-top: 3px solid #f0ebe3;
+      text-align: center;
     }
 
     .rhyme-line {
-      margin: 8px 0;
+      margin: 6px 0;
+      display: inline;
+    }
+
+    .rhyme-line::after {
+      content: ' ';
     }
 
     /* Colorful letter classes - consonants only */
@@ -236,10 +273,10 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 18px;
+      gap: 15px;
       width: 100%;
-      padding: 25px;
-      border-top: 1px solid #e0e0e0;
+      max-width: 700px;
+      padding: 20px;
       margin-top: 15px;
     }
 
@@ -453,23 +490,28 @@
       letter-spacing: 1px;
     }
 
+    .complete-book {
+      background: #faf9f7;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      max-width: 500px;
+      margin: 15px 0;
+    }
+
     .complete-image,
     .complete-video {
-      max-width: 300px;
-      max-height: 350px;
-      object-fit: contain;
-      margin: 25px 0;
-      border-radius: 12px;
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
     }
 
     .complete-rhyme {
-      padding: 25px 35px;
-      margin: 15px 0;
-      line-height: 2;
-      font-size: 22px;
-      max-width: 480px;
-      border-top: 1px solid #e0e0e0;
-      border-bottom: 1px solid #e0e0e0;
+      padding: 25px 30px;
+      line-height: 1.8;
+      font-size: 20px;
+      background: #fff;
+      text-align: center;
     }
 
     /* Confetti */
@@ -569,14 +611,19 @@
     @media (max-width: 768px) {
       body { font-size: 22px; padding: 10px; }
       .main-title { font-size: 34px; }
-      .rhyme-container { font-size: 22px; padding: 20px; border-right: none; border-bottom: 1px solid #e0e0e0; }
-      .answer-btn { font-size: 22px; padding: 12px 24px; min-width: 100px; }
-      .level-image { max-width: 260px; max-height: 300px; }
+      .rhyme-container { font-size: 20px; padding: 20px 15px; }
+      .answer-btn { font-size: 20px; padding: 10px 20px; min-width: 90px; }
+      .level-image, .level-video { max-height: 280px; }
+      .image-container { min-height: 200px; padding: 15px; }
       .title-image { max-width: 280px; max-height: 320px; }
-      .header { flex-direction: column; gap: 12px; }
-      .game-container { gap: 25px; }
-      .story-card { width: 220px; }
-      .story-card img { height: 140px; }
+      .header { padding: 10px 15px; }
+      .title { font-size: 18px; }
+      .back-btn { font-size: 14px; padding: 6px 12px; }
+      .story-card { width: 160px; padding: 12px; }
+      .story-card img, .story-card video { height: 120px; }
+      .story-card h3 { font-size: 16px; }
+      .story-card p { font-size: 12px; }
+      .speak-btn { width: 50px; height: 50px; font-size: 24px; bottom: 20px; right: 20px; }
     }
   </style>
 </head>
@@ -592,7 +639,7 @@
     <div class="decorative-line"></div>
 
     <div class="title-image-container">
-      <img class="title-image" src="https://cdn.midjourney.com/2555f16c-9f4b-4bd3-add2-58fcccd3b6f9/0_3.jpeg" alt="Chucho">
+      <img class="title-image" src="https://cdn.midjourney.com/7f61af2f-57c1-439a-9726-5e8e9b1cfe2b/0_1.jpeg" alt="Chucho">
     </div>
 
     <p class="subtitle">elige una historia</p>
@@ -614,10 +661,12 @@
     </div>
 
     <div class="game-container">
-      <div class="rhyme-container" id="rhyme-container"></div>
-      <div class="image-container" id="media-container">
-        <img id="game-image" class="level-image waiting" src="" alt="Ilustración">
-        <video id="game-video" class="level-video" src="" autoplay loop muted playsinline style="display:none;"></video>
+      <div class="book-page">
+        <div class="image-container" id="media-container">
+          <img id="game-image" class="level-image waiting" src="" alt="Ilustración">
+          <video id="game-video" class="level-video" src="" autoplay loop muted playsinline style="display:none;"></video>
+        </div>
+        <div class="rhyme-container" id="rhyme-container"></div>
       </div>
     </div>
 
@@ -628,9 +677,11 @@
   <div class="screen complete-screen" id="complete-screen">
     <h2 class="congrats-title">¡muy bien!</h2>
     <div class="decorative-line"></div>
-    <img id="complete-image" class="complete-image" src="" alt="Felicidades">
-    <video id="complete-video" class="complete-video" src="" autoplay loop muted playsinline style="display:none;"></video>
-    <div class="complete-rhyme" id="complete-rhyme"></div>
+    <div class="complete-book">
+      <img id="complete-image" class="complete-image" src="" alt="Felicidades">
+      <video id="complete-video" class="complete-video" src="" autoplay loop muted playsinline style="display:none;"></video>
+      <div class="complete-rhyme" id="complete-rhyme"></div>
+    </div>
     <div class="button-group">
       <button class="play-btn" id="replay-btn">jugar de nuevo</button>
       <button class="play-btn secondary" id="menu-btn">otras historias</button>
