@@ -132,8 +132,6 @@
       width: auto;
       height: auto;
       object-fit: contain;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     /* Rhyme container - Right side, poem style */
@@ -216,36 +214,6 @@
       max-width: 320px;
       max-height: 380px;
       object-fit: contain;
-      transition: transform 0.3s ease;
-      border-radius: 12px;
-    }
-
-    .level-image.waiting {
-      animation: gentle-float 3s ease-in-out infinite;
-    }
-
-    .level-image.correct {
-      animation: celebrate-bounce 0.6s ease-out;
-    }
-
-    .level-image.wrong {
-      animation: gentle-shake 0.4s ease-in-out;
-    }
-
-    @keyframes gentle-float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-
-    @keyframes celebrate-bounce {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-
-    @keyframes gentle-shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
     }
 
     /* Answer buttons container */
