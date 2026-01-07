@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jugando con Chucho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Patrick Hand', cursive;
+      background-color: #F5E6C8;
+      color: #8B4513;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      font-size: 28px;
+      text-transform: lowercase;
+    }
+
+    /* Screen management */
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 32px;
+      color: #2E5090;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title .paw {
+      font-size: 24px;
+    }
+
+    /* Progress dots */
+    .progress {
+      display: flex;
+      gap: 8px;
+    }
+
+    .progress-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #FFE4B5;
+      border: 2px solid #8B4513;
+      transition: background-color 0.3s ease;
+    }
+
+    .progress-dot.completed {
+      background-color: #4CAF50;
+    }
+
+    .progress-dot.current {
+      background-color: #D2691E;
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Game container */
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      width: 100%;
+      padding: 20px;
+    }
+
+    /* Rhyme container */
+    .rhyme-container {
+      flex: 1;
+      min-width: 300px;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      line-height: 1.8;
+      font-size: 30px;
+    }
+
+    .rhyme-line {
+      margin: 8px 0;
+    }
+
+    /* Blank word styling */
+    .blank {
+      display: inline-block;
+      min-width: 100px;
+      padding: 5px 15px;
+      border-bottom: 4px dashed #2E5090;
+      margin: 0 5px;
+      text-align: center;
+      animation: pulse-blank 1.5s ease-in-out infinite;
+      color: transparent;
+    }
+
+    .blank.filled {
+      border-bottom: 4px solid #4CAF50;
+      color: #4CAF50;
+      animation: none;
+    }
+
+    .blank.filled-review {
+      border-bottom: 4px solid #4CAF50;
+      color: #4CAF50;
+      animation: none;
+    }
+
+    @keyframes pulse-blank {
+      0%, 100% { border-color: #2E5090; }
+      50% { border-color: #D2691E; }
+    }
+
+    /* Chucho container */
+    .chucho-container {
+      width: 200px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Chucho SVG animations */
+    .chucho-svg {
+      width: 180px;
+      height: 220px;
+    }
+
+    .chucho-svg.idle .tail {
+      animation: wag-tail 0.5s ease-in-out infinite;
+      transform-origin: 85% 75%;
+    }
+
+    .chucho-svg.waiting .head {
+      animation: tilt-head 2s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .chucho-svg.correct {
+      animation: jump 0.5s ease-in-out;
+    }
+
+    .chucho-svg.correct .tail {
+      animation: wag-tail 0.2s ease-in-out infinite;
+      transform-origin: 85% 75%;
+    }
+
+    .chucho-svg.wrong .head {
+      animation: encourage 0.5s ease-in-out;
+      transform-origin: center;
+    }
+
+    .chucho-svg.complete {
+      animation: celebrate 0.5s ease-in-out infinite;
+    }
+
+    .chucho-svg.complete .tail {
+      animation: wag-tail 0.15s ease-in-out infinite;
+      transform-origin: 85% 75%;
+    }
+
+    @keyframes wag-tail {
+      0%, 100% { transform: rotate(-15deg); }
+      50% { transform: rotate(15deg); }
+    }
+
+    @keyframes tilt-head {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+    }
+
+    @keyframes jump {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+
+    @keyframes encourage {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    @keyframes celebrate {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-15px) rotate(3deg); }
+    }
+
+    /* Answer buttons container */
+    .answers-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      padding: 30px;
+      margin-top: 20px;
+    }
+
+    /* Answer buttons */
+    .answer-btn {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 32px;
+      padding: 20px 40px;
+      min-width: 150px;
+      min-height: 70px;
+      background-color: #FFE4B5;
+      border: 4px solid #8B4513;
+      border-radius: 15px;
+      color: #8B4513;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: lowercase;
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+      background-color: #FFD699;
+    }
+
+    .answer-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .answer-btn.correct {
+      background-color: #4CAF50;
+      border-color: #388E3C;
+      color: white;
+      animation: success-pop 0.3s ease-out;
+    }
+
+    .answer-btn.wrong {
+      background-color: #E57373;
+      border-color: #D32F2F;
+      color: white;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    .answer-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @keyframes success-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-10px); }
+      80% { transform: translateX(10px); }
+    }
+
+    /* Stars animation */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .star {
+      position: absolute;
+      font-size: 40px;
+      animation: star-fly 1s ease-out forwards;
+    }
+
+    @keyframes star-fly {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-50px) scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.5);
+      }
+    }
+
+    /* Title screen */
+    .title-screen {
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    .main-title {
+      font-size: 56px;
+      color: #2E5090;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 0 #D2691E;
+    }
+
+    .title-chucho {
+      margin: 40px 0;
+    }
+
+    .play-btn {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 40px;
+      padding: 20px 60px;
+      background-color: #4CAF50;
+      border: 4px solid #388E3C;
+      border-radius: 20px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 10px;
+      text-transform: lowercase;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.05);
+      background-color: #45a049;
+    }
+
+    .play-btn.secondary {
+      background-color: #FFE4B5;
+      border-color: #8B4513;
+      color: #8B4513;
+      font-size: 32px;
+      padding: 15px 40px;
+    }
+
+    .play-btn.secondary:hover {
+      background-color: #FFD699;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    /* Complete screen */
+    .complete-screen {
+      text-align: center;
+      padding-top: 30px;
+    }
+
+    .congrats-title {
+      font-size: 48px;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    .complete-rhyme {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      line-height: 1.8;
+      font-size: 28px;
+      max-width: 500px;
+    }
+
+    .complete-chucho {
+      margin: 30px 0;
+    }
+
+    /* Confetti */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      overflow: hidden;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      top: -20px;
+      animation: confetti-fall 3s ease-in-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Review mode styling */
+    .review-blank {
+      display: inline-block;
+      min-width: 80px;
+      padding: 3px 10px;
+      border-bottom: 3px dashed #2E5090;
+      margin: 0 3px;
+      text-align: center;
+      color: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .review-blank.active {
+      border-color: #D2691E;
+      animation: pulse-blank 1.5s ease-in-out infinite;
+    }
+
+    .review-blank.filled {
+      border-bottom: 3px solid #4CAF50;
+      color: #4CAF50;
+      cursor: default;
+      animation: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        font-size: 24px;
+        padding: 10px;
+      }
+
+      .main-title {
+        font-size: 40px;
+      }
+
+      .rhyme-container {
+        font-size: 26px;
+        padding: 20px;
+      }
+
+      .answer-btn {
+        font-size: 28px;
+        padding: 15px 30px;
+        min-width: 120px;
+      }
+
+      .chucho-container {
+        width: 150px;
+        height: 200px;
+      }
+
+      .chucho-svg {
+        width: 140px;
+        height: 180px;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .progress-dot {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Stars container for animations -->
+  <div class="stars-container" id="stars-container"></div>
+
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confetti-container"></div>
+
+  <!-- Title Screen -->
+  <div class="screen title-screen" id="title-screen">
+    <h1 class="main-title">jugando con chucho</h1>
+    <div class="title-chucho">
+      <svg class="chucho-svg idle" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- Body -->
+        <ellipse cx="100" cy="170" rx="55" ry="45" fill="#D4A574"/>
+        <!-- Back legs -->
+        <ellipse cx="65" cy="210" rx="18" ry="25" fill="#C49A6C"/>
+        <ellipse cx="135" cy="210" rx="18" ry="25" fill="#C49A6C"/>
+        <!-- Front legs -->
+        <ellipse cx="75" cy="200" rx="15" ry="30" fill="#D4A574"/>
+        <ellipse cx="125" cy="200" rx="15" ry="30" fill="#D4A574"/>
+        <!-- Paws -->
+        <ellipse cx="75" cy="230" rx="18" ry="10" fill="#C49A6C"/>
+        <ellipse cx="125" cy="230" rx="18" ry="10" fill="#C49A6C"/>
+        <ellipse cx="65" cy="235" rx="15" ry="8" fill="#C49A6C"/>
+        <ellipse cx="135" cy="235" rx="15" ry="8" fill="#C49A6C"/>
+        <!-- Tail -->
+        <g class="tail">
+          <path d="M 155 160 Q 185 140 175 115" stroke="#D4A574" stroke-width="20" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- Head -->
+        <g class="head">
+          <ellipse cx="100" cy="85" rx="50" ry="45" fill="#D4A574"/>
+          <!-- Ears -->
+          <ellipse cx="45" cy="85" rx="25" ry="40" fill="#C49A6C"/>
+          <ellipse cx="155" cy="85" rx="25" ry="40" fill="#C49A6C"/>
+          <!-- Inner ears -->
+          <ellipse cx="45" cy="90" rx="15" ry="25" fill="#B8896A"/>
+          <ellipse cx="155" cy="90" rx="15" ry="25" fill="#B8896A"/>
+          <!-- Face -->
+          <ellipse cx="100" cy="95" rx="30" ry="25" fill="#E8C9A0"/>
+          <!-- Snout -->
+          <ellipse cx="100" cy="105" rx="18" ry="12" fill="#E8C9A0"/>
+          <!-- Nose -->
+          <ellipse cx="100" cy="98" rx="10" ry="7" fill="#4A3728"/>
+          <!-- Eyes -->
+          <ellipse cx="80" cy="75" rx="12" ry="14" fill="white"/>
+          <ellipse cx="120" cy="75" rx="12" ry="14" fill="white"/>
+          <ellipse cx="82" cy="77" rx="7" ry="8" fill="#4A3728"/>
+          <ellipse cx="122" cy="77" rx="7" ry="8" fill="#4A3728"/>
+          <ellipse cx="84" cy="75" rx="3" ry="3" fill="white"/>
+          <ellipse cx="124" cy="75" rx="3" ry="3" fill="white"/>
+          <!-- Eyebrows -->
+          <path d="M 68 62 Q 80 58 92 64" stroke="#8B6914" stroke-width="3" fill="none"/>
+          <path d="M 108 64 Q 120 58 132 62" stroke="#8B6914" stroke-width="3" fill="none"/>
+          <!-- Mouth/Tongue -->
+          <path d="M 90 112 Q 100 118 110 112" stroke="#4A3728" stroke-width="2" fill="none"/>
+          <ellipse cx="100" cy="118" rx="8" ry="6" fill="#E57373"/>
+        </g>
+        <!-- Collar -->
+        <rect x="70" y="125" width="60" height="12" rx="3" fill="#CC3333"/>
+        <circle cx="100" cy="137" r="6" fill="#FFD700"/>
+      </svg>
+    </div>
+    <div class="button-group" id="title-buttons">
+      <button class="play-btn" id="play-btn">¡jugar!</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div class="screen game-screen" id="game-screen">
+    <div class="header">
+      <div class="title">
+        <span class="paw">🐾</span>
+        <span>jugando con chucho</span>
+      </div>
+      <div class="progress" id="progress">
+        <!-- Progress dots generated by JS -->
+      </div>
+    </div>
+
+    <div class="game-container">
+      <div class="rhyme-container" id="rhyme-container">
+        <!-- Rhyme content generated by JS -->
+      </div>
+
+      <div class="chucho-container">
+        <svg class="chucho-svg waiting" id="game-chucho" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body -->
+          <ellipse cx="100" cy="170" rx="55" ry="45" fill="#D4A574"/>
+          <!-- Back legs -->
+          <ellipse cx="65" cy="210" rx="18" ry="25" fill="#C49A6C"/>
+          <ellipse cx="135" cy="210" rx="18" ry="25" fill="#C49A6C"/>
+          <!-- Front legs -->
+          <ellipse cx="75" cy="200" rx="15" ry="30" fill="#D4A574"/>
+          <ellipse cx="125" cy="200" rx="15" ry="30" fill="#D4A574"/>
+          <!-- Paws -->
+          <ellipse cx="75" cy="230" rx="18" ry="10" fill="#C49A6C"/>
+          <ellipse cx="125" cy="230" rx="18" ry="10" fill="#C49A6C"/>
+          <ellipse cx="65" cy="235" rx="15" ry="8" fill="#C49A6C"/>
+          <ellipse cx="135" cy="235" rx="15" ry="8" fill="#C49A6C"/>
+          <!-- Tail -->
+          <g class="tail">
+            <path d="M 155 160 Q 185 140 175 115" stroke="#D4A574" stroke-width="20" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- Head -->
+          <g class="head">
+            <ellipse cx="100" cy="85" rx="50" ry="45" fill="#D4A574"/>
+            <!-- Ears -->
+            <ellipse cx="45" cy="85" rx="25" ry="40" fill="#C49A6C"/>
+            <ellipse cx="155" cy="85" rx="25" ry="40" fill="#C49A6C"/>
+            <!-- Inner ears -->
+            <ellipse cx="45" cy="90" rx="15" ry="25" fill="#B8896A"/>
+            <ellipse cx="155" cy="90" rx="15" ry="25" fill="#B8896A"/>
+            <!-- Face -->
+            <ellipse cx="100" cy="95" rx="30" ry="25" fill="#E8C9A0"/>
+            <!-- Snout -->
+            <ellipse cx="100" cy="105" rx="18" ry="12" fill="#E8C9A0"/>
+            <!-- Nose -->
+            <ellipse cx="100" cy="98" rx="10" ry="7" fill="#4A3728"/>
+            <!-- Eyes -->
+            <ellipse cx="80" cy="75" rx="12" ry="14" fill="white"/>
+            <ellipse cx="120" cy="75" rx="12" ry="14" fill="white"/>
+            <ellipse cx="82" cy="77" rx="7" ry="8" fill="#4A3728"/>
+            <ellipse cx="122" cy="77" rx="7" ry="8" fill="#4A3728"/>
+            <ellipse cx="84" cy="75" rx="3" ry="3" fill="white"/>
+            <ellipse cx="124" cy="75" rx="3" ry="3" fill="white"/>
+            <!-- Eyebrows -->
+            <path d="M 68 62 Q 80 58 92 64" stroke="#8B6914" stroke-width="3" fill="none"/>
+            <path d="M 108 64 Q 120 58 132 62" stroke="#8B6914" stroke-width="3" fill="none"/>
+            <!-- Mouth/Tongue -->
+            <path d="M 90 112 Q 100 118 110 112" stroke="#4A3728" stroke-width="2" fill="none"/>
+            <ellipse cx="100" cy="118" rx="8" ry="6" fill="#E57373"/>
+          </g>
+          <!-- Collar -->
+          <rect x="70" y="125" width="60" height="12" rx="3" fill="#CC3333"/>
+          <circle cx="100" cy="137" r="6" fill="#FFD700"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="answers-container" id="answers-container">
+      <!-- Answer buttons generated by JS -->
+    </div>
+  </div>
+
+  <!-- Complete Screen -->
+  <div class="screen complete-screen" id="complete-screen">
+    <h2 class="congrats-title">¡muy bien! ¡felicidades!</h2>
+    <div class="complete-chucho">
+      <svg class="chucho-svg complete" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- Body -->
+        <ellipse cx="100" cy="170" rx="55" ry="45" fill="#D4A574"/>
+        <!-- Back legs -->
+        <ellipse cx="65" cy="210" rx="18" ry="25" fill="#C49A6C"/>
+        <ellipse cx="135" cy="210" rx="18" ry="25" fill="#C49A6C"/>
+        <!-- Front legs -->
+        <ellipse cx="75" cy="200" rx="15" ry="30" fill="#D4A574"/>
+        <ellipse cx="125" cy="200" rx="15" ry="30" fill="#D4A574"/>
+        <!-- Paws -->
+        <ellipse cx="75" cy="230" rx="18" ry="10" fill="#C49A6C"/>
+        <ellipse cx="125" cy="230" rx="18" ry="10" fill="#C49A6C"/>
+        <ellipse cx="65" cy="235" rx="15" ry="8" fill="#C49A6C"/>
+        <ellipse cx="135" cy="235" rx="15" ry="8" fill="#C49A6C"/>
+        <!-- Tail -->
+        <g class="tail">
+          <path d="M 155 160 Q 185 140 175 115" stroke="#D4A574" stroke-width="20" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- Head -->
+        <g class="head">
+          <ellipse cx="100" cy="85" rx="50" ry="45" fill="#D4A574"/>
+          <!-- Ears -->
+          <ellipse cx="45" cy="85" rx="25" ry="40" fill="#C49A6C"/>
+          <ellipse cx="155" cy="85" rx="25" ry="40" fill="#C49A6C"/>
+          <!-- Inner ears -->
+          <ellipse cx="45" cy="90" rx="15" ry="25" fill="#B8896A"/>
+          <ellipse cx="155" cy="90" rx="15" ry="25" fill="#B8896A"/>
+          <!-- Face -->
+          <ellipse cx="100" cy="95" rx="30" ry="25" fill="#E8C9A0"/>
+          <!-- Snout -->
+          <ellipse cx="100" cy="105" rx="18" ry="12" fill="#E8C9A0"/>
+          <!-- Nose -->
+          <ellipse cx="100" cy="98" rx="10" ry="7" fill="#4A3728"/>
+          <!-- Eyes - happy closed -->
+          <path d="M 70 75 Q 80 68 90 75" stroke="#4A3728" stroke-width="4" fill="none"/>
+          <path d="M 110 75 Q 120 68 130 75" stroke="#4A3728" stroke-width="4" fill="none"/>
+          <!-- Mouth - big smile -->
+          <path d="M 80 110 Q 100 130 120 110" stroke="#4A3728" stroke-width="3" fill="none"/>
+          <ellipse cx="100" cy="120" rx="12" ry="8" fill="#E57373"/>
+        </g>
+        <!-- Collar -->
+        <rect x="70" y="125" width="60" height="12" rx="3" fill="#CC3333"/>
+        <circle cx="100" cy="137" r="6" fill="#FFD700"/>
+      </svg>
+    </div>
+    <div class="complete-rhyme" id="complete-rhyme">
+      <!-- Full rhyme shown here -->
+    </div>
+    <button class="play-btn" id="replay-btn">jugar de nuevo</button>
+  </div>
+
+  <script>
+    // Game configuration
+    const RHYME_LINES = [
+      { text: 'morito va de', word: 'caza' },
+      { text: 'sale un', word: 'conejo' },
+      { text: 'dispara y' },
+      { text: 'se hace', word: 'daño' },
+      { text: 'en el', word: 'dedo' },
+      { text: '¡ay mi', word: 'dedito', suffix: '!' },
+      { text: '¡ay mi dedito! d d d' },
+      { text: 'decía el', word: 'gato' },
+      { text: 'su', word: 'mamá', suffix: ' se lo curó' },
+      { text: 'y dejó de', word: 'llorar' }
+    ];
+
+    const LEVELS = [
+      { lineIndex: 0, word: 'caza', options: ['caza', 'casa'] },
+      { lineIndex: 1, word: 'conejo', options: ['conejo', 'gato'] },
+      { lineIndex: 3, word: 'daño', options: ['daño', 'baño'] },
+      { lineIndex: 4, word: 'dedo', options: ['dedo', 'diente'] },
+      { lineIndex: 5, word: 'dedito', options: ['dedito', 'perrito', 'gatito'] },
+      { lineIndex: 7, word: 'gato', options: ['gato', 'pato', 'rato'] },
+      { lineIndex: 8, word: 'mamá', options: ['mamá', 'papá'] },
+      { lineIndex: 8, word: 'curó', wordInSuffix: true, options: ['curó', 'cuidó', 'miró'] },
+      { lineIndex: 9, word: 'llorar', options: ['llorar', 'jugar', 'cantar'] },
+      { type: 'review' }
+    ];
+
+    // State
+    let gameState = {
+      currentLevel: 1,
+      completedLevels: [],
+      reviewBlanks: [],
+      reviewAnswered: 0
+    };
+
+    // DOM elements
+    const titleScreen = document.getElementById('title-screen');
+    const gameScreen = document.getElementById('game-screen');
+    const completeScreen = document.getElementById('complete-screen');
+    const titleButtons = document.getElementById('title-buttons');
+    const playBtn = document.getElementById('play-btn');
+    const progress = document.getElementById('progress');
+    const rhymeContainer = document.getElementById('rhyme-container');
+    const answersContainer = document.getElementById('answers-container');
+    const gameChucho = document.getElementById('game-chucho');
+    const completeRhyme = document.getElementById('complete-rhyme');
+    const replayBtn = document.getElementById('replay-btn');
+    const starsContainer = document.getElementById('stars-container');
+    const confettiContainer = document.getElementById('confetti-container');
+
+    // Initialize
+    function init() {
+      loadState();
+      setupTitleScreen();
+      setupEventListeners();
+    }
+
+    // Load state from localStorage
+    function loadState() {
+      const saved = localStorage.getItem('jugandoConChucho');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          gameState = { ...gameState, ...parsed };
+        } catch (e) {
+          console.error('Error loading state:', e);
+        }
+      }
+    }
+
+    // Save state to localStorage
+    function saveState() {
+      localStorage.setItem('jugandoConChucho', JSON.stringify({
+        currentLevel: gameState.currentLevel,
+        completedLevels: gameState.completedLevels
+      }));
+    }
+
+    // Setup title screen
+    function setupTitleScreen() {
+      titleButtons.innerHTML = '';
+
+      if (gameState.currentLevel > 1 && gameState.currentLevel <= 10) {
+        // Returning player
+        const continueBtn = document.createElement('button');
+        continueBtn.className = 'play-btn';
+        continueBtn.textContent = 'continuar';
+        continueBtn.onclick = () => startGame(false);
+
+        const restartBtn = document.createElement('button');
+        restartBtn.className = 'play-btn secondary';
+        restartBtn.textContent = 'empezar de nuevo';
+        restartBtn.onclick = () => startGame(true);
+
+        titleButtons.appendChild(continueBtn);
+        titleButtons.appendChild(restartBtn);
+      } else {
+        const playBtn = document.createElement('button');
+        playBtn.className = 'play-btn';
+        playBtn.textContent = '¡jugar!';
+        playBtn.onclick = () => startGame(true);
+        titleButtons.appendChild(playBtn);
+      }
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      replayBtn.onclick = () => {
+        resetGame();
+        showScreen('title');
+      };
+    }
+
+    // Show screen
+    function showScreen(screenName) {
+      titleScreen.classList.remove('active');
+      gameScreen.classList.remove('active');
+      completeScreen.classList.remove('active');
+
+      switch (screenName) {
+        case 'title':
+          titleScreen.classList.add('active');
+          break;
+        case 'game':
+          gameScreen.classList.add('active');
+          break;
+        case 'complete':
+          completeScreen.classList.add('active');
+          showConfetti();
+          break;
+      }
+    }
+
+    // Start game
+    function startGame(reset = false) {
+      if (reset) {
+        resetGame();
+      }
+      showScreen('game');
+      renderLevel();
+    }
+
+    // Reset game
+    function resetGame() {
+      gameState = {
+        currentLevel: 1,
+        completedLevels: [],
+        reviewBlanks: [],
+        reviewAnswered: 0
+      };
+      saveState();
+      setupTitleScreen();
+    }
+
+    // Render progress dots
+    function renderProgress() {
+      progress.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        if (gameState.completedLevels.includes(i)) {
+          dot.classList.add('completed');
+        } else if (i === gameState.currentLevel) {
+          dot.classList.add('current');
+        }
+        progress.appendChild(dot);
+      }
+    }
+
+    // Render level
+    function renderLevel() {
+      renderProgress();
+      const level = LEVELS[gameState.currentLevel - 1];
+
+      if (level.type === 'review') {
+        renderReviewLevel();
+      } else {
+        renderNormalLevel(level);
+      }
+
+      setChucho('waiting');
+    }
+
+    // Render normal level
+    function renderNormalLevel(level) {
+      rhymeContainer.innerHTML = '';
+
+      RHYME_LINES.forEach((line, index) => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'rhyme-line';
+
+        if (index === level.lineIndex) {
+          if (level.wordInSuffix) {
+            // Word is in suffix (like "curó" in "su mamá se lo curó")
+            lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' +
+              line.suffix.replace(level.word, `<span class="blank" id="blank">${level.word}</span>`);
+          } else {
+            // Normal case
+            lineDiv.innerHTML = line.text + ' <span class="blank" id="blank">' + line.word + '</span>' + (line.suffix || '');
+          }
+        } else {
+          // Show completed words or full lines
+          if (line.word) {
+            const isCompleted = gameState.completedLevels.some(lvl => {
+              const lvlConfig = LEVELS[lvl - 1];
+              return lvlConfig && lvlConfig.lineIndex === index && lvlConfig.word === line.word;
+            });
+
+            if (isCompleted || index < level.lineIndex ||
+                (gameState.completedLevels.includes(gameState.currentLevel - 1) && index < level.lineIndex)) {
+              lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' + (line.suffix || '');
+            } else {
+              lineDiv.innerHTML = line.text + ' ' + line.word + (line.suffix || '');
+            }
+          } else {
+            lineDiv.textContent = line.text;
+          }
+        }
+
+        rhymeContainer.appendChild(lineDiv);
+      });
+
+      // Render answer buttons
+      renderAnswerButtons(level.options, level.word);
+    }
+
+    // Render review level (level 10)
+    function renderReviewLevel() {
+      // Select 3 random blanks if not already set
+      if (gameState.reviewBlanks.length === 0) {
+        const availableWords = LEVELS.slice(0, 9).map((l, i) => ({ ...l, levelIndex: i }));
+        const shuffled = availableWords.sort(() => Math.random() - 0.5);
+        gameState.reviewBlanks = shuffled.slice(0, 3);
+        gameState.reviewAnswered = 0;
+      }
+
+      rhymeContainer.innerHTML = '';
+
+      RHYME_LINES.forEach((line, index) => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'rhyme-line';
+
+        // Check if this line has a review blank
+        const reviewBlank = gameState.reviewBlanks.find(rb => rb.lineIndex === index);
+
+        if (reviewBlank) {
+          const isAnswered = reviewBlank.answered;
+          const isActive = !isAnswered &&
+            gameState.reviewBlanks.filter(rb => rb.answered).length ===
+            gameState.reviewBlanks.indexOf(reviewBlank);
+
+          if (reviewBlank.wordInSuffix) {
+            lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' +
+              line.suffix.replace(reviewBlank.word,
+                `<span class="review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}" data-word="${reviewBlank.word}">${reviewBlank.word}</span>`);
+          } else {
+            const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
+            lineDiv.innerHTML = line.text + ` <span class="${blankClass}" data-word="${reviewBlank.word}">${reviewBlank.word}</span>` + (line.suffix || '');
+          }
+        } else if (line.word) {
+          lineDiv.innerHTML = line.text + ' ' + line.word + (line.suffix || '');
+        } else {
+          lineDiv.textContent = line.text;
+        }
+
+        rhymeContainer.appendChild(lineDiv);
+      });
+
+      // Find current active blank
+      const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
+      if (answeredCount < 3) {
+        const currentBlank = gameState.reviewBlanks[answeredCount];
+        renderAnswerButtons(currentBlank.options, currentBlank.word, true);
+      }
+    }
+
+    // Render answer buttons
+    function renderAnswerButtons(options, correctWord, isReview = false) {
+      answersContainer.innerHTML = '';
+
+      // Shuffle options
+      const shuffled = [...options].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.textContent = option;
+        btn.onclick = () => handleAnswer(option, correctWord, isReview);
+        answersContainer.appendChild(btn);
+      });
+    }
+
+    // Handle answer
+    function handleAnswer(selected, correct, isReview = false) {
+      const buttons = answersContainer.querySelectorAll('.answer-btn');
+      const clickedBtn = Array.from(buttons).find(btn => btn.textContent === selected);
+
+      if (selected === correct) {
+        // Correct answer
+        clickedBtn.classList.add('correct');
+        buttons.forEach(btn => btn.disabled = true);
+
+        if (isReview) {
+          // Mark this review blank as answered
+          const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
+          gameState.reviewBlanks[answeredCount].answered = true;
+
+          // Update the blank display
+          const blank = document.querySelector(`.review-blank[data-word="${correct}"]`);
+          if (blank) {
+            blank.classList.remove('active');
+            blank.classList.add('filled');
+          }
+        } else {
+          // Normal level - fill in the blank
+          const blank = document.getElementById('blank');
+          if (blank) {
+            blank.classList.add('filled');
+          }
+        }
+
+        setChucho('correct');
+        showStars();
+
+        // Progress after delay
+        setTimeout(() => {
+          if (isReview) {
+            const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
+            if (answeredCount >= 3) {
+              // Review complete
+              gameState.completedLevels.push(gameState.currentLevel);
+              saveState();
+              showCompleteScreen();
+            } else {
+              // Next review question
+              renderReviewLevel();
+              setChucho('waiting');
+            }
+          } else {
+            gameState.completedLevels.push(gameState.currentLevel);
+            gameState.currentLevel++;
+            saveState();
+
+            if (gameState.currentLevel > 10) {
+              showCompleteScreen();
+            } else {
+              renderLevel();
+            }
+          }
+        }, 1500);
+      } else {
+        // Wrong answer
+        clickedBtn.classList.add('wrong');
+        clickedBtn.disabled = true;
+        setChucho('wrong');
+
+        setTimeout(() => {
+          setChucho('waiting');
+        }, 1000);
+      }
+    }
+
+    // Set Chucho state
+    function setChucho(state) {
+      gameChucho.className = 'chucho-svg ' + state;
+    }
+
+    // Show stars animation
+    function showStars() {
+      const colors = ['#FFD700', '#FFA500', '#FF6347', '#32CD32', '#4169E1'];
+
+      for (let i = 0; i < 8; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.textContent = '⭐';
+        star.style.left = (30 + Math.random() * 40) + '%';
+        star.style.top = (30 + Math.random() * 20) + '%';
+        star.style.animationDelay = (Math.random() * 0.3) + 's';
+        starsContainer.appendChild(star);
+
+        setTimeout(() => star.remove(), 1500);
+      }
+    }
+
+    // Show confetti
+    function showConfetti() {
+      const colors = ['#FFD700', '#FF6347', '#32CD32', '#4169E1', '#FF69B4', '#00CED1'];
+
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = (Math.random() * 2) + 's';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confettiContainer.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    // Show complete screen
+    function showCompleteScreen() {
+      // Render complete rhyme
+      completeRhyme.innerHTML = '';
+      RHYME_LINES.forEach(line => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'rhyme-line';
+        if (line.word) {
+          lineDiv.innerHTML = line.text + ' <span class="filled">' + line.word + '</span>' + (line.suffix || '');
+        } else {
+          lineDiv.textContent = line.text;
+        }
+        completeRhyme.appendChild(lineDiv);
+      });
+
+      showScreen('complete');
+    }
+
+    // Start
+    init();
+    showScreen('title');
+  </script>
+</body>
+</html>
