@@ -1113,14 +1113,15 @@
 
     function getSpanishVoice() {
       const voices = speechSynth.getVoices();
-      // Prefer Siri/enhanced Spanish voices (iOS/macOS)
+      // Prioritize Enhanced voices, then Siri voices (iOS/macOS)
       const spanishVoice =
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Marisol')) ||  // Siri Spanish (Spain)
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Paulina')) ||  // Siri Spanish (Mexico)
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Enhanced')) || // Enhanced voices
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('(Enhanced)')) || // Enhanced first!
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Enhanced')) ||
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Marisol')) ||
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Paulina')) ||
         voices.find(v => v.lang.startsWith('es') && v.name.includes('Mónica')) ||
         voices.find(v => v.lang.startsWith('es') && v.name.includes('Monica')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.includes('Jorge')) ||    // Siri male
+        voices.find(v => v.lang.startsWith('es') && v.name.includes('Jorge')) ||
         voices.find(v => v.lang.startsWith('es-ES')) ||
         voices.find(v => v.lang.startsWith('es-MX')) ||
         voices.find(v => v.lang.startsWith('es'));
