@@ -24,10 +24,8 @@
       align-items: center;
       padding: 20px;
       font-size: 26px;
-      text-transform: lowercase;
     }
 
-    /* Screen management */
     .screen {
       display: none;
       width: 100%;
@@ -52,7 +50,7 @@
     }
 
     .title {
-      font-size: 28px;
+      font-size: 24px;
       color: #3a3a3a;
       display: flex;
       align-items: center;
@@ -61,8 +59,25 @@
     }
 
     .title .paw {
-      font-size: 22px;
+      font-size: 20px;
       opacity: 0.7;
+    }
+
+    .back-btn {
+      font-family: 'Borel', cursive;
+      font-size: 18px;
+      padding: 8px 20px;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #666;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      border-color: #999;
+      color: #333;
     }
 
     /* Progress dots */
@@ -97,7 +112,7 @@
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
-      gap: 60px;
+      gap: 50px;
       width: 100%;
       padding: 30px;
     }
@@ -105,16 +120,16 @@
     /* Rhyme container */
     .rhyme-container {
       flex: 1;
-      min-width: 320px;
-      max-width: 450px;
-      padding: 40px;
+      min-width: 300px;
+      max-width: 420px;
+      padding: 30px;
       line-height: 2;
-      font-size: 28px;
+      font-size: 26px;
       border-right: 1px solid #e0e0e0;
     }
 
     .rhyme-line {
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
     /* Colorful letter classes - consonants only */
@@ -145,10 +160,10 @@
     /* Blank word styling */
     .blank {
       display: inline-block;
-      min-width: 90px;
-      padding: 4px 12px;
+      min-width: 80px;
+      padding: 4px 10px;
       border-bottom: 3px solid #ccc;
-      margin: 0 6px;
+      margin: 0 4px;
       text-align: center;
       transition: all 0.3s ease;
     }
@@ -174,11 +189,10 @@
     }
 
     .level-image {
-      max-width: 350px;
-      max-height: 400px;
+      max-width: 320px;
+      max-height: 380px;
       object-fit: contain;
       transition: transform 0.3s ease;
-      filter: grayscale(0%);
     }
 
     .level-image.waiting {
@@ -195,12 +209,12 @@
 
     @keyframes gentle-float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-6px); }
     }
 
     @keyframes celebrate-bounce {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      50% { transform: scale(1.03); }
     }
 
     @keyframes gentle-shake {
@@ -214,19 +228,19 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
+      gap: 18px;
       width: 100%;
-      padding: 30px;
+      padding: 25px;
       border-top: 1px solid #e0e0e0;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     /* Answer buttons */
     .answer-btn {
       font-family: 'Borel', cursive;
-      font-size: 28px;
-      padding: 16px 36px;
-      min-width: 140px;
+      font-size: 26px;
+      padding: 14px 32px;
+      min-width: 130px;
       background-color: #fff;
       border: 2px solid #ddd;
       border-radius: 8px;
@@ -242,13 +256,9 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .answer-btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-
     .answer-btn.correct {
-      background-color: #4a4a4a;
-      border-color: #4a4a4a;
+      background-color: #D4A017;
+      border-color: #D4A017;
     }
 
     .answer-btn.correct span {
@@ -291,63 +301,98 @@
 
     .star {
       position: absolute;
-      font-size: 30px;
+      font-size: 28px;
       animation: star-fly 1.2s ease-out forwards;
       opacity: 0.8;
     }
 
     @keyframes star-fly {
-      0% {
-        opacity: 0.8;
-        transform: translateY(0) scale(0) rotate(0deg);
-      }
-      50% {
-        opacity: 1;
-        transform: translateY(-40px) scale(1.1) rotate(180deg);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-80px) scale(0.5) rotate(360deg);
-      }
+      0% { opacity: 0.8; transform: translateY(0) scale(0) rotate(0deg); }
+      50% { opacity: 1; transform: translateY(-40px) scale(1.1) rotate(180deg); }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.5) rotate(360deg); }
     }
 
     /* Title screen */
     .title-screen {
       text-align: center;
-      padding-top: 40px;
+      padding-top: 30px;
     }
 
     .main-title {
-      font-size: 52px;
+      font-size: 48px;
       color: #3a3a3a;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: 2px;
       font-weight: normal;
     }
 
     .subtitle {
-      font-size: 20px;
+      font-size: 18px;
       color: #888;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       font-style: italic;
     }
 
     .title-image-container {
-      margin: 30px 0;
-      position: relative;
+      margin: 25px 0;
     }
 
     .title-image {
-      max-width: 400px;
-      max-height: 480px;
+      max-width: 320px;
+      max-height: 380px;
       object-fit: contain;
-      filter: grayscale(0%);
+    }
+
+    /* Story selection */
+    .story-selection {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      margin: 30px 0;
+      padding: 0 20px;
+    }
+
+    .story-card {
+      width: 260px;
+      padding: 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+
+    .story-card:hover {
+      border-color: #999;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .story-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .story-card h3 {
+      font-size: 20px;
+      color: #3a3a3a;
+      margin-bottom: 6px;
+      font-weight: normal;
+    }
+
+    .story-card p {
+      font-size: 14px;
+      color: #888;
     }
 
     .play-btn {
       font-family: 'Borel', cursive;
-      font-size: 32px;
-      padding: 18px 50px;
+      font-size: 28px;
+      padding: 16px 45px;
       background-color: #fff;
       border: 2px solid #3a3a3a;
       border-radius: 8px;
@@ -355,7 +400,6 @@
       cursor: pointer;
       transition: all 0.2s ease;
       margin: 10px;
-      text-transform: lowercase;
       letter-spacing: 1px;
     }
 
@@ -367,8 +411,8 @@
     }
 
     .play-btn.secondary {
-      font-size: 24px;
-      padding: 14px 36px;
+      font-size: 22px;
+      padding: 12px 32px;
       border-color: #ccc;
       color: #666;
     }
@@ -382,37 +426,37 @@
     .button-group {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
       align-items: center;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     /* Complete screen */
     .complete-screen {
       text-align: center;
-      padding-top: 40px;
+      padding-top: 35px;
     }
 
     .congrats-title {
-      font-size: 42px;
+      font-size: 38px;
       color: #3a3a3a;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       letter-spacing: 1px;
     }
 
     .complete-image {
-      max-width: 350px;
-      max-height: 400px;
+      max-width: 300px;
+      max-height: 350px;
       object-fit: contain;
-      margin: 30px 0;
+      margin: 25px 0;
     }
 
     .complete-rhyme {
-      padding: 30px 40px;
-      margin: 20px 0;
+      padding: 25px 35px;
+      margin: 15px 0;
       line-height: 2;
-      font-size: 24px;
-      max-width: 500px;
+      font-size: 22px;
+      max-width: 480px;
       border-top: 1px solid #e0e0e0;
       border-bottom: 1px solid #e0e0e0;
     }
@@ -438,103 +482,51 @@
     }
 
     @keyframes confetti-fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
     /* Review mode styling */
     .review-blank {
       display: inline-block;
-      min-width: 80px;
-      padding: 3px 10px;
+      min-width: 70px;
+      padding: 3px 8px;
       border-bottom: 3px solid #ccc;
-      margin: 0 4px;
+      margin: 0 3px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .review-blank span {
-      color: transparent;
-    }
+    .review-blank span { color: transparent; }
+    .review-blank.active { border-color: #888; }
+    .review-blank.filled { border-color: #4a4a4a; cursor: default; }
+    .review-blank.filled span { color: #4a4a4a; }
 
-    .review-blank.active {
-      border-color: #888;
-    }
-
-    .review-blank.filled {
-      border-color: #4a4a4a;
-      cursor: default;
-    }
-
-    .review-blank.filled span {
-      color: #4a4a4a;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      body {
-        font-size: 22px;
-        padding: 10px;
-      }
-
-      .main-title {
-        font-size: 36px;
-      }
-
-      .rhyme-container {
-        font-size: 24px;
-        padding: 20px;
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-      }
-
-      .answer-btn {
-        font-size: 24px;
-        padding: 14px 28px;
-        min-width: 110px;
-      }
-
-      .level-image {
-        max-width: 280px;
-        max-height: 320px;
-      }
-
-      .title-image {
-        max-width: 300px;
-        max-height: 360px;
-      }
-
-      .header {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .game-container {
-        gap: 30px;
-      }
-    }
-
-    /* Decorative elements */
     .decorative-line {
       width: 60px;
       height: 2px;
       background-color: #ddd;
-      margin: 20px auto;
+      margin: 15px auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { font-size: 22px; padding: 10px; }
+      .main-title { font-size: 34px; }
+      .rhyme-container { font-size: 22px; padding: 20px; border-right: none; border-bottom: 1px solid #e0e0e0; }
+      .answer-btn { font-size: 22px; padding: 12px 24px; min-width: 100px; }
+      .level-image { max-width: 260px; max-height: 300px; }
+      .title-image { max-width: 280px; max-height: 320px; }
+      .header { flex-direction: column; gap: 12px; }
+      .game-container { gap: 25px; }
+      .story-card { width: 220px; }
+      .story-card img { height: 140px; }
     }
   </style>
 </head>
 <body>
-  <!-- Stars container for animations -->
   <div class="stars-container" id="stars-container"></div>
-
-  <!-- Confetti container -->
   <div class="confetti-container" id="confetti-container"></div>
 
   <!-- Title Screen -->
@@ -542,135 +534,139 @@
     <h1 class="main-title">jugando con chucho</h1>
     <p class="subtitle">aprende a leer jugando</p>
     <div class="decorative-line"></div>
+
     <div class="title-image-container">
-      <img id="title-chucho-img" class="title-image" src="images/chucho-portrait.jpg" alt="Chucho el perrito">
+      <img class="title-image" src="https://cdn.midjourney.com/2555f16c-9f4b-4bd3-add2-58fcccd3b6f9/0_3.jpeg" alt="Chucho">
     </div>
-    <div class="button-group" id="title-buttons">
-      <button class="play-btn" id="play-btn">¡jugar!</button>
+
+    <p class="subtitle">elige una historia</p>
+
+    <div class="story-selection" id="story-selection">
+      <!-- Story cards generated by JS -->
     </div>
   </div>
 
   <!-- Game Screen -->
   <div class="screen game-screen" id="game-screen">
     <div class="header">
+      <button class="back-btn" id="back-btn">← volver</button>
       <div class="title">
         <span class="paw">🐾</span>
-        <span>jugando con chucho</span>
+        <span id="story-title">jugando con chucho</span>
       </div>
-      <div class="progress" id="progress">
-        <!-- Progress dots generated by JS -->
-      </div>
+      <div class="progress" id="progress"></div>
     </div>
 
     <div class="game-container">
-      <div class="rhyme-container" id="rhyme-container">
-        <!-- Rhyme content generated by JS -->
-      </div>
-
+      <div class="rhyme-container" id="rhyme-container"></div>
       <div class="image-container">
         <img id="game-image" class="level-image waiting" src="" alt="Ilustración">
       </div>
     </div>
 
-    <div class="answers-container" id="answers-container">
-      <!-- Answer buttons generated by JS -->
-    </div>
+    <div class="answers-container" id="answers-container"></div>
   </div>
 
   <!-- Complete Screen -->
   <div class="screen complete-screen" id="complete-screen">
     <h2 class="congrats-title">¡muy bien!</h2>
     <div class="decorative-line"></div>
-    <img id="complete-image" class="complete-image" src="" alt="Chucho celebrando">
-    <div class="complete-rhyme" id="complete-rhyme">
-      <!-- Full rhyme shown here -->
+    <img id="complete-image" class="complete-image" src="" alt="Felicidades">
+    <div class="complete-rhyme" id="complete-rhyme"></div>
+    <div class="button-group">
+      <button class="play-btn" id="replay-btn">jugar de nuevo</button>
+      <button class="play-btn secondary" id="menu-btn">otras historias</button>
     </div>
-    <button class="play-btn" id="replay-btn">jugar de nuevo</button>
   </div>
 
   <script>
-    // Level images - replace with your actual image paths
-    const LEVEL_IMAGES = {
-      title: 'images/chucho-portrait.jpg',
-      1: 'images/chucho-playing.jpg',      // perro
-      2: 'images/chucho-playing.jpg',      // chucho
-      3: 'images/chucho-dinosaur.jpg',     // dinosaurio
-      4: 'images/chucho-dinosaur.jpg',     // juegan
-      5: 'images/chucho-snow.jpg',         // nieve
-      6: 'images/chucho-snow.jpg',         // trineo
-      7: 'images/chucho-snow.jpg',         // cola
-      8: 'images/chucho-portrait.jpg',     // alegría
-      9: 'images/chucho-portrait.jpg',     // amigo
-      10: 'images/chucho-portrait.jpg',    // review
-      complete: 'images/chucho-portrait.jpg'
+    // ============ STORIES DATA ============
+    const STORIES = {
+      snow: {
+        id: 'snow',
+        title: 'hermanos en la nieve',
+        description: 'Giulia, Giacomo y Giovanni',
+        image: 'https://cdn.midjourney.com/08427c84-98ee-40e4-a4a0-6a51b2f8ee3e/0_3.jpeg',
+        lines: [
+          { text: 'Giulia tiene dos', word: 'hermanos' },
+          { text: 'Giacomo y', word: 'Giovanni' },
+          { text: 'salen juntos a', word: 'jugar' },
+          { text: 'con', word: 'guantes', suffix: ' en las manos' },
+          { text: 'cogen el', word: 'trineo', suffix: ' rojo' },
+          { text: 'suben a la', word: 'montaña' },
+          { text: 'bajan muy', word: 'deprisa' },
+          { text: '¡qué', word: 'risa', suffix: '!' },
+          { text: 'les gusta la', word: 'nieve' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'hermanos', options: ['hermanos', 'hermanas', 'manzanas'] },
+          { lineIndex: 1, word: 'Giovanni', options: ['Giovanni', 'Antonio', 'Silvano'] },
+          { lineIndex: 2, word: 'jugar', options: ['jugar', 'luchar', 'nadar'] },
+          { lineIndex: 3, word: 'guantes', options: ['guantes', 'zapatos', 'pantalones'] },
+          { lineIndex: 4, word: 'trineo', options: ['trineo', 'paseo', 'correo'] },
+          { lineIndex: 5, word: 'montaña', options: ['montaña', 'cabaña', 'mañana'] },
+          { lineIndex: 6, word: 'deprisa', options: ['deprisa', 'despacio', 'sonrisa'] },
+          { lineIndex: 7, word: 'risa', options: ['risa', 'prisa', 'brisa'] },
+          { lineIndex: 8, word: 'nieve', options: ['nieve', 'llueve', 'nueve'] },
+          { type: 'review' }
+        ]
+      },
+      cabin: {
+        id: 'cabin',
+        title: 'la cabaña del lago',
+        description: 'Sara y su perro Chucho',
+        image: 'https://cdn.midjourney.com/b77f2329-c56f-490c-b307-edb5ed8132c6/0_0.jpeg',
+        lines: [
+          { text: 'Sara vive en una', word: 'cabaña' },
+          { text: 'en el', word: 'bosque', suffix: ' junto al lago' },
+          { text: 'tiene un', word: 'perro', suffix: ' muy bonito' },
+          { text: 'que se llama', word: 'Chucho' },
+          { text: 'pasean entre los', word: 'árboles' },
+          { text: 'nadan en el', word: 'agua', suffix: ' fría' },
+          { text: 'recogen', word: 'flores', suffix: ' del campo' },
+          { text: 'Sara quiere a su', word: 'amigo' },
+          { text: '¡qué', word: 'alegría', suffix: '!' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'cabaña', options: ['cabaña', 'montaña', 'mañana'] },
+          { lineIndex: 1, word: 'bosque', options: ['bosque', 'parque', 'tanque'] },
+          { lineIndex: 2, word: 'perro', options: ['perro', 'cerro', 'hierro'] },
+          { lineIndex: 3, word: 'Chucho', options: ['Chucho', 'Mucho', 'Lucho'] },
+          { lineIndex: 4, word: 'árboles', options: ['árboles', 'mármoles', 'fútboles'] },
+          { lineIndex: 5, word: 'agua', options: ['agua', 'fragua', 'yegua'] },
+          { lineIndex: 6, word: 'flores', options: ['flores', 'colores', 'dolores'] },
+          { lineIndex: 7, word: 'amigo', options: ['amigo', 'abrigo', 'trigo'] },
+          { lineIndex: 8, word: 'alegría', options: ['alegría', 'energía', 'sandía'] },
+          { type: 'review' }
+        ]
+      }
     };
 
-    // New rhyme that matches the images
-    const RHYME_LINES = [
-      { text: 'pablo tiene un', word: 'perro' },
-      { text: 'se llama', word: 'chucho' },
-      { text: 'le enseña un', word: 'dinosaurio' },
-      { text: 'y', word: 'juegan', suffix: ' mucho' },
-      { text: 'salen a pasear' },
-      { text: 'por la', word: 'nieve', suffix: ' fría' },
-      { text: 'en el', word: 'trineo', suffix: ' van' },
-      { text: 'chucho mueve la', word: 'cola' },
-      { text: '¡qué', word: 'alegría', suffix: '!' },
-      { text: 'chucho es mi', word: 'amigo' }
-    ];
-
-    const LEVELS = [
-      { lineIndex: 0, word: 'perro', options: ['perro', 'gato', 'pato'] },
-      { lineIndex: 1, word: 'chucho', options: ['chucho', 'lucho', 'mucho'] },
-      { lineIndex: 2, word: 'dinosaurio', options: ['dinosaurio', 'canario', 'armario'] },
-      { lineIndex: 3, word: 'juegan', options: ['juegan', 'llegan', 'riegan'] },
-      { lineIndex: 5, word: 'nieve', options: ['nieve', 'llueve', 'nueve'] },
-      { lineIndex: 6, word: 'trineo', options: ['trineo', 'paseo', 'correo'] },
-      { lineIndex: 7, word: 'cola', options: ['cola', 'bola', 'ola'] },
-      { lineIndex: 8, word: 'alegría', options: ['alegría', 'energía', 'sandía'] },
-      { lineIndex: 9, word: 'amigo', options: ['amigo', 'abrigo', 'trigo'] },
-      { type: 'review' }
-    ];
-
-    // Vowels - displayed in dark grey (uncolored)
+    // ============ COLOR FUNCTIONS ============
     const VOWELS = 'aeiouáéíóúü';
 
-    // Get color class for a letter
     function getLetterClass(char) {
       const lower = char.toLowerCase();
-      if (VOWELS.includes(lower)) {
-        return 'letter-vowel';
-      }
+      if (VOWELS.includes(lower)) return 'letter-vowel';
       if (lower === 'ñ') return 'letter-ñ';
-      if (/[a-z]/.test(lower)) {
-        return `letter-${lower}`;
-      }
+      if (/[a-z]/.test(lower)) return `letter-${lower}`;
       return 'letter-vowel';
     }
 
-    // Colorize text - consonants get colors, vowels are dark
     function colorizeText(text) {
       return text.split('').map(char => {
-        if (char === ' ') {
-          return ' ';
-        }
-        if (/[!¡¿?,.\-:]/.test(char)) {
-          return `<span class="letter-vowel">${char}</span>`;
-        }
-        const colorClass = getLetterClass(char);
-        return `<span class="${colorClass}">${char}</span>`;
+        if (char === ' ') return ' ';
+        if (/[!¡¿?,.\-:]/.test(char)) return `<span class="letter-vowel">${char}</span>`;
+        return `<span class="${getLetterClass(char)}">${char}</span>`;
       }).join('');
     }
 
-    // Colorize a word (for blanks and buttons)
     function colorizeWord(word) {
-      return word.split('').map(char => {
-        const colorClass = getLetterClass(char);
-        return `<span class="${colorClass}">${char}</span>`;
-      }).join('');
+      return word.split('').map(char => `<span class="${getLetterClass(char)}">${char}</span>`).join('');
     }
 
-    // State
+    // ============ GAME STATE ============
+    let currentStory = null;
     let gameState = {
       currentLevel: 1,
       completedLevels: [],
@@ -678,87 +674,60 @@
       reviewAnswered: 0
     };
 
-    // DOM elements
+    // ============ DOM ELEMENTS ============
     const titleScreen = document.getElementById('title-screen');
     const gameScreen = document.getElementById('game-screen');
     const completeScreen = document.getElementById('complete-screen');
-    const titleButtons = document.getElementById('title-buttons');
+    const storySelection = document.getElementById('story-selection');
+    const storyTitle = document.getElementById('story-title');
     const progress = document.getElementById('progress');
     const rhymeContainer = document.getElementById('rhyme-container');
     const answersContainer = document.getElementById('answers-container');
     const gameImage = document.getElementById('game-image');
-    const titleChuchoImg = document.getElementById('title-chucho-img');
     const completeImage = document.getElementById('complete-image');
     const completeRhyme = document.getElementById('complete-rhyme');
+    const backBtn = document.getElementById('back-btn');
     const replayBtn = document.getElementById('replay-btn');
+    const menuBtn = document.getElementById('menu-btn');
     const starsContainer = document.getElementById('stars-container');
     const confettiContainer = document.getElementById('confetti-container');
 
-    // Initialize
+    // ============ INITIALIZATION ============
     function init() {
-      loadState();
-      setupTitleScreen();
+      renderStorySelection();
       setupEventListeners();
-      titleChuchoImg.src = LEVEL_IMAGES.title;
-      completeImage.src = LEVEL_IMAGES.complete;
     }
 
-    // Load state from localStorage
-    function loadState() {
-      const saved = localStorage.getItem('jugandoConChucho');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          gameState = { ...gameState, ...parsed };
-        } catch (e) {
-          console.error('Error loading state:', e);
-        }
-      }
+    function renderStorySelection() {
+      storySelection.innerHTML = '';
+
+      Object.values(STORIES).forEach(story => {
+        const card = document.createElement('div');
+        card.className = 'story-card';
+        card.innerHTML = `
+          <img src="${story.image}" alt="${story.title}">
+          <h3>${story.title}</h3>
+          <p>${story.description}</p>
+        `;
+        card.onclick = () => startStory(story.id);
+        storySelection.appendChild(card);
+      });
     }
 
-    // Save state to localStorage
-    function saveState() {
-      localStorage.setItem('jugandoConChucho', JSON.stringify({
-        currentLevel: gameState.currentLevel,
-        completedLevels: gameState.completedLevels
-      }));
-    }
-
-    // Setup title screen
-    function setupTitleScreen() {
-      titleButtons.innerHTML = '';
-
-      if (gameState.currentLevel > 1 && gameState.currentLevel <= 10) {
-        const continueBtn = document.createElement('button');
-        continueBtn.className = 'play-btn';
-        continueBtn.textContent = 'continuar';
-        continueBtn.onclick = () => startGame(false);
-
-        const restartBtn = document.createElement('button');
-        restartBtn.className = 'play-btn secondary';
-        restartBtn.textContent = 'empezar de nuevo';
-        restartBtn.onclick = () => startGame(true);
-
-        titleButtons.appendChild(continueBtn);
-        titleButtons.appendChild(restartBtn);
-      } else {
-        const playBtn = document.createElement('button');
-        playBtn.className = 'play-btn';
-        playBtn.textContent = '¡jugar!';
-        playBtn.onclick = () => startGame(true);
-        titleButtons.appendChild(playBtn);
-      }
-    }
-
-    // Setup event listeners
     function setupEventListeners() {
+      backBtn.onclick = () => showScreen('title');
       replayBtn.onclick = () => {
         resetGame();
+        renderLevel();
+        showScreen('game');
+      };
+      menuBtn.onclick = () => {
+        currentStory = null;
         showScreen('title');
       };
     }
 
-    // Show screen
+    // ============ SCREEN MANAGEMENT ============
     function showScreen(screenName) {
       titleScreen.classList.remove('active');
       gameScreen.classList.remove('active');
@@ -778,16 +747,17 @@
       }
     }
 
-    // Start game
-    function startGame(reset = false) {
-      if (reset) {
-        resetGame();
-      }
+    // ============ GAME LOGIC ============
+    function startStory(storyId) {
+      currentStory = STORIES[storyId];
+      storyTitle.textContent = currentStory.title;
+      gameImage.src = currentStory.image;
+      completeImage.src = currentStory.image;
+      resetGame();
       showScreen('game');
       renderLevel();
     }
 
-    // Reset game
     function resetGame() {
       gameState = {
         currentLevel: 1,
@@ -795,32 +765,23 @@
         reviewBlanks: [],
         reviewAnswered: 0
       };
-      saveState();
-      setupTitleScreen();
     }
 
-    // Render progress dots
     function renderProgress() {
       progress.innerHTML = '';
-      for (let i = 1; i <= 10; i++) {
+      const totalLevels = currentStory.levels.length;
+      for (let i = 1; i <= totalLevels; i++) {
         const dot = document.createElement('div');
         dot.className = 'progress-dot';
-        if (gameState.completedLevels.includes(i)) {
-          dot.classList.add('completed');
-        } else if (i === gameState.currentLevel) {
-          dot.classList.add('current');
-        }
+        if (gameState.completedLevels.includes(i)) dot.classList.add('completed');
+        else if (i === gameState.currentLevel) dot.classList.add('current');
         progress.appendChild(dot);
       }
     }
 
-    // Render level
     function renderLevel() {
       renderProgress();
-      const level = LEVELS[gameState.currentLevel - 1];
-
-      // Set level-specific image
-      gameImage.src = LEVEL_IMAGES[gameState.currentLevel];
+      const level = currentStory.levels[gameState.currentLevel - 1];
 
       if (level.type === 'review') {
         renderReviewLevel();
@@ -831,21 +792,15 @@
       setImageState('waiting');
     }
 
-    // Render normal level
     function renderNormalLevel(level) {
       rhymeContainer.innerHTML = '';
 
-      RHYME_LINES.forEach((line, index) => {
+      currentStory.lines.forEach((line, index) => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
 
         if (index === level.lineIndex) {
-          if (level.wordInSuffix) {
-            const suffixWithBlank = line.suffix.replace(level.word, `<span class="blank" id="blank">${colorizeWord(level.word)}</span>`);
-            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank;
-          } else {
-            lineDiv.innerHTML = colorizeText(line.text) + ' <span class="blank" id="blank">' + colorizeWord(line.word) + '</span>' + colorizeText(line.suffix || '');
-          }
+          lineDiv.innerHTML = colorizeText(line.text) + ' <span class="blank" id="blank">' + colorizeWord(line.word) + '</span>' + colorizeText(line.suffix || '');
         } else {
           if (line.word) {
             lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + colorizeText(line.suffix || '');
@@ -860,10 +815,9 @@
       renderAnswerButtons(level.options, level.word);
     }
 
-    // Render review level (level 10)
     function renderReviewLevel() {
       if (gameState.reviewBlanks.length === 0) {
-        const availableWords = LEVELS.slice(0, 9).map((l, i) => ({ ...l, levelIndex: i }));
+        const availableWords = currentStory.levels.slice(0, -1).map((l, i) => ({ ...l, levelIndex: i }));
         const shuffled = availableWords.sort(() => Math.random() - 0.5);
         gameState.reviewBlanks = shuffled.slice(0, 3);
         gameState.reviewAnswered = 0;
@@ -871,7 +825,7 @@
 
       rhymeContainer.innerHTML = '';
 
-      RHYME_LINES.forEach((line, index) => {
+      currentStory.lines.forEach((line, index) => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
 
@@ -879,19 +833,9 @@
 
         if (reviewBlank) {
           const isAnswered = reviewBlank.answered;
-          const isActive = !isAnswered &&
-            gameState.reviewBlanks.filter(rb => rb.answered).length ===
-            gameState.reviewBlanks.indexOf(reviewBlank);
-
-          if (reviewBlank.wordInSuffix) {
-            const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
-            const suffixWithBlank = line.suffix.replace(reviewBlank.word,
-              `<span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>`);
-            lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + suffixWithBlank;
-          } else {
-            const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
-            lineDiv.innerHTML = colorizeText(line.text) + ` <span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>` + colorizeText(line.suffix || '');
-          }
+          const isActive = !isAnswered && gameState.reviewBlanks.filter(rb => rb.answered).length === gameState.reviewBlanks.indexOf(reviewBlank);
+          const blankClass = `review-blank ${isAnswered ? 'filled' : ''} ${isActive ? 'active' : ''}`;
+          lineDiv.innerHTML = colorizeText(line.text) + ` <span class="${blankClass}" data-word="${reviewBlank.word}">${colorizeWord(reviewBlank.word)}</span>` + colorizeText(line.suffix || '');
         } else if (line.word) {
           lineDiv.innerHTML = colorizeText(line.text) + ' ' + colorizeWord(line.word) + colorizeText(line.suffix || '');
         } else {
@@ -908,10 +852,8 @@
       }
     }
 
-    // Render answer buttons
     function renderAnswerButtons(options, correctWord, isReview = false) {
       answersContainer.innerHTML = '';
-
       const shuffled = [...options].sort(() => Math.random() - 0.5);
 
       shuffled.forEach(option => {
@@ -924,7 +866,6 @@
       });
     }
 
-    // Handle answer
     function handleAnswer(selected, correct, isReview = false) {
       const buttons = answersContainer.querySelectorAll('.answer-btn');
       const clickedBtn = Array.from(buttons).find(btn => btn.dataset.word === selected);
@@ -936,17 +877,11 @@
         if (isReview) {
           const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
           gameState.reviewBlanks[answeredCount].answered = true;
-
           const blank = document.querySelector(`.review-blank[data-word="${correct}"]`);
-          if (blank) {
-            blank.classList.remove('active');
-            blank.classList.add('filled');
-          }
+          if (blank) { blank.classList.remove('active'); blank.classList.add('filled'); }
         } else {
           const blank = document.getElementById('blank');
-          if (blank) {
-            blank.classList.add('filled');
-          }
+          if (blank) blank.classList.add('filled');
         }
 
         setImageState('correct');
@@ -957,7 +892,6 @@
             const answeredCount = gameState.reviewBlanks.filter(rb => rb.answered).length;
             if (answeredCount >= 3) {
               gameState.completedLevels.push(gameState.currentLevel);
-              saveState();
               showCompleteScreen();
             } else {
               renderReviewLevel();
@@ -966,9 +900,7 @@
           } else {
             gameState.completedLevels.push(gameState.currentLevel);
             gameState.currentLevel++;
-            saveState();
-
-            if (gameState.currentLevel > 10) {
+            if (gameState.currentLevel > currentStory.levels.length) {
               showCompleteScreen();
             } else {
               renderLevel();
@@ -979,19 +911,14 @@
         clickedBtn.classList.add('wrong');
         clickedBtn.disabled = true;
         setImageState('wrong');
-
-        setTimeout(() => {
-          setImageState('waiting');
-        }, 800);
+        setTimeout(() => setImageState('waiting'), 800);
       }
     }
 
-    // Set image state
     function setImageState(state) {
       gameImage.className = 'level-image ' + state;
     }
 
-    // Show stars animation
     function showStars() {
       for (let i = 0; i < 6; i++) {
         const star = document.createElement('div');
@@ -1000,17 +927,14 @@
         star.style.left = (35 + Math.random() * 30) + '%';
         star.style.top = (35 + Math.random() * 20) + '%';
         star.style.animationDelay = (Math.random() * 0.3) + 's';
-        star.style.color = '#4a4a4a';
+        star.style.color = '#D4A017';
         starsContainer.appendChild(star);
-
         setTimeout(() => star.remove(), 1500);
       }
     }
 
-    // Show confetti
     function showConfetti() {
       const colors = ['#4a4a4a', '#888', '#aaa', '#ccc', '#ddd'];
-
       for (let i = 0; i < 40; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
@@ -1019,15 +943,13 @@
         confetti.style.animationDelay = (Math.random() * 2) + 's';
         confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
         confettiContainer.appendChild(confetti);
-
         setTimeout(() => confetti.remove(), 5000);
       }
     }
 
-    // Show complete screen
     function showCompleteScreen() {
       completeRhyme.innerHTML = '';
-      RHYME_LINES.forEach(line => {
+      currentStory.lines.forEach(line => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
         if (line.word) {
@@ -1037,7 +959,6 @@
         }
         completeRhyme.appendChild(lineDiv);
       });
-
       showScreen('complete');
     }
 
