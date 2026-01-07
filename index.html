@@ -552,6 +552,124 @@
       50% { transform: scale(1.05); }
     }
 
+    /* Mode toggle */
+    .mode-toggle {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .mode-toggle-switch {
+      width: 36px;
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .mode-toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .mode-toggle.active .mode-toggle-switch {
+      background: #D4A017;
+    }
+
+    .mode-toggle.active .mode-toggle-switch::after {
+      transform: translateX(16px);
+    }
+
+    .mode-toggle-label {
+      font-size: 18px;
+    }
+
+    /* Letter buttons for spelling mode */
+    .letter-btn {
+      font-family: 'Borel', cursive;
+      font-size: 28px;
+      width: 50px;
+      height: 50px;
+      background-color: #fff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .letter-btn:hover:not(:disabled) {
+      border-color: #999;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .letter-btn.correct {
+      background-color: #D4A017;
+      border-color: #D4A017;
+    }
+
+    .letter-btn.correct span {
+      color: white !important;
+    }
+
+    .letter-btn.wrong {
+      background-color: #f5f5f5;
+      border-color: #ccc;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    .letter-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Spelling progress display */
+    .spelling-progress {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .spelling-slot {
+      font-family: 'Borel', cursive;
+      font-size: 28px;
+      min-width: 35px;
+      height: 45px;
+      border-bottom: 3px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s ease;
+    }
+
+    .spelling-slot.current {
+      border-color: #D4A017;
+    }
+
+    .spelling-slot.filled {
+      border-color: #4a4a4a;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       body { font-size: 20px; padding: 8px; }
@@ -572,6 +690,13 @@
       .story-card h3 { font-size: 14px; }
       .story-card p { font-size: 11px; }
       .speak-btn { width: 45px; height: 45px; font-size: 20px; bottom: 15px; right: 15px; }
+      .mode-toggle { right: 10px; top: 10px; gap: 5px; }
+      .mode-toggle-label { font-size: 14px; }
+      .mode-toggle-switch { width: 30px; height: 16px; }
+      .mode-toggle-switch::after { width: 12px; height: 12px; }
+      .mode-toggle.active .mode-toggle-switch::after { transform: translateX(14px); }
+      .letter-btn { width: 40px; height: 40px; font-size: 22px; }
+      .spelling-slot { min-width: 28px; height: 38px; font-size: 22px; }
     }
   </style>
 </head>
@@ -596,6 +721,10 @@
       <button class="back-btn" id="back-btn">☜</button>
       <div class="title" id="story-title">jugando con chucho</div>
       <div class="progress" id="progress"></div>
+      <div class="mode-toggle" id="mode-toggle" title="Modo deletreo">
+        <span class="mode-toggle-label">✎</span>
+        <div class="mode-toggle-switch"></div>
+      </div>
     </div>
 
     <div class="game-container">
@@ -772,6 +901,12 @@
 
     // ============ GAME STATE ============
     let currentStory = null;
+    let spellingMode = false;
+    let spellingState = {
+      currentWord: '',
+      currentIndex: 0,
+      letterOptions: []
+    };
     let gameState = {
       currentLevel: 1,
       completedLevels: [],
@@ -798,6 +933,7 @@
     const menuBtn = document.getElementById('menu-btn');
     const starsContainer = document.getElementById('stars-container');
     const confettiContainer = document.getElementById('confetti-container');
+    const modeToggle = document.getElementById('mode-toggle');
 
     // ============ INITIALIZATION ============
     function init() {
@@ -849,6 +985,11 @@
       menuBtn.onclick = () => {
         currentStory = null;
         showScreen('title');
+      };
+      modeToggle.onclick = () => {
+        spellingMode = !spellingMode;
+        modeToggle.classList.toggle('active', spellingMode);
+        renderLevel(); // Re-render with new mode
       };
     }
 
@@ -997,16 +1138,128 @@
 
     function renderAnswerButtons(options, correctWord, isReview = false) {
       answersContainer.innerHTML = '';
-      const shuffled = [...options].sort(() => Math.random() - 0.5);
 
-      shuffled.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'answer-btn';
-        btn.innerHTML = colorizeWord(option);
-        btn.dataset.word = option;
-        btn.onclick = () => handleAnswer(option, correctWord, isReview);
-        answersContainer.appendChild(btn);
+      if (spellingMode && !isReview) {
+        // Spelling mode: show letter-by-letter input
+        renderSpellingMode(correctWord);
+      } else {
+        // Word mode: show word buttons
+        const shuffled = [...options].sort(() => Math.random() - 0.5);
+
+        shuffled.forEach(option => {
+          const btn = document.createElement('button');
+          btn.className = 'answer-btn';
+          btn.innerHTML = colorizeWord(option);
+          btn.dataset.word = option;
+          btn.onclick = () => handleAnswer(option, correctWord, isReview);
+          answersContainer.appendChild(btn);
+        });
+      }
+    }
+
+    function renderSpellingMode(correctWord) {
+      spellingState.currentWord = correctWord;
+      spellingState.currentIndex = 0;
+
+      // Create spelling progress display
+      const progressDiv = document.createElement('div');
+      progressDiv.className = 'spelling-progress';
+      progressDiv.id = 'spelling-progress';
+
+      correctWord.split('').forEach((letter, idx) => {
+        const slot = document.createElement('div');
+        slot.className = 'spelling-slot' + (idx === 0 ? ' current' : '');
+        slot.dataset.index = idx;
+        progressDiv.appendChild(slot);
       });
+
+      answersContainer.appendChild(progressDiv);
+
+      // Generate letter options
+      renderLetterOptions(correctWord, 0);
+    }
+
+    function renderLetterOptions(word, currentIndex) {
+      // Remove existing letter buttons
+      const existingBtns = answersContainer.querySelectorAll('.letter-btn');
+      existingBtns.forEach(btn => btn.remove());
+
+      const correctLetter = word[currentIndex].toLowerCase();
+
+      // Get some random wrong letters
+      const alphabet = 'abcdefghijklmnñopqrstuvwxyz';
+      const wrongLetters = alphabet.split('').filter(l => l !== correctLetter);
+      const shuffledWrong = wrongLetters.sort(() => Math.random() - 0.5).slice(0, 5);
+
+      // Combine and shuffle
+      const options = [correctLetter, ...shuffledWrong].sort(() => Math.random() - 0.5);
+
+      // Create letter buttons
+      const btnContainer = document.createElement('div');
+      btnContainer.style.cssText = 'display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;';
+
+      options.forEach(letter => {
+        const btn = document.createElement('button');
+        btn.className = 'letter-btn';
+        btn.innerHTML = `<span class="${getLetterClass(letter)}">${letter}</span>`;
+        btn.dataset.letter = letter;
+        btn.onclick = () => handleLetterAnswer(letter, word, currentIndex);
+        btnContainer.appendChild(btn);
+      });
+
+      answersContainer.appendChild(btnContainer);
+    }
+
+    function handleLetterAnswer(selected, word, currentIndex) {
+      const correctLetter = word[currentIndex].toLowerCase();
+      const buttons = answersContainer.querySelectorAll('.letter-btn');
+      const clickedBtn = Array.from(buttons).find(btn => btn.dataset.letter === selected);
+      const slots = document.querySelectorAll('.spelling-slot');
+
+      if (selected === correctLetter) {
+        clickedBtn.classList.add('correct');
+
+        // Fill in the slot
+        slots[currentIndex].innerHTML = `<span class="${getLetterClass(selected)}">${selected}</span>`;
+        slots[currentIndex].classList.remove('current');
+        slots[currentIndex].classList.add('filled');
+
+        // Check if word is complete
+        if (currentIndex + 1 >= word.length) {
+          // Word complete!
+          buttons.forEach(btn => btn.disabled = true);
+
+          const blank = document.getElementById('blank');
+          if (blank) blank.classList.add('filled');
+
+          setImageState('correct');
+          showStars();
+
+          setTimeout(() => {
+            gameState.completedLevels.push(gameState.currentLevel);
+            gameState.currentLevel++;
+            if (gameState.currentLevel > currentStory.levels.length) {
+              showCompleteScreen();
+            } else {
+              renderLevel();
+            }
+          }, 1500);
+        } else {
+          // Next letter
+          slots[currentIndex + 1].classList.add('current');
+          spellingState.currentIndex = currentIndex + 1;
+
+          // Small delay before showing next letters
+          setTimeout(() => {
+            renderLetterOptions(word, currentIndex + 1);
+          }, 300);
+        }
+      } else {
+        clickedBtn.classList.add('wrong');
+        clickedBtn.disabled = true;
+        setImageState('wrong');
+        setTimeout(() => setImageState('waiting'), 400);
+      }
     }
 
     function handleAnswer(selected, correct, isReview = false) {
