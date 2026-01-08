@@ -948,7 +948,7 @@
     <div class="game-container">
       <div class="image-container" id="media-container">
         <img id="game-image" class="level-image" src="" alt="Ilustración">
-        <video id="game-video" class="level-video" src="" muted playsinline style="display:none;"></video>
+        <video id="game-video" class="level-video" src="" muted playsinline preload="metadata" style="display:none;"></video>
       </div>
       <div class="rhyme-container" id="rhyme-container"></div>
     </div>
@@ -963,7 +963,7 @@
     <div class="game-container" style="margin-bottom: 20px;">
       <div class="image-container">
         <img id="complete-image" class="level-image" src="" alt="Felicidades">
-        <video id="complete-video" class="level-video" src="" muted playsinline style="display:none;"></video>
+        <video id="complete-video" class="level-video" src="" muted playsinline preload="metadata" style="display:none;"></video>
       </div>
       <div class="rhyme-container" id="complete-rhyme"></div>
     </div>
@@ -989,9 +989,9 @@
           { text: 'son los tres', word: 'exploradores' },
           { text: 'suben a la', word: 'montaña' },
           { text: 'con alegría y', word: 'maña' },
-          { text: 'bajan en el', word: 'trineo' },
-          { text: '¡qué bonito', word: 'paseo', suffix: '!' },
-          { text: 'les encanta la', word: 'nieve' }
+          { text: 'el frío no les', word: 'mueve' },
+          { text: 'les encanta la', word: 'nieve' },
+          { text: '¡qué', word: 'felicidad', suffix: '!' }
         ],
         levels: [
           { lineIndex: 0, word: 'hermanos', options: ['hermanos', 'gusanos', 'veranos'] },
@@ -1000,9 +1000,9 @@
           { lineIndex: 3, word: 'exploradores', options: ['exploradores', 'cazadores', 'pescadores'] },
           { lineIndex: 4, word: 'montaña', options: ['montaña', 'cabaña', 'mañana'] },
           { lineIndex: 5, word: 'maña', options: ['maña', 'hazaña', 'pestaña'] },
-          { lineIndex: 6, word: 'trineo', options: ['trineo', 'paseo', 'correo'] },
-          { lineIndex: 7, word: 'paseo', options: ['paseo', 'deseo', 'museo'] },
-          { lineIndex: 8, word: 'nieve', options: ['nieve', 'llueve', 'nueve'] },
+          { lineIndex: 6, word: 'mueve', options: ['mueve', 'llueve', 'atreve'] },
+          { lineIndex: 7, word: 'nieve', options: ['nieve', 'relieve', 'nueve'] },
+          { lineIndex: 8, word: 'felicidad', options: ['felicidad', 'amistad', 'verdad'] },
           { type: 'review' }
         ]
       },
@@ -1309,11 +1309,11 @@
       if (currentStory.video) {
         gameImage.style.display = 'none';
         gameVideo.style.display = 'block';
-        gameVideo.src = currentStory.video;
+        gameVideo.src = currentStory.video + '#t=0.001';
         setupIntermittentVideo(gameVideo);
         completeImage.style.display = 'none';
         completeVideo.style.display = 'block';
-        completeVideo.src = currentStory.video;
+        completeVideo.src = currentStory.video + '#t=0.001';
         setupIntermittentVideo(completeVideo);
       } else {
         gameImage.style.display = 'block';
