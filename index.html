@@ -411,6 +411,43 @@
       color: #888;
     }
 
+    /* Locked story cards */
+    .story-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(60%);
+    }
+
+    .story-card.locked:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: #e0e0e0;
+    }
+
+    .story-card.locked::before,
+    .story-card.locked::after {
+      color: #ddd;
+    }
+
+    .story-card.locked:hover::before,
+    .story-card.locked:hover::after {
+      color: #ddd;
+    }
+
+    /* Story status indicators */
+    .story-status {
+      margin-left: 6px;
+      font-size: 14px;
+    }
+
+    .story-card.completed .story-status {
+      color: #43A047;
+    }
+
+    .story-card.locked .story-status {
+      color: #999;
+    }
+
     .play-btn {
       font-family: 'Borel', cursive;
       font-size: 28px;
@@ -1136,6 +1173,52 @@
       reviewAnswered: 0
     };
 
+    // ============ PROGRESS TRACKING ============
+    const STORAGE_KEY = 'cuentos-progress';
+
+    function loadProgress() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : { completedStories: [] };
+      } catch (e) {
+        return { completedStories: [] };
+      }
+    }
+
+    function saveProgress(progress) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      } catch (e) {
+        // Storage not available
+      }
+    }
+
+    function markStoryCompleted(storyId) {
+      const progress = loadProgress();
+      if (!progress.completedStories.includes(storyId)) {
+        progress.completedStories.push(storyId);
+        saveProgress(progress);
+      }
+    }
+
+    function isStoryCompleted(storyId) {
+      const progress = loadProgress();
+      return progress.completedStories.includes(storyId);
+    }
+
+    function isStoryUnlocked(storyId) {
+      const storyOrder = ['snow', 'bird', 'swan', 'cabin'];
+      const storyIndex = storyOrder.indexOf(storyId);
+
+      // First two stories always unlocked
+      if (storyIndex <= 1) return true;
+
+      // Others require completing previous stories
+      const progress = loadProgress();
+      const requiredStories = storyOrder.slice(0, storyIndex);
+      return requiredStories.every(id => progress.completedStories.includes(id));
+    }
+
     // ============ DOM ELEMENTS ============
     const titleScreen = document.getElementById('title-screen');
     const gameScreen = document.getElementById('game-screen');
@@ -1174,21 +1257,38 @@
 
       Object.values(STORIES).forEach(story => {
         const card = document.createElement('div');
-        card.className = 'story-card';
+        const unlocked = isStoryUnlocked(story.id);
+        const completed = isStoryCompleted(story.id);
+
+        card.className = 'story-card' + (unlocked ? '' : ' locked') + (completed ? ' completed' : '');
+
         const mediaHTML = story.video
           ? `<video src="${story.video}#t=0.001" muted playsinline preload="metadata" class="story-video"></video>`
           : `<img src="${story.image}" alt="${story.title}">`;
+
+        const statusIcon = completed ? '<span class="story-status">✓</span>' : (!unlocked ? '<span class="story-status">🔒</span>' : '');
+
         card.innerHTML = `
           ${mediaHTML}
-          <h3>${story.title}</h3>
+          <h3>${story.title}${statusIcon}</h3>
           <p>${story.description}</p>
         `;
-        card.onclick = () => startStory(story.id);
+
+        if (unlocked) {
+          card.onclick = () => startStory(story.id);
+        } else {
+          card.onclick = () => {
+            // Shake animation for locked stories
+            card.style.animation = 'shake 0.4s ease-in-out';
+            setTimeout(() => card.style.animation = '', 400);
+          };
+        }
+
         storySelection.appendChild(card);
 
-        // Setup intermittent playback for video cards
+        // Setup intermittent playback for video cards (only if unlocked)
         const video = card.querySelector('video');
-        if (video) {
+        if (video && unlocked) {
           video.addEventListener('loadeddata', () => {
             video.pause();
             video.currentTime = 0;
@@ -1247,6 +1347,7 @@
       switch (screenName) {
         case 'title':
           titleScreen.classList.add('active');
+          renderStorySelection(); // Re-render to show updated locked/completed states
           updateURL('/');
           break;
         case 'game':
@@ -1292,7 +1393,13 @@
       if (hash) {
         const story = Object.values(STORIES).find(s => s.hash === hash);
         if (story) {
-          startStory(story.id);
+          // Check if story is unlocked before starting
+          if (isStoryUnlocked(story.id)) {
+            startStory(story.id);
+          } else {
+            // Redirect to title if story is locked
+            showScreen('title');
+          }
           return;
         }
       }
@@ -1694,6 +1801,9 @@
     }
 
     function showCompleteScreen() {
+      // Mark story as completed
+      markStoryCompleted(currentStory.id);
+
       completeRhyme.innerHTML = '';
       currentStory.lines.forEach(line => {
         const lineDiv = document.createElement('div');
