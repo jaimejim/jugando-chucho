@@ -1203,7 +1203,12 @@
 
     function unlockAllStories() {
       const progress = loadProgress();
-      progress.completedStories = ['snow', 'bird', 'swan', 'cabin'];
+      // Toggle: if all unlocked, reset to empty; otherwise unlock all
+      if (progress.completedStories.length === 4) {
+        progress.completedStories = [];
+      } else {
+        progress.completedStories = ['snow', 'bird', 'swan', 'cabin'];
+      }
       saveProgress(progress);
       renderStorySelection();
     }
