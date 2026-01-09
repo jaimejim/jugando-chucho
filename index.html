@@ -1216,6 +1216,36 @@
           { lineIndex: 8, word: 'tortuga', options: ['tortuga', 'arruga', 'lechuga'] },
           { type: 'review' }
         ]
+      },
+      wolf: {
+        id: 'wolf',
+        hash: 'lb7po',
+        title: 'el lobo y el perro',
+        description: 'libertad o comodidad',
+        video: 'https://cdn.midjourney.com/video/b3036be9-966a-43b5-8022-91ad628ee168/0.mp4',
+        lines: [
+          { text: 'un lobo ve un perro', word: 'gordito' },
+          { text: 'que come un rico', word: 'trocito' },
+          { text: 'ven conmigo dice', word: 'amigo' },
+          { text: 'tendrás comida y', word: 'abrigo' },
+          { text: 'pero el lobo ve el', word: 'cuello' },
+          { text: 'marcado, nada', word: 'bello' },
+          { text: 'es de mi', word: 'collar' },
+          { text: 'no lo puedo', word: 'quitar' },
+          { text: '¡prefiero', word: 'libertad', suffix: '!' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'gordito', options: ['gordito', 'bonito', 'chiquito'] },
+          { lineIndex: 1, word: 'trocito', options: ['trocito', 'pedacito', 'ratito'] },
+          { lineIndex: 2, word: 'amigo', options: ['amigo', 'conmigo', 'abrigo'] },
+          { lineIndex: 3, word: 'abrigo', options: ['abrigo', 'amigo', 'castigo'] },
+          { lineIndex: 4, word: 'cuello', options: ['cuello', 'bello', 'sello'] },
+          { lineIndex: 5, word: 'bello', options: ['bello', 'destello', 'cabello'] },
+          { lineIndex: 6, word: 'collar', options: ['collar', 'lugar', 'hogar'] },
+          { lineIndex: 7, word: 'quitar', options: ['quitar', 'gritar', 'evitar'] },
+          { lineIndex: 8, word: 'libertad', options: ['libertad', 'amistad', 'verdad'] },
+          { type: 'review' }
+        ]
       }
     };
 
@@ -1288,10 +1318,10 @@
     function unlockAllStories() {
       const progress = loadProgress();
       // Toggle: if all unlocked, reset to empty; otherwise unlock all
-      if (progress.completedStories.length === 6) {
+      if (progress.completedStories.length === 7) {
         progress.completedStories = [];
       } else {
-        progress.completedStories = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise'];
+        progress.completedStories = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise', 'wolf'];
       }
       saveProgress(progress);
       renderStorySelection();
@@ -1303,7 +1333,7 @@
     }
 
     function isStoryUnlocked(storyId) {
-      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise'];
+      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise', 'wolf'];
       const storyIndex = storyOrder.indexOf(storyId);
 
       // First two stories always unlocked
