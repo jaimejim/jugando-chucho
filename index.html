@@ -1156,6 +1156,36 @@
           { lineIndex: 8, word: 'alegría', options: ['alegría', 'energía', 'sandía'] },
           { type: 'review' }
         ]
+      },
+      manta: {
+        id: 'manta',
+        hash: 'mn7ta',
+        title: 'la manta y la princesa',
+        description: 'aventuras en el mar',
+        video: 'https://cdn.midjourney.com/video/6c6e16fe-b46b-42b9-9d3a-0e7e3204cb28/0.mp4',
+        lines: [
+          { text: 'una manta blanca', word: 'gigante' },
+          { text: 'nada en el mar', word: 'brillante' },
+          { text: 'su amiga es la', word: 'princesa' },
+          { text: 'de las flores, qué', word: 'belleza' },
+          { text: 'viene a', word: 'buscarla' },
+          { text: 'en su lomo a', word: 'llevarla' },
+          { text: 'juntas cruzan el', word: 'mar' },
+          { text: 'aventuras van a', word: 'encontrar' },
+          { text: '¡qué bonita', word: 'amistad', suffix: '!' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'gigante', options: ['gigante', 'elefante', 'brillante'] },
+          { lineIndex: 1, word: 'brillante', options: ['brillante', 'elegante', 'distante'] },
+          { lineIndex: 2, word: 'princesa', options: ['princesa', 'sorpresa', 'promesa'] },
+          { lineIndex: 3, word: 'belleza', options: ['belleza', 'certeza', 'tristeza'] },
+          { lineIndex: 4, word: 'buscarla', options: ['buscarla', 'dejarla', 'mirarla'] },
+          { lineIndex: 5, word: 'llevarla', options: ['llevarla', 'amarla', 'cuidarla'] },
+          { lineIndex: 6, word: 'mar', options: ['mar', 'hogar', 'lugar'] },
+          { lineIndex: 7, word: 'encontrar', options: ['encontrar', 'explorar', 'soñar'] },
+          { lineIndex: 8, word: 'amistad', options: ['amistad', 'felicidad', 'libertad'] },
+          { type: 'review' }
+        ]
       }
     };
 
@@ -1228,10 +1258,10 @@
     function unlockAllStories() {
       const progress = loadProgress();
       // Toggle: if all unlocked, reset to empty; otherwise unlock all
-      if (progress.completedStories.length === 4) {
+      if (progress.completedStories.length === 5) {
         progress.completedStories = [];
       } else {
-        progress.completedStories = ['snow', 'bird', 'swan', 'cabin'];
+        progress.completedStories = ['snow', 'bird', 'swan', 'cabin', 'manta'];
       }
       saveProgress(progress);
       renderStorySelection();
@@ -1243,7 +1273,7 @@
     }
 
     function isStoryUnlocked(storyId) {
-      const storyOrder = ['snow', 'bird', 'swan', 'cabin'];
+      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta'];
       const storyIndex = storyOrder.indexOf(storyId);
 
       // First two stories always unlocked
