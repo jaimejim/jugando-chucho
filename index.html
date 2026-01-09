@@ -888,7 +888,7 @@
 
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
-    <h1 class="main-title">elige una historia</h1>
+    <h1 class="main-title">elige una <span id="secret-unlock" style="cursor: text;">historia</span></h1>
     <div class="decorative-line"></div>
 
     <div class="story-selection" id="story-selection">
@@ -1201,6 +1201,13 @@
       }
     }
 
+    function unlockAllStories() {
+      const progress = loadProgress();
+      progress.completedStories = ['snow', 'bird', 'swan', 'cabin'];
+      saveProgress(progress);
+      renderStorySelection();
+    }
+
     function isStoryCompleted(storyId) {
       const progress = loadProgress();
       return progress.completedStories.includes(storyId);
@@ -1331,6 +1338,9 @@
       };
       backInstructions.onclick = () => showScreen('title');
       backAuthor.onclick = () => showScreen('title');
+
+      // Secret easter egg: click "historia" to unlock all stories
+      document.getElementById('secret-unlock').onclick = unlockAllStories;
 
       // Handle browser back/forward
       window.onpopstate = handleRoute;
