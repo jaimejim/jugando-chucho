@@ -2703,11 +2703,24 @@
       const langCode = LANG_VOICES[currentLanguage];
       const langPrefix = langCode.split('-')[0];
 
-      // Prioritize enhanced voices for the current language
+      // Preferred voice names per language (iOS common voices)
+      const preferredVoices = {
+        es: ['mónica', 'monica', 'jorge'],
+        it: ['federica', 'alice', 'luca'],
+        en: ['siri', 'samantha', 'daniel'],
+        fi: ['satu', 'onni']
+      };
+
+      const preferred = preferredVoices[currentLanguage] || [];
+
+      // Priority: preferred + premium > preferred + enhanced > preferred > premium > enhanced > any
       const voice =
-        voices.find(v => v.lang === langCode && v.name.toLowerCase().includes('enhanced')) ||
-        voices.find(v => v.lang === langCode) ||
+        voices.find(v => v.lang.startsWith(langPrefix) && preferred.some(p => v.name.toLowerCase().includes(p)) && v.name.toLowerCase().includes('premium')) ||
+        voices.find(v => v.lang.startsWith(langPrefix) && preferred.some(p => v.name.toLowerCase().includes(p)) && v.name.toLowerCase().includes('enhanced')) ||
+        voices.find(v => v.lang.startsWith(langPrefix) && preferred.some(p => v.name.toLowerCase().includes(p))) ||
+        voices.find(v => v.lang.startsWith(langPrefix) && v.name.toLowerCase().includes('premium')) ||
         voices.find(v => v.lang.startsWith(langPrefix) && v.name.toLowerCase().includes('enhanced')) ||
+        voices.find(v => v.lang === langCode) ||
         voices.find(v => v.lang.startsWith(langPrefix));
       return voice || voices[0];
     }
