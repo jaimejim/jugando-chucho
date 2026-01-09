@@ -851,6 +851,37 @@
       color: #888 !important;
     }
 
+    /* Language selector */
+    .lang-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .lang-btn {
+      padding: 4px 10px;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Borel', cursive;
+      font-size: 14px;
+      color: #888;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn:hover {
+      border-color: #999;
+      color: #666;
+    }
+
+    .lang-btn.active {
+      background: #3a3a3a;
+      border-color: #3a3a3a;
+      color: #fff;
+    }
+
     /* iPad landscape - use full screen */
     @media (min-width: 768px) and (max-width: 1400px) and (orientation: landscape) {
       body { padding: 15px 30px; }
@@ -912,7 +943,13 @@
 
   <!-- Title Screen -->
   <div class="screen title-screen" id="title-screen">
-    <h1 class="main-title">elige una <span id="secret-unlock" style="cursor: text;">historia</span></h1>
+    <div class="lang-selector" id="lang-selector">
+      <button class="lang-btn active" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="it">IT</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fi">FI</button>
+    </div>
+    <h1 class="main-title" id="main-title">elige una <span id="secret-unlock" style="cursor: text;">historia</span></h1>
     <div class="decorative-line"></div>
 
     <div class="story-selection" id="story-selection">
@@ -1035,222 +1072,875 @@
   </div>
 
   <script>
+    // ============ LANGUAGE SYSTEM ============
+    const LANG_KEY = 'cuentos-language';
+    let currentLanguage = localStorage.getItem(LANG_KEY) || 'es';
+
+    const UI_TEXT = {
+      es: {
+        chooseStory: 'elige una',
+        storyWord: 'historia',
+        instructions: 'instrucciones',
+        author: 'autor',
+        playAgain: 'jugar de nuevo',
+        otherStories: 'otras historias',
+        congrats: '¡muy bien!',
+        readAloud: 'Leer en voz alta',
+        spellingMode: 'Modo deletreo'
+      },
+      it: {
+        chooseStory: 'scegli una',
+        storyWord: 'storia',
+        instructions: 'istruzioni',
+        author: 'autore',
+        playAgain: 'gioca ancora',
+        otherStories: 'altre storie',
+        congrats: 'molto bene!',
+        readAloud: 'Leggi ad alta voce',
+        spellingMode: 'Modo ortografia'
+      },
+      en: {
+        chooseStory: 'choose a',
+        storyWord: 'story',
+        instructions: 'instructions',
+        author: 'author',
+        playAgain: 'play again',
+        otherStories: 'other stories',
+        congrats: 'well done!',
+        readAloud: 'Read aloud',
+        spellingMode: 'Spelling mode'
+      },
+      fi: {
+        chooseStory: 'valitse',
+        storyWord: 'tarina',
+        instructions: 'ohjeet',
+        author: 'tekijä',
+        playAgain: 'pelaa uudelleen',
+        otherStories: 'muut tarinat',
+        congrats: 'hienoa!',
+        readAloud: 'Lue ääneen',
+        spellingMode: 'Tavausmoodi'
+      }
+    };
+
+    const LANG_VOICES = {
+      es: 'es-ES',
+      it: 'it-IT',
+      en: 'en-GB',
+      fi: 'fi-FI'
+    };
+
     // ============ STORIES DATA ============
     const STORIES = {
       snow: {
         id: 'snow',
         hash: 'nv3ki',
-        title: 'hermanos en la nieve',
-        description: 'Giulia, Giacomo y Giovanni',
         video: 'https://cdn.midjourney.com/video/38467d78-2dc2-4477-9c84-421022e852a1/2.mp4',
-        lines: [
-          { text: 'Giulia y sus', word: 'hermanos' },
-          { text: 'juegan dándose las', word: 'manos' },
-          { text: 'con sus guantes de', word: 'colores' },
-          { text: 'son los tres', word: 'exploradores' },
-          { text: 'suben a la', word: 'montaña' },
-          { text: 'con alegría y', word: 'maña' },
-          { text: 'el frío no les', word: 'mueve' },
-          { text: 'les encanta la', word: 'nieve' },
-          { text: '¡qué', word: 'felicidad', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'hermanos', options: ['hermanos', 'gusanos', 'veranos'] },
-          { lineIndex: 1, word: 'manos', options: ['manos', 'años', 'baños'] },
-          { lineIndex: 2, word: 'colores', options: ['colores', 'dolores', 'amores'] },
-          { lineIndex: 3, word: 'exploradores', options: ['exploradores', 'cazadores', 'pescadores'] },
-          { lineIndex: 4, word: 'montaña', options: ['montaña', 'cabaña', 'mañana'] },
-          { lineIndex: 5, word: 'maña', options: ['maña', 'hazaña', 'pestaña'] },
-          { lineIndex: 6, word: 'mueve', options: ['mueve', 'llueve', 'atreve'] },
-          { lineIndex: 7, word: 'nieve', options: ['nieve', 'relieve', 'nueve'] },
-          { lineIndex: 8, word: 'felicidad', options: ['felicidad', 'amistad', 'verdad'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'hermanos en la nieve',
+            description: 'Giulia, Giacomo y Giovanni',
+            lines: [
+              { text: 'Giulia y sus', word: 'hermanos' },
+              { text: 'juegan dándose las', word: 'manos' },
+              { text: 'con sus guantes de', word: 'colores' },
+              { text: 'son los tres', word: 'exploradores' },
+              { text: 'suben a la', word: 'montaña' },
+              { text: 'con alegría y', word: 'maña' },
+              { text: 'el frío no les', word: 'mueve' },
+              { text: 'les encanta la', word: 'nieve' },
+              { text: '¡qué', word: 'felicidad', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'hermanos', options: ['hermanos', 'gusanos', 'veranos'] },
+              { lineIndex: 1, word: 'manos', options: ['manos', 'años', 'baños'] },
+              { lineIndex: 2, word: 'colores', options: ['colores', 'dolores', 'amores'] },
+              { lineIndex: 3, word: 'exploradores', options: ['exploradores', 'cazadores', 'pescadores'] },
+              { lineIndex: 4, word: 'montaña', options: ['montaña', 'cabaña', 'mañana'] },
+              { lineIndex: 5, word: 'maña', options: ['maña', 'hazaña', 'pestaña'] },
+              { lineIndex: 6, word: 'mueve', options: ['mueve', 'llueve', 'atreve'] },
+              { lineIndex: 7, word: 'nieve', options: ['nieve', 'relieve', 'nueve'] },
+              { lineIndex: 8, word: 'felicidad', options: ['felicidad', 'amistad', 'verdad'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'fratelli nella neve',
+            description: 'Giulia, Giacomo e Giovanni',
+            lines: [
+              { text: 'Giulia e i suoi', word: 'fratelli' },
+              { text: 'giocano tutti', word: 'belli' },
+              { text: 'con guanti di', word: 'colori' },
+              { text: 'sono tre', word: 'esploratori' },
+              { text: 'salgono la', word: 'montagna' },
+              { text: 'con gioia in', word: 'compagnia' },
+              { text: 'il freddo non fa', word: 'niente' },
+              { text: 'la neve è', word: 'divertente' },
+              { text: 'che', word: 'felicità', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'fratelli', options: ['fratelli', 'capelli', 'anelli'] },
+              { lineIndex: 1, word: 'belli', options: ['belli', 'quelli', 'fratelli'] },
+              { lineIndex: 2, word: 'colori', options: ['colori', 'fiori', 'amori'] },
+              { lineIndex: 3, word: 'esploratori', options: ['esploratori', 'cacciatori', 'pescatori'] },
+              { lineIndex: 4, word: 'montagna', options: ['montagna', 'campagna', 'lasagna'] },
+              { lineIndex: 5, word: 'compagnia', options: ['compagnia', 'allegria', 'magia'] },
+              { lineIndex: 6, word: 'niente', options: ['niente', 'dente', 'gente'] },
+              { lineIndex: 7, word: 'divertente', options: ['divertente', 'sorridente', 'contente'] },
+              { lineIndex: 8, word: 'felicità', options: ['felicità', 'bontà', 'libertà'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'siblings in the snow',
+            description: 'Giulia, Giacomo and Giovanni',
+            lines: [
+              { text: 'Giulia and her', word: 'brothers' },
+              { text: 'they play like no', word: 'others' },
+              { text: 'with gloves of every', word: 'hue' },
+              { text: 'explorers through and', word: 'through' },
+              { text: 'they climb up so', word: 'high' },
+              { text: 'under the blue', word: 'sky' },
+              { text: 'the cold cannot', word: 'stop' },
+              { text: 'the fun at the', word: 'top' },
+              { text: 'such', word: 'happiness', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'brothers', options: ['brothers', 'mothers', 'others'] },
+              { lineIndex: 1, word: 'others', options: ['others', 'brothers', 'feathers'] },
+              { lineIndex: 2, word: 'hue', options: ['hue', 'blue', 'new'] },
+              { lineIndex: 3, word: 'through', options: ['through', 'true', 'blue'] },
+              { lineIndex: 4, word: 'high', options: ['high', 'sky', 'fly'] },
+              { lineIndex: 5, word: 'sky', options: ['sky', 'high', 'fly'] },
+              { lineIndex: 6, word: 'stop', options: ['stop', 'top', 'drop'] },
+              { lineIndex: 7, word: 'top', options: ['top', 'stop', 'hop'] },
+              { lineIndex: 8, word: 'happiness', options: ['happiness', 'kindness', 'sweetness'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'sisarukset lumessa',
+            description: 'Giulia, Giacomo ja Giovanni',
+            lines: [
+              { text: 'Giulia ja hänen', word: 'veljensä' },
+              { text: 'leikkivät', word: 'yhdessä' },
+              { text: 'väriset', word: 'käsineet' },
+              { text: 'kolme', word: 'tutkijaa' },
+              { text: 'kiipeävät', word: 'vuorelle' },
+              { text: 'ilolla ja', word: 'voimalla' },
+              { text: 'kylmä ei', word: 'haittaa' },
+              { text: 'he rakastavat', word: 'lunta' },
+              { text: 'mikä', word: 'ilo', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'veljensä', options: ['veljensä', 'siskonsa', 'ystävänsä'] },
+              { lineIndex: 1, word: 'yhdessä', options: ['yhdessä', 'yksin', 'ulkona'] },
+              { lineIndex: 2, word: 'käsineet', options: ['käsineet', 'hatut', 'kengät'] },
+              { lineIndex: 3, word: 'tutkijaa', options: ['tutkijaa', 'lasta', 'ystävää'] },
+              { lineIndex: 4, word: 'vuorelle', options: ['vuorelle', 'metsään', 'kotiin'] },
+              { lineIndex: 5, word: 'voimalla', options: ['voimalla', 'hitaasti', 'nopeasti'] },
+              { lineIndex: 6, word: 'haittaa', options: ['haittaa', 'auta', 'satu'] },
+              { lineIndex: 7, word: 'lunta', options: ['lunta', 'sadetta', 'aurinkoa'] },
+              { lineIndex: 8, word: 'ilo', options: ['ilo', 'suru', 'väsy'] },
+              { type: 'review' }
+            ]
+          }
+        }
       },
       bird: {
         id: 'bird',
         hash: 'pj4ro',
-        title: 'el pájaro rojo',
-        description: 'un pájaro entre las rosas',
         video: 'https://cdn.midjourney.com/video/5084ed15-958e-4427-aecf-8732a458e3df/0.mp4',
-        lines: [
-          { text: 'un pájaro', word: 'rojo' },
-          { text: 'lo miro con un', word: 'ojo' },
-          { text: 'vive entre las', word: 'rosas' },
-          { text: 'sus plumas son', word: 'hermosas' },
-          { text: 'canta su', word: 'canción' },
-          { text: 'con mucha', word: 'emoción' },
-          { text: 'vuela sin', word: 'parar' },
-          { text: 'hasta su', word: 'hogar' },
-          { text: '¡qué bonito', word: 'color', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'rojo', options: ['rojo', 'azul', 'verde'] },
-          { lineIndex: 1, word: 'ojo', options: ['ojo', 'hijo', 'fijo'] },
-          { lineIndex: 2, word: 'rosas', options: ['rosas', 'casas', 'cosas'] },
-          { lineIndex: 3, word: 'hermosas', options: ['hermosas', 'preciosas', 'graciosas'] },
-          { lineIndex: 4, word: 'canción', options: ['canción', 'camión', 'avión'] },
-          { lineIndex: 5, word: 'emoción', options: ['emoción', 'pasión', 'ilusión'] },
-          { lineIndex: 6, word: 'parar', options: ['parar', 'cantar', 'volar'] },
-          { lineIndex: 7, word: 'hogar', options: ['hogar', 'lugar', 'jugar'] },
-          { lineIndex: 8, word: 'color', options: ['color', 'calor', 'amor'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'el pájaro rojo',
+            description: 'un pájaro entre las rosas',
+            lines: [
+              { text: 'un pájaro', word: 'rojo' },
+              { text: 'lo miro con un', word: 'ojo' },
+              { text: 'vive entre las', word: 'rosas' },
+              { text: 'sus plumas son', word: 'hermosas' },
+              { text: 'canta su', word: 'canción' },
+              { text: 'con mucha', word: 'emoción' },
+              { text: 'vuela sin', word: 'parar' },
+              { text: 'hasta su', word: 'hogar' },
+              { text: '¡qué bonito', word: 'color', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'rojo', options: ['rojo', 'azul', 'verde'] },
+              { lineIndex: 1, word: 'ojo', options: ['ojo', 'hijo', 'fijo'] },
+              { lineIndex: 2, word: 'rosas', options: ['rosas', 'casas', 'cosas'] },
+              { lineIndex: 3, word: 'hermosas', options: ['hermosas', 'preciosas', 'graciosas'] },
+              { lineIndex: 4, word: 'canción', options: ['canción', 'camión', 'avión'] },
+              { lineIndex: 5, word: 'emoción', options: ['emoción', 'pasión', 'ilusión'] },
+              { lineIndex: 6, word: 'parar', options: ['parar', 'cantar', 'volar'] },
+              { lineIndex: 7, word: 'hogar', options: ['hogar', 'lugar', 'jugar'] },
+              { lineIndex: 8, word: 'color', options: ['color', 'calor', 'amor'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'l\'uccello rosso',
+            description: 'un uccello tra le rose',
+            lines: [
+              { text: 'un uccello', word: 'rosso' },
+              { text: 'lo guardo', word: 'addosso' },
+              { text: 'vive tra le', word: 'rose' },
+              { text: 'piume', word: 'meravigliose' },
+              { text: 'canta la sua', word: 'canzone' },
+              { text: 'con tanta', word: 'emozione' },
+              { text: 'vola senza', word: 'fermare' },
+              { text: 'fino a', word: 'tornare' },
+              { text: 'che bel', word: 'colore', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'rosso', options: ['rosso', 'grosso', 'mosso'] },
+              { lineIndex: 1, word: 'addosso', options: ['addosso', 'dosso', 'rosso'] },
+              { lineIndex: 2, word: 'rose', options: ['rose', 'cose', 'pose'] },
+              { lineIndex: 3, word: 'meravigliose', options: ['meravigliose', 'preziose', 'gioiose'] },
+              { lineIndex: 4, word: 'canzone', options: ['canzone', 'azione', 'lezione'] },
+              { lineIndex: 5, word: 'emozione', options: ['emozione', 'passione', 'canzone'] },
+              { lineIndex: 6, word: 'fermare', options: ['fermare', 'volare', 'cantare'] },
+              { lineIndex: 7, word: 'tornare', options: ['tornare', 'restare', 'volare'] },
+              { lineIndex: 8, word: 'colore', options: ['colore', 'amore', 'calore'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'the red bird',
+            description: 'a bird among the roses',
+            lines: [
+              { text: 'a bird so', word: 'red' },
+              { text: 'I watch its little', word: 'head' },
+              { text: 'it lives among the', word: 'roses' },
+              { text: 'striking many', word: 'poses' },
+              { text: 'singing its', word: 'song' },
+              { text: 'happy all day', word: 'long' },
+              { text: 'it flies up to the', word: 'sky' },
+              { text: 'waving us', word: 'goodbye' },
+              { text: 'such a pretty', word: 'sight', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'red', options: ['red', 'blue', 'green'] },
+              { lineIndex: 1, word: 'head', options: ['head', 'bed', 'led'] },
+              { lineIndex: 2, word: 'roses', options: ['roses', 'noses', 'poses'] },
+              { lineIndex: 3, word: 'poses', options: ['poses', 'roses', 'closes'] },
+              { lineIndex: 4, word: 'song', options: ['song', 'long', 'strong'] },
+              { lineIndex: 5, word: 'long', options: ['long', 'song', 'along'] },
+              { lineIndex: 6, word: 'sky', options: ['sky', 'fly', 'high'] },
+              { lineIndex: 7, word: 'goodbye', options: ['goodbye', 'sky', 'fly'] },
+              { lineIndex: 8, word: 'sight', options: ['sight', 'light', 'bright'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'punainen lintu',
+            description: 'lintu ruusujen keskellä',
+            lines: [
+              { text: 'lintu', word: 'punainen' },
+              { text: 'katson sitä', word: 'tarkkaan' },
+              { text: 'asuu', word: 'ruusuissa' },
+              { text: 'höyhenet ovat', word: 'kauniit' },
+              { text: 'laulaa', word: 'laulunsa' },
+              { text: 'täynnä', word: 'iloa' },
+              { text: 'lentää', word: 'taivaalle' },
+              { text: 'kotiin', word: 'palaa' },
+              { text: 'mikä kaunis', word: 'väri', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'punainen', options: ['punainen', 'sininen', 'vihreä'] },
+              { lineIndex: 1, word: 'tarkkaan', options: ['tarkkaan', 'hitaasti', 'nopeasti'] },
+              { lineIndex: 2, word: 'ruusuissa', options: ['ruusuissa', 'puissa', 'taloissa'] },
+              { lineIndex: 3, word: 'kauniit', options: ['kauniit', 'pienet', 'isot'] },
+              { lineIndex: 4, word: 'laulunsa', options: ['laulunsa', 'tanssinsa', 'leikkinsä'] },
+              { lineIndex: 5, word: 'iloa', options: ['iloa', 'surua', 'pelkoa'] },
+              { lineIndex: 6, word: 'taivaalle', options: ['taivaalle', 'maahan', 'veteen'] },
+              { lineIndex: 7, word: 'palaa', options: ['palaa', 'lähtee', 'jää'] },
+              { lineIndex: 8, word: 'väri', options: ['väri', 'ääni', 'muoto'] },
+              { type: 'review' }
+            ]
+          }
+        }
       },
       swan: {
         id: 'swan',
         hash: 'cs2ne',
-        title: 'el cisne y la moneda',
-        description: 'un cisne encuentra un tesoro',
         video: 'https://cdn.midjourney.com/video/f8e23f19-cfad-4b46-aba3-61a9bcd4c7a4/0.mp4',
-        lines: [
-          { text: 'un cisne muy', word: 'blanco' },
-          { text: 'nada sin', word: 'descanso' },
-          { text: 'en el lago', word: 'azul' },
-          { text: 'bajo un cielo de', word: 'tul' },
-          { text: 'encuentra una', word: 'moneda' },
-          { text: 'brillante en la', word: 'vereda' },
-          { text: 'es su gran', word: 'tesoro' },
-          { text: 'vale más que el', word: 'oro' },
-          { text: '¡qué cisne', word: 'feliz', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'blanco', options: ['blanco', 'franco', 'manco'] },
-          { lineIndex: 1, word: 'descanso', options: ['descanso', 'ganso', 'manso'] },
-          { lineIndex: 2, word: 'azul', options: ['azul', 'baúl', 'abril'] },
-          { lineIndex: 3, word: 'tul', options: ['tul', 'sul', 'dul'] },
-          { lineIndex: 4, word: 'moneda', options: ['moneda', 'rueda', 'queda'] },
-          { lineIndex: 5, word: 'vereda', options: ['vereda', 'seda', 'arboleda'] },
-          { lineIndex: 6, word: 'tesoro', options: ['tesoro', 'lloro', 'moro'] },
-          { lineIndex: 7, word: 'oro', options: ['oro', 'coro', 'toro'] },
-          { lineIndex: 8, word: 'feliz', options: ['feliz', 'perdiz', 'raíz'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'el cisne y la moneda',
+            description: 'un cisne encuentra un tesoro',
+            lines: [
+              { text: 'un cisne muy', word: 'blanco' },
+              { text: 'nada sin', word: 'descanso' },
+              { text: 'en el lago', word: 'azul' },
+              { text: 'bajo un cielo de', word: 'tul' },
+              { text: 'encuentra una', word: 'moneda' },
+              { text: 'brillante en la', word: 'vereda' },
+              { text: 'es su gran', word: 'tesoro' },
+              { text: 'vale más que el', word: 'oro' },
+              { text: '¡qué cisne', word: 'feliz', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'blanco', options: ['blanco', 'franco', 'manco'] },
+              { lineIndex: 1, word: 'descanso', options: ['descanso', 'ganso', 'manso'] },
+              { lineIndex: 2, word: 'azul', options: ['azul', 'baúl', 'abril'] },
+              { lineIndex: 3, word: 'tul', options: ['tul', 'sul', 'dul'] },
+              { lineIndex: 4, word: 'moneda', options: ['moneda', 'rueda', 'queda'] },
+              { lineIndex: 5, word: 'vereda', options: ['vereda', 'seda', 'arboleda'] },
+              { lineIndex: 6, word: 'tesoro', options: ['tesoro', 'lloro', 'moro'] },
+              { lineIndex: 7, word: 'oro', options: ['oro', 'coro', 'toro'] },
+              { lineIndex: 8, word: 'feliz', options: ['feliz', 'perdiz', 'raíz'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'il cigno e la moneta',
+            description: 'un cigno trova un tesoro',
+            lines: [
+              { text: 'un cigno tutto', word: 'bianco' },
+              { text: 'nuota senza essere', word: 'stanco' },
+              { text: 'nel lago', word: 'blu' },
+              { text: 'sotto il cielo', word: 'su' },
+              { text: 'trova una', word: 'moneta' },
+              { text: 'nascosta e', word: 'segreta' },
+              { text: 'è il suo gran', word: 'tesoro' },
+              { text: 'vale più dell\'', word: 'oro' },
+              { text: 'che cigno', word: 'felice', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'bianco', options: ['bianco', 'stanco', 'franco'] },
+              { lineIndex: 1, word: 'stanco', options: ['stanco', 'bianco', 'banco'] },
+              { lineIndex: 2, word: 'blu', options: ['blu', 'tu', 'su'] },
+              { lineIndex: 3, word: 'su', options: ['su', 'blu', 'tu'] },
+              { lineIndex: 4, word: 'moneta', options: ['moneta', 'cometa', 'poeta'] },
+              { lineIndex: 5, word: 'segreta', options: ['segreta', 'completa', 'moneta'] },
+              { lineIndex: 6, word: 'tesoro', options: ['tesoro', 'lavoro', 'decoro'] },
+              { lineIndex: 7, word: 'oro', options: ['oro', 'tesoro', 'coro'] },
+              { lineIndex: 8, word: 'felice', options: ['felice', 'radice', 'cornice'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'the swan and the coin',
+            description: 'a swan finds a treasure',
+            lines: [
+              { text: 'a swan so', word: 'white' },
+              { text: 'swimming in the', word: 'light' },
+              { text: 'in the lake so', word: 'blue' },
+              { text: 'under skies so', word: 'true' },
+              { text: 'finds a shiny', word: 'coin' },
+              { text: 'what a lucky', word: 'join' },
+              { text: 'it\'s a', word: 'treasure' },
+              { text: 'bringing so much', word: 'pleasure' },
+              { text: 'such a happy', word: 'swan', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'white', options: ['white', 'bright', 'light'] },
+              { lineIndex: 1, word: 'light', options: ['light', 'white', 'night'] },
+              { lineIndex: 2, word: 'blue', options: ['blue', 'true', 'new'] },
+              { lineIndex: 3, word: 'true', options: ['true', 'blue', 'flew'] },
+              { lineIndex: 4, word: 'coin', options: ['coin', 'join', 'shine'] },
+              { lineIndex: 5, word: 'join', options: ['join', 'coin', 'shine'] },
+              { lineIndex: 6, word: 'treasure', options: ['treasure', 'pleasure', 'measure'] },
+              { lineIndex: 7, word: 'pleasure', options: ['pleasure', 'treasure', 'leisure'] },
+              { lineIndex: 8, word: 'swan', options: ['swan', 'dawn', 'gone'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'joutsen ja kolikko',
+            description: 'joutsen löytää aarteen',
+            lines: [
+              { text: 'joutsen', word: 'valkoinen' },
+              { text: 'ui ilman', word: 'lepoa' },
+              { text: 'järvessä', word: 'sinisessä' },
+              { text: 'taivaan', word: 'alla' },
+              { text: 'löytää', word: 'kolikon' },
+              { text: 'kiiltävän', word: 'polulta' },
+              { text: 'se on hänen', word: 'aarteensa' },
+              { text: 'arvokkaampi kuin', word: 'kulta' },
+              { text: 'onnellinen', word: 'joutsen', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'valkoinen', options: ['valkoinen', 'musta', 'harmaa'] },
+              { lineIndex: 1, word: 'lepoa', options: ['lepoa', 'apua', 'vettä'] },
+              { lineIndex: 2, word: 'sinisessä', options: ['sinisessä', 'vihreässä', 'punaisessa'] },
+              { lineIndex: 3, word: 'alla', options: ['alla', 'päällä', 'vieressä'] },
+              { lineIndex: 4, word: 'kolikon', options: ['kolikon', 'kiven', 'lehden'] },
+              { lineIndex: 5, word: 'polulta', options: ['polulta', 'vedestä', 'maasta'] },
+              { lineIndex: 6, word: 'aarteensa', options: ['aarteensa', 'kotinsa', 'ruokansa'] },
+              { lineIndex: 7, word: 'kulta', options: ['kulta', 'hopea', 'rauta'] },
+              { lineIndex: 8, word: 'joutsen', options: ['joutsen', 'ankka', 'lintu'] },
+              { type: 'review' }
+            ]
+          }
+        }
       },
       cabin: {
         id: 'cabin',
         hash: 'cb5na',
-        title: 'avanto en Nochebuena',
-        description: 'Valentina nada en el lago helado',
         image: 'https://cdn.midjourney.com/977d305e-6456-40ac-acf1-4772ab24e5ff/0_1.png',
-        lines: [
-          { text: 'mañana de', word: 'Nochebuena' },
-          { text: 'Valentina sale', word: 'serena' },
-          { text: 'va al lago', word: 'helado' },
-          { text: 'todo está', word: 'nevado' },
-          { text: 'rompe el', word: 'hielo' },
-          { text: 'bajo el', word: 'cielo' },
-          { text: 'se mete a', word: 'nadar' },
-          { text: 'en el agua', word: 'polar' },
-          { text: '¡qué mamá tan', word: 'valiente', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'Nochebuena', options: ['Nochebuena', 'Nochevieja', 'Navidad'] },
-          { lineIndex: 1, word: 'serena', options: ['serena', 'morena', 'buena'] },
-          { lineIndex: 2, word: 'helado', options: ['helado', 'salado', 'pesado'] },
-          { lineIndex: 3, word: 'nevado', options: ['nevado', 'callado', 'cansado'] },
-          { lineIndex: 4, word: 'hielo', options: ['hielo', 'cielo', 'vuelo'] },
-          { lineIndex: 5, word: 'cielo', options: ['cielo', 'hielo', 'suelo'] },
-          { lineIndex: 6, word: 'nadar', options: ['nadar', 'saltar', 'jugar'] },
-          { lineIndex: 7, word: 'polar', options: ['polar', 'solar', 'lunar'] },
-          { lineIndex: 8, word: 'valiente', options: ['valiente', 'caliente', 'sonriente'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'avanto en Nochebuena',
+            description: 'Valentina nada en el lago helado',
+            lines: [
+              { text: 'mañana de', word: 'Nochebuena' },
+              { text: 'Valentina sale', word: 'serena' },
+              { text: 'va al lago', word: 'helado' },
+              { text: 'todo está', word: 'nevado' },
+              { text: 'rompe el', word: 'hielo' },
+              { text: 'bajo el', word: 'cielo' },
+              { text: 'se mete a', word: 'nadar' },
+              { text: 'en el agua', word: 'polar' },
+              { text: '¡qué mamá tan', word: 'valiente', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'Nochebuena', options: ['Nochebuena', 'Nochevieja', 'Navidad'] },
+              { lineIndex: 1, word: 'serena', options: ['serena', 'morena', 'buena'] },
+              { lineIndex: 2, word: 'helado', options: ['helado', 'salado', 'pesado'] },
+              { lineIndex: 3, word: 'nevado', options: ['nevado', 'callado', 'cansado'] },
+              { lineIndex: 4, word: 'hielo', options: ['hielo', 'cielo', 'vuelo'] },
+              { lineIndex: 5, word: 'cielo', options: ['cielo', 'hielo', 'suelo'] },
+              { lineIndex: 6, word: 'nadar', options: ['nadar', 'saltar', 'jugar'] },
+              { lineIndex: 7, word: 'polar', options: ['polar', 'solar', 'lunar'] },
+              { lineIndex: 8, word: 'valiente', options: ['valiente', 'caliente', 'sonriente'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'avanto alla Vigilia',
+            description: 'Valentina nuota nel lago ghiacciato',
+            lines: [
+              { text: 'mattina di', word: 'Natale' },
+              { text: 'Valentina è', word: 'speciale' },
+              { text: 'va al lago', word: 'ghiacciato' },
+              { text: 'tutto è', word: 'nevicato' },
+              { text: 'rompe il', word: 'ghiaccio' },
+              { text: 'sotto lo', word: 'spazio' },
+              { text: 'si tuffa a', word: 'nuotare' },
+              { text: 'nell\'acqua', word: 'polare' },
+              { text: 'che mamma', word: 'coraggiosa', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'Natale', options: ['Natale', 'Pasqua', 'Estate'] },
+              { lineIndex: 1, word: 'speciale', options: ['speciale', 'normale', 'natale'] },
+              { lineIndex: 2, word: 'ghiacciato', options: ['ghiacciato', 'riscaldato', 'colorato'] },
+              { lineIndex: 3, word: 'nevicato', options: ['nevicato', 'piovuto', 'soffiato'] },
+              { lineIndex: 4, word: 'ghiaccio', options: ['ghiaccio', 'spazio', 'braccio'] },
+              { lineIndex: 5, word: 'spazio', options: ['spazio', 'ghiaccio', 'palazzo'] },
+              { lineIndex: 6, word: 'nuotare', options: ['nuotare', 'saltare', 'giocare'] },
+              { lineIndex: 7, word: 'polare', options: ['polare', 'solare', 'lunare'] },
+              { lineIndex: 8, word: 'coraggiosa', options: ['coraggiosa', 'paurosa', 'gioiosa'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'ice swimming on Christmas Eve',
+            description: 'Valentina swims in the frozen lake',
+            lines: [
+              { text: 'on Christmas', word: 'Eve' },
+              { text: 'hard to', word: 'believe' },
+              { text: 'the lake is', word: 'frozen' },
+              { text: 'Valentina has', word: 'chosen' },
+              { text: 'to break the', word: 'ice' },
+              { text: 'it feels so', word: 'nice' },
+              { text: 'she goes for a', word: 'swim' },
+              { text: 'water to the', word: 'brim' },
+              { text: 'what a brave', word: 'mom', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'Eve', options: ['Eve', 'Day', 'Night'] },
+              { lineIndex: 1, word: 'believe', options: ['believe', 'receive', 'leave'] },
+              { lineIndex: 2, word: 'frozen', options: ['frozen', 'chosen', 'broken'] },
+              { lineIndex: 3, word: 'chosen', options: ['chosen', 'frozen', 'open'] },
+              { lineIndex: 4, word: 'ice', options: ['ice', 'nice', 'rice'] },
+              { lineIndex: 5, word: 'nice', options: ['nice', 'ice', 'twice'] },
+              { lineIndex: 6, word: 'swim', options: ['swim', 'brim', 'dim'] },
+              { lineIndex: 7, word: 'brim', options: ['brim', 'swim', 'slim'] },
+              { lineIndex: 8, word: 'mom', options: ['mom', 'calm', 'warm'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'avanto jouluaattona',
+            description: 'Valentina ui jäätyneessä järvessä',
+            lines: [
+              { text: 'jouluaaton', word: 'aamu' },
+              { text: 'Valentina on', word: 'rauhallinen' },
+              { text: 'menee', word: 'järvelle' },
+              { text: 'kaikki on', word: 'lumista' },
+              { text: 'rikkoo', word: 'jään' },
+              { text: 'taivaan', word: 'alla' },
+              { text: 'menee', word: 'uimaan' },
+              { text: 'jääkylmään', word: 'veteen' },
+              { text: 'mikä rohkea', word: 'äiti', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'aamu', options: ['aamu', 'ilta', 'yö'] },
+              { lineIndex: 1, word: 'rauhallinen', options: ['rauhallinen', 'kiireinen', 'väsynyt'] },
+              { lineIndex: 2, word: 'järvelle', options: ['järvelle', 'metsään', 'kotiin'] },
+              { lineIndex: 3, word: 'lumista', options: ['lumista', 'vihreää', 'kuivaa'] },
+              { lineIndex: 4, word: 'jään', options: ['jään', 'lumen', 'veden'] },
+              { lineIndex: 5, word: 'alla', options: ['alla', 'päällä', 'vieressä'] },
+              { lineIndex: 6, word: 'uimaan', options: ['uimaan', 'juoksemaan', 'kävelemään'] },
+              { lineIndex: 7, word: 'veteen', options: ['veteen', 'lumeen', 'maahan'] },
+              { lineIndex: 8, word: 'äiti', options: ['äiti', 'isä', 'lapsi'] },
+              { type: 'review' }
+            ]
+          }
+        }
       },
       manta: {
         id: 'manta',
         hash: 'mn7ta',
-        title: 'la manta y la princesa',
-        description: 'aventuras en el mar',
         video: 'https://cdn.midjourney.com/video/6c6e16fe-b46b-42b9-9d3a-0e7e3204cb28/0.mp4',
-        lines: [
-          { text: 'una manta blanca', word: 'gigante' },
-          { text: 'nada en el mar', word: 'brillante' },
-          { text: 'su amiga es la', word: 'princesa' },
-          { text: 'de las flores, qué', word: 'belleza' },
-          { text: 'viene a', word: 'buscarla' },
-          { text: 'en su lomo a', word: 'llevarla' },
-          { text: 'juntas cruzan el', word: 'mar' },
-          { text: 'aventuras van a', word: 'encontrar' },
-          { text: '¡qué bonita', word: 'amistad', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'gigante', options: ['gigante', 'elefante', 'brillante'] },
-          { lineIndex: 1, word: 'brillante', options: ['brillante', 'elegante', 'distante'] },
-          { lineIndex: 2, word: 'princesa', options: ['princesa', 'sorpresa', 'promesa'] },
-          { lineIndex: 3, word: 'belleza', options: ['belleza', 'certeza', 'tristeza'] },
-          { lineIndex: 4, word: 'buscarla', options: ['buscarla', 'dejarla', 'mirarla'] },
-          { lineIndex: 5, word: 'llevarla', options: ['llevarla', 'amarla', 'cuidarla'] },
-          { lineIndex: 6, word: 'mar', options: ['mar', 'hogar', 'lugar'] },
-          { lineIndex: 7, word: 'encontrar', options: ['encontrar', 'explorar', 'soñar'] },
-          { lineIndex: 8, word: 'amistad', options: ['amistad', 'felicidad', 'libertad'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'la manta y la princesa',
+            description: 'aventuras en el mar',
+            lines: [
+              { text: 'una manta blanca', word: 'gigante' },
+              { text: 'nada en el mar', word: 'brillante' },
+              { text: 'su amiga es la', word: 'princesa' },
+              { text: 'de las flores, qué', word: 'belleza' },
+              { text: 'viene a', word: 'buscarla' },
+              { text: 'en su lomo a', word: 'llevarla' },
+              { text: 'juntas cruzan el', word: 'mar' },
+              { text: 'aventuras van a', word: 'encontrar' },
+              { text: '¡qué bonita', word: 'amistad', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'gigante', options: ['gigante', 'elefante', 'brillante'] },
+              { lineIndex: 1, word: 'brillante', options: ['brillante', 'elegante', 'distante'] },
+              { lineIndex: 2, word: 'princesa', options: ['princesa', 'sorpresa', 'promesa'] },
+              { lineIndex: 3, word: 'belleza', options: ['belleza', 'certeza', 'tristeza'] },
+              { lineIndex: 4, word: 'buscarla', options: ['buscarla', 'dejarla', 'mirarla'] },
+              { lineIndex: 5, word: 'llevarla', options: ['llevarla', 'amarla', 'cuidarla'] },
+              { lineIndex: 6, word: 'mar', options: ['mar', 'hogar', 'lugar'] },
+              { lineIndex: 7, word: 'encontrar', options: ['encontrar', 'explorar', 'soñar'] },
+              { lineIndex: 8, word: 'amistad', options: ['amistad', 'felicidad', 'libertad'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'la manta e la principessa',
+            description: 'avventure nel mare',
+            lines: [
+              { text: 'una manta bianca', word: 'gigante' },
+              { text: 'nuota nel mare', word: 'brillante' },
+              { text: 'la sua amica è la', word: 'principessa' },
+              { text: 'dei fiori, che', word: 'bellezza' },
+              { text: 'viene a', word: 'cercarla' },
+              { text: 'sulla schiena a', word: 'portarla' },
+              { text: 'insieme attraversano il', word: 'mare' },
+              { text: 'avventure da', word: 'trovare' },
+              { text: 'che bella', word: 'amicizia', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'gigante', options: ['gigante', 'elefante', 'brillante'] },
+              { lineIndex: 1, word: 'brillante', options: ['brillante', 'elegante', 'distante'] },
+              { lineIndex: 2, word: 'principessa', options: ['principessa', 'contessa', 'promessa'] },
+              { lineIndex: 3, word: 'bellezza', options: ['bellezza', 'certezza', 'dolcezza'] },
+              { lineIndex: 4, word: 'cercarla', options: ['cercarla', 'lasciarla', 'guardarla'] },
+              { lineIndex: 5, word: 'portarla', options: ['portarla', 'amarla', 'aiutarla'] },
+              { lineIndex: 6, word: 'mare', options: ['mare', 'andare', 'stare'] },
+              { lineIndex: 7, word: 'trovare', options: ['trovare', 'esplorare', 'sognare'] },
+              { lineIndex: 8, word: 'amicizia', options: ['amicizia', 'felicità', 'letizia'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'the manta and the princess',
+            description: 'adventures in the sea',
+            lines: [
+              { text: 'a white manta', word: 'giant' },
+              { text: 'swimming so', word: 'radiant' },
+              { text: 'her friend is the', word: 'princess' },
+              { text: 'of flowers with', word: 'finesse' },
+              { text: 'she comes to', word: 'find' },
+              { text: 'her friend so', word: 'kind' },
+              { text: 'together they cross the', word: 'sea' },
+              { text: 'adventures wild and', word: 'free' },
+              { text: 'what a lovely', word: 'friendship', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'giant', options: ['giant', 'radiant', 'brilliant'] },
+              { lineIndex: 1, word: 'radiant', options: ['radiant', 'giant', 'vibrant'] },
+              { lineIndex: 2, word: 'princess', options: ['princess', 'finesse', 'success'] },
+              { lineIndex: 3, word: 'finesse', options: ['finesse', 'princess', 'caress'] },
+              { lineIndex: 4, word: 'find', options: ['find', 'kind', 'mind'] },
+              { lineIndex: 5, word: 'kind', options: ['kind', 'find', 'mind'] },
+              { lineIndex: 6, word: 'sea', options: ['sea', 'free', 'be'] },
+              { lineIndex: 7, word: 'free', options: ['free', 'sea', 'be'] },
+              { lineIndex: 8, word: 'friendship', options: ['friendship', 'kinship', 'hardship'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'manta ja prinsessa',
+            description: 'seikkailuja merellä',
+            lines: [
+              { text: 'valkoinen manta', word: 'jättimäinen' },
+              { text: 'ui meressä', word: 'loistavana' },
+              { text: 'hänen ystävänsä on', word: 'prinsessa' },
+              { text: 'kukkien, mikä', word: 'kauneus' },
+              { text: 'tulee häntä', word: 'hakemaan' },
+              { text: 'selässään', word: 'viemään' },
+              { text: 'yhdessä ylittävät', word: 'meren' },
+              { text: 'seikkailuja', word: 'löytämään' },
+              { text: 'mikä kaunis', word: 'ystävyys', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'jättimäinen', options: ['jättimäinen', 'pieni', 'tavallinen'] },
+              { lineIndex: 1, word: 'loistavana', options: ['loistavana', 'hitaasti', 'hiljaa'] },
+              { lineIndex: 2, word: 'prinsessa', options: ['prinsessa', 'kuningatar', 'tyttö'] },
+              { lineIndex: 3, word: 'kauneus', options: ['kauneus', 'rakkaus', 'ystävyys'] },
+              { lineIndex: 4, word: 'hakemaan', options: ['hakemaan', 'jättämään', 'katsomaan'] },
+              { lineIndex: 5, word: 'viemään', options: ['viemään', 'tuomaan', 'pitämään'] },
+              { lineIndex: 6, word: 'meren', options: ['meren', 'järven', 'joen'] },
+              { lineIndex: 7, word: 'löytämään', options: ['löytämään', 'etsimään', 'unelmoimaan'] },
+              { lineIndex: 8, word: 'ystävyys', options: ['ystävyys', 'rakkaus', 'onni'] },
+              { type: 'review' }
+            ]
+          }
+        }
       },
       tortoise: {
         id: 'tortoise',
         hash: 'tr7ga',
-        title: 'la liebre y la tortuga',
-        description: 'una carrera con sorpresa',
         video: 'https://cdn.midjourney.com/video/7eca4076-f208-41ad-b6bf-c995652a1840/0.mp4',
-        lines: [
-          { text: 'la liebre corre', word: 'ligera' },
-          { text: 'se cree que va', word: 'primera' },
-          { text: 'la tortuga sin', word: 'prisa' },
-          { text: 'camina con', word: 'sonrisa' },
-          { text: 'la liebre para a', word: 'descansar' },
-          { text: 'segura de', word: 'ganar' },
-          { text: 'la tortuga no se', word: 'cansa' },
-          { text: 'y al final', word: 'avanza' },
-          { text: '¡gana la', word: 'tortuga', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'ligera', options: ['ligera', 'primera', 'entera'] },
-          { lineIndex: 1, word: 'primera', options: ['primera', 'ligera', 'sincera'] },
-          { lineIndex: 2, word: 'prisa', options: ['prisa', 'risa', 'brisa'] },
-          { lineIndex: 3, word: 'sonrisa', options: ['sonrisa', 'prisa', 'camisa'] },
-          { lineIndex: 4, word: 'descansar', options: ['descansar', 'caminar', 'saltar'] },
-          { lineIndex: 5, word: 'ganar', options: ['ganar', 'pasar', 'llegar'] },
-          { lineIndex: 6, word: 'cansa', options: ['cansa', 'descansa', 'alcanza'] },
-          { lineIndex: 7, word: 'avanza', options: ['avanza', 'danza', 'alcanza'] },
-          { lineIndex: 8, word: 'tortuga', options: ['tortuga', 'arruga', 'lechuga'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'la liebre y la tortuga',
+            description: 'una carrera con sorpresa',
+            lines: [
+              { text: 'la liebre corre', word: 'ligera' },
+              { text: 'se cree que va', word: 'primera' },
+              { text: 'la tortuga sin', word: 'prisa' },
+              { text: 'camina con', word: 'sonrisa' },
+              { text: 'la liebre para a', word: 'descansar' },
+              { text: 'segura de', word: 'ganar' },
+              { text: 'la tortuga no se', word: 'cansa' },
+              { text: 'y al final', word: 'avanza' },
+              { text: '¡gana la', word: 'tortuga', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'ligera', options: ['ligera', 'primera', 'entera'] },
+              { lineIndex: 1, word: 'primera', options: ['primera', 'ligera', 'sincera'] },
+              { lineIndex: 2, word: 'prisa', options: ['prisa', 'risa', 'brisa'] },
+              { lineIndex: 3, word: 'sonrisa', options: ['sonrisa', 'prisa', 'camisa'] },
+              { lineIndex: 4, word: 'descansar', options: ['descansar', 'caminar', 'saltar'] },
+              { lineIndex: 5, word: 'ganar', options: ['ganar', 'pasar', 'llegar'] },
+              { lineIndex: 6, word: 'cansa', options: ['cansa', 'descansa', 'alcanza'] },
+              { lineIndex: 7, word: 'avanza', options: ['avanza', 'danza', 'alcanza'] },
+              { lineIndex: 8, word: 'tortuga', options: ['tortuga', 'arruga', 'lechuga'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'la lepre e la tartaruga',
+            description: 'una gara a sorpresa',
+            lines: [
+              { text: 'la lepre corre', word: 'veloce' },
+              { text: 'pensa di essere', word: 'feroce' },
+              { text: 'la tartaruga senza', word: 'fretta' },
+              { text: 'cammina', word: 'perfetta' },
+              { text: 'la lepre si ferma a', word: 'riposare' },
+              { text: 'sicura di', word: 'arrivare' },
+              { text: 'la tartaruga non si', word: 'stanca' },
+              { text: 'e alla fine', word: 'avanza' },
+              { text: 'vince la', word: 'tartaruga', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'veloce', options: ['veloce', 'feroce', 'voce'] },
+              { lineIndex: 1, word: 'feroce', options: ['feroce', 'veloce', 'noce'] },
+              { lineIndex: 2, word: 'fretta', options: ['fretta', 'stretta', 'vetta'] },
+              { lineIndex: 3, word: 'perfetta', options: ['perfetta', 'fretta', 'stretta'] },
+              { lineIndex: 4, word: 'riposare', options: ['riposare', 'camminare', 'saltare'] },
+              { lineIndex: 5, word: 'arrivare', options: ['arrivare', 'passare', 'tornare'] },
+              { lineIndex: 6, word: 'stanca', options: ['stanca', 'bianca', 'panca'] },
+              { lineIndex: 7, word: 'avanza', options: ['avanza', 'danza', 'stanza'] },
+              { lineIndex: 8, word: 'tartaruga', options: ['tartaruga', 'ruga', 'fuga'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'the hare and the tortoise',
+            description: 'a race with a surprise',
+            lines: [
+              { text: 'the hare runs', word: 'fast' },
+              { text: 'thinks he\'ll be', word: 'last' },
+              { text: 'the tortoise goes', word: 'slow' },
+              { text: 'steady as she\'ll', word: 'go' },
+              { text: 'the hare stops to', word: 'rest' },
+              { text: 'sure he is the', word: 'best' },
+              { text: 'the tortoise keeps on', word: 'steady' },
+              { text: 'always staying', word: 'ready' },
+              { text: 'the tortoise', word: 'wins', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'fast', options: ['fast', 'last', 'past'] },
+              { lineIndex: 1, word: 'last', options: ['last', 'fast', 'past'] },
+              { lineIndex: 2, word: 'slow', options: ['slow', 'go', 'low'] },
+              { lineIndex: 3, word: 'go', options: ['go', 'slow', 'show'] },
+              { lineIndex: 4, word: 'rest', options: ['rest', 'best', 'test'] },
+              { lineIndex: 5, word: 'best', options: ['best', 'rest', 'nest'] },
+              { lineIndex: 6, word: 'steady', options: ['steady', 'ready', 'already'] },
+              { lineIndex: 7, word: 'ready', options: ['ready', 'steady', 'already'] },
+              { lineIndex: 8, word: 'wins', options: ['wins', 'grins', 'begins'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'jänis ja kilpikonna',
+            description: 'kilpailu yllätyksellä',
+            lines: [
+              { text: 'jänis juoksee', word: 'nopeasti' },
+              { text: 'luulee olevansa', word: 'ensimmäinen' },
+              { text: 'kilpikonna ilman', word: 'kiirettä' },
+              { text: 'kävelee', word: 'hymyillen' },
+              { text: 'jänis pysähtyy', word: 'lepäämään' },
+              { text: 'varma', word: 'voitostaan' },
+              { text: 'kilpikonna ei', word: 'väsy' },
+              { text: 'ja lopulta', word: 'etenee' },
+              { text: 'kilpikonna', word: 'voittaa', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'nopeasti', options: ['nopeasti', 'hitaasti', 'hiljaa'] },
+              { lineIndex: 1, word: 'ensimmäinen', options: ['ensimmäinen', 'viimeinen', 'toinen'] },
+              { lineIndex: 2, word: 'kiirettä', options: ['kiirettä', 'aikaa', 'voimaa'] },
+              { lineIndex: 3, word: 'hymyillen', options: ['hymyillen', 'itkien', 'huutaen'] },
+              { lineIndex: 4, word: 'lepäämään', options: ['lepäämään', 'juoksemaan', 'hyppimään'] },
+              { lineIndex: 5, word: 'voitostaan', options: ['voitostaan', 'tappiostaan', 'matkastaan'] },
+              { lineIndex: 6, word: 'väsy', options: ['väsy', 'herää', 'nukahda'] },
+              { lineIndex: 7, word: 'etenee', options: ['etenee', 'pysähtyy', 'palaa'] },
+              { lineIndex: 8, word: 'voittaa', options: ['voittaa', 'häviää', 'luovuttaa'] },
+              { type: 'review' }
+            ]
+          }
+        }
       },
       wolf: {
         id: 'wolf',
         hash: 'lb7po',
-        title: 'el lobo y el perro',
-        description: 'libertad o comodidad',
         video: 'https://cdn.midjourney.com/video/b3036be9-966a-43b5-8022-91ad628ee168/0.mp4',
-        lines: [
-          { text: 'un lobo ve un perro', word: 'gordito' },
-          { text: 'que come un rico', word: 'trocito' },
-          { text: 'ven conmigo dice', word: 'amigo' },
-          { text: 'tendrás comida y', word: 'abrigo' },
-          { text: 'pero el lobo ve el', word: 'cuello' },
-          { text: 'marcado, nada', word: 'bello' },
-          { text: 'es de mi', word: 'collar' },
-          { text: 'no lo puedo', word: 'quitar' },
-          { text: '¡prefiero', word: 'libertad', suffix: '!' }
-        ],
-        levels: [
-          { lineIndex: 0, word: 'gordito', options: ['gordito', 'bonito', 'chiquito'] },
-          { lineIndex: 1, word: 'trocito', options: ['trocito', 'pedacito', 'ratito'] },
-          { lineIndex: 2, word: 'amigo', options: ['amigo', 'conmigo', 'abrigo'] },
-          { lineIndex: 3, word: 'abrigo', options: ['abrigo', 'amigo', 'castigo'] },
-          { lineIndex: 4, word: 'cuello', options: ['cuello', 'bello', 'sello'] },
-          { lineIndex: 5, word: 'bello', options: ['bello', 'destello', 'cabello'] },
-          { lineIndex: 6, word: 'collar', options: ['collar', 'lugar', 'hogar'] },
-          { lineIndex: 7, word: 'quitar', options: ['quitar', 'gritar', 'evitar'] },
-          { lineIndex: 8, word: 'libertad', options: ['libertad', 'amistad', 'verdad'] },
-          { type: 'review' }
-        ]
+        translations: {
+          es: {
+            title: 'el lobo y el perro',
+            description: 'libertad o comodidad',
+            lines: [
+              { text: 'un lobo ve un perro', word: 'gordito' },
+              { text: 'que come un rico', word: 'trocito' },
+              { text: 'ven conmigo dice', word: 'amigo' },
+              { text: 'tendrás comida y', word: 'abrigo' },
+              { text: 'pero el lobo ve el', word: 'cuello' },
+              { text: 'marcado, nada', word: 'bello' },
+              { text: 'es de mi', word: 'collar' },
+              { text: 'no lo puedo', word: 'quitar' },
+              { text: '¡prefiero', word: 'libertad', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'gordito', options: ['gordito', 'bonito', 'chiquito'] },
+              { lineIndex: 1, word: 'trocito', options: ['trocito', 'pedacito', 'ratito'] },
+              { lineIndex: 2, word: 'amigo', options: ['amigo', 'conmigo', 'abrigo'] },
+              { lineIndex: 3, word: 'abrigo', options: ['abrigo', 'amigo', 'castigo'] },
+              { lineIndex: 4, word: 'cuello', options: ['cuello', 'bello', 'sello'] },
+              { lineIndex: 5, word: 'bello', options: ['bello', 'destello', 'cabello'] },
+              { lineIndex: 6, word: 'collar', options: ['collar', 'lugar', 'hogar'] },
+              { lineIndex: 7, word: 'quitar', options: ['quitar', 'gritar', 'evitar'] },
+              { lineIndex: 8, word: 'libertad', options: ['libertad', 'amistad', 'verdad'] },
+              { type: 'review' }
+            ]
+          },
+          it: {
+            title: 'il lupo e il cane',
+            description: 'libertà o comodità',
+            lines: [
+              { text: 'un lupo vede un cane', word: 'grassotto' },
+              { text: 'che mangia un bel', word: 'biscotto' },
+              { text: 'vieni con me dice', word: 'amico' },
+              { text: 'avrai cibo e', word: 'riparo' },
+              { text: 'ma il lupo vede il', word: 'collo' },
+              { text: 'segnato, non è', word: 'bello' },
+              { text: 'è dal mio', word: 'collare' },
+              { text: 'non posso', word: 'togliere' },
+              { text: 'preferisco la', word: 'libertà', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'grassotto', options: ['grassotto', 'bassotto', 'marmotto'] },
+              { lineIndex: 1, word: 'biscotto', options: ['biscotto', 'risotto', 'fagotto'] },
+              { lineIndex: 2, word: 'amico', options: ['amico', 'nemico', 'antico'] },
+              { lineIndex: 3, word: 'riparo', options: ['riparo', 'chiaro', 'raro'] },
+              { lineIndex: 4, word: 'collo', options: ['collo', 'bello', 'quello'] },
+              { lineIndex: 5, word: 'bello', options: ['bello', 'collo', 'quello'] },
+              { lineIndex: 6, word: 'collare', options: ['collare', 'olare', 'olare'] },
+              { lineIndex: 7, word: 'togliere', options: ['togliere', 'cogliere', 'scegliere'] },
+              { lineIndex: 8, word: 'libertà', options: ['libertà', 'felicità', 'bontà'] },
+              { type: 'review' }
+            ]
+          },
+          en: {
+            title: 'the wolf and the dog',
+            description: 'freedom or comfort',
+            lines: [
+              { text: 'a wolf sees a dog so', word: 'chubby' },
+              { text: 'eating something', word: 'yummy' },
+              { text: 'come with me says the', word: 'friend' },
+              { text: 'food and shelter I\'ll', word: 'lend' },
+              { text: 'but the wolf sees the', word: 'neck' },
+              { text: 'marked, what a', word: 'wreck' },
+              { text: 'it\'s from my', word: 'collar' },
+              { text: 'can\'t make it', word: 'smaller' },
+              { text: 'I prefer', word: 'freedom', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'chubby', options: ['chubby', 'grubby', 'stubby'] },
+              { lineIndex: 1, word: 'yummy', options: ['yummy', 'tummy', 'mummy'] },
+              { lineIndex: 2, word: 'friend', options: ['friend', 'lend', 'end'] },
+              { lineIndex: 3, word: 'lend', options: ['lend', 'friend', 'bend'] },
+              { lineIndex: 4, word: 'neck', options: ['neck', 'wreck', 'check'] },
+              { lineIndex: 5, word: 'wreck', options: ['wreck', 'neck', 'deck'] },
+              { lineIndex: 6, word: 'collar', options: ['collar', 'dollar', 'smaller'] },
+              { lineIndex: 7, word: 'smaller', options: ['smaller', 'collar', 'taller'] },
+              { lineIndex: 8, word: 'freedom', options: ['freedom', 'kingdom', 'wisdom'] },
+              { type: 'review' }
+            ]
+          },
+          fi: {
+            title: 'susi ja koira',
+            description: 'vapaus vai mukavuus',
+            lines: [
+              { text: 'susi näkee', word: 'lihavan' },
+              { text: 'koiran syömässä', word: 'palaa' },
+              { text: 'tule mukaani sanoo', word: 'ystävä' },
+              { text: 'saat ruokaa ja', word: 'suojaa' },
+              { text: 'mutta susi näkee', word: 'kaulan' },
+              { text: 'merkityn, ei', word: 'kaunista' },
+              { text: 'se on minun', word: 'pannastani' },
+              { text: 'en voi sitä', word: 'poistaa' },
+              { text: 'valitsen', word: 'vapauden', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'lihavan', options: ['lihavan', 'laiham', 'pienen'] },
+              { lineIndex: 1, word: 'palaa', options: ['palaa', 'luuta', 'leipää'] },
+              { lineIndex: 2, word: 'ystävä', options: ['ystävä', 'vieras', 'vihollinen'] },
+              { lineIndex: 3, word: 'suojaa', options: ['suojaa', 'vaaraa', 'pelkoa'] },
+              { lineIndex: 4, word: 'kaulan', options: ['kaulan', 'pään', 'selän'] },
+              { lineIndex: 5, word: 'kaunista', options: ['kaunista', 'rumaa', 'hyvää'] },
+              { lineIndex: 6, word: 'pannastani', options: ['pannastani', 'koristani', 'ketjustani'] },
+              { lineIndex: 7, word: 'poistaa', options: ['poistaa', 'pitää', 'ottaa'] },
+              { lineIndex: 8, word: 'vapauden', options: ['vapauden', 'mukavuuden', 'turvallisuuden'] },
+              { type: 'review' }
+            ]
+          }
+        }
       }
     };
 
     // ============ COLOR FUNCTIONS ============
-    const VOWELS = 'aeiouáéíóúü';
+    const VOWELS = 'aeiouáéíóúüäöåàèìòù';
 
     function getLetterClass(char) {
       const lower = char.toLowerCase();
@@ -1374,6 +2064,7 @@
 
     // ============ INITIALIZATION ============
     function init() {
+      updateLanguageUI();
       renderStorySelection();
       setupEventListeners();
     }
@@ -1382,6 +2073,7 @@
       storySelection.innerHTML = '';
 
       Object.values(STORIES).forEach(story => {
+        const trans = story.translations[currentLanguage];
         const card = document.createElement('div');
         const unlocked = isStoryUnlocked(story.id);
         const completed = isStoryCompleted(story.id);
@@ -1390,14 +2082,14 @@
 
         const mediaHTML = story.video
           ? `<video src="${story.video}#t=0.001" muted playsinline preload="metadata" class="story-video"></video>`
-          : `<img src="${story.image}" alt="${story.title}">`;
+          : `<img src="${story.image}" alt="${trans.title}">`;
 
         const statusIcon = completed ? '<span class="story-status">✓</span>' : (!unlocked ? '<span class="story-status">🔒</span>' : '');
 
         card.innerHTML = `
           ${mediaHTML}
-          <h3>${story.title}${statusIcon}</h3>
-          <p>${story.description}</p>
+          <h3>${trans.title}${statusIcon}</h3>
+          <p>${trans.description}</p>
         `;
 
         if (unlocked) {
@@ -1461,8 +2153,50 @@
       // Secret easter egg: click "historia" to unlock all stories
       document.getElementById('secret-unlock').onclick = unlockAllStories;
 
+      // Language selector
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.onclick = () => {
+          const lang = btn.dataset.lang;
+          if (lang !== currentLanguage) {
+            currentLanguage = lang;
+            localStorage.setItem(LANG_KEY, lang);
+            updateLanguageUI();
+            renderStorySelection();
+          }
+        };
+      });
+
       // Handle browser back/forward
       window.onpopstate = handleRoute;
+    }
+
+    function updateLanguageUI() {
+      // Update language button states
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+      });
+
+      // Update title
+      const ui = UI_TEXT[currentLanguage];
+      document.getElementById('main-title').innerHTML = `${ui.chooseStory} <span id="secret-unlock" style="cursor: text;">${ui.storyWord}</span>`;
+      document.getElementById('secret-unlock').onclick = unlockAllStories;
+
+      // Update footer links
+      document.getElementById('link-instrucciones').textContent = ui.instructions;
+      document.getElementById('link-autor').textContent = ui.author;
+
+      // Update speak button title
+      document.getElementById('speak-btn').title = ui.readAloud;
+
+      // Update mode toggle title
+      document.getElementById('mode-toggle').title = ui.spellingMode;
+
+      // Update complete screen buttons
+      document.getElementById('replay-btn').textContent = ui.playAgain;
+      document.getElementById('menu-btn').textContent = ui.otherStories;
+
+      // Update congrats title
+      document.querySelector('.congrats-title').textContent = ui.congrats;
     }
 
     // ============ SCREEN MANAGEMENT ============
@@ -1537,9 +2271,14 @@
     }
 
     // ============ GAME LOGIC ============
+    function getTranslation() {
+      return currentStory.translations[currentLanguage];
+    }
+
     function startStory(storyId) {
       currentStory = STORIES[storyId];
-      storyTitle.textContent = currentStory.title;
+      const trans = getTranslation();
+      storyTitle.textContent = trans.title;
 
       // Handle video vs image
       if (currentStory.video) {
@@ -1576,7 +2315,8 @@
 
     function renderProgress() {
       progress.innerHTML = '';
-      const totalLevels = currentStory.levels.length;
+      const trans = getTranslation();
+      const totalLevels = trans.levels.length;
       for (let i = 1; i <= totalLevels; i++) {
         const dot = document.createElement('div');
         dot.className = 'progress-dot';
@@ -1588,7 +2328,8 @@
 
     function renderLevel() {
       renderProgress();
-      const level = currentStory.levels[gameState.currentLevel - 1];
+      const trans = getTranslation();
+      const level = trans.levels[gameState.currentLevel - 1];
 
       if (level.type === 'review') {
         renderReviewLevel();
@@ -1601,8 +2342,9 @@
 
     function renderNormalLevel(level) {
       rhymeContainer.innerHTML = '';
+      const trans = getTranslation();
 
-      currentStory.lines.forEach((line, index) => {
+      trans.lines.forEach((line, index) => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
 
@@ -1623,8 +2365,10 @@
     }
 
     function renderReviewLevel() {
+      const trans = getTranslation();
+
       if (gameState.reviewBlanks.length === 0) {
-        const availableWords = currentStory.levels.slice(0, -1).map((l, i) => ({ ...l, levelIndex: i }));
+        const availableWords = trans.levels.slice(0, -1).map((l, i) => ({ ...l, levelIndex: i }));
         const shuffled = availableWords.sort(() => Math.random() - 0.5);
         gameState.reviewBlanks = shuffled.slice(0, 3);
         gameState.reviewAnswered = 0;
@@ -1632,7 +2376,7 @@
 
       rhymeContainer.innerHTML = '';
 
-      currentStory.lines.forEach((line, index) => {
+      trans.lines.forEach((line, index) => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
 
@@ -1761,7 +2505,7 @@
           setTimeout(() => {
             gameState.completedLevels.push(gameState.currentLevel);
             gameState.currentLevel++;
-            if (gameState.currentLevel > currentStory.levels.length) {
+            if (gameState.currentLevel > getTranslation().levels.length) {
               showCompleteScreen();
             } else {
               renderLevel();
@@ -1819,7 +2563,7 @@
           } else {
             gameState.completedLevels.push(gameState.currentLevel);
             gameState.currentLevel++;
-            if (gameState.currentLevel > currentStory.levels.length) {
+            if (gameState.currentLevel > getTranslation().levels.length) {
               showCompleteScreen();
             } else {
               renderLevel();
@@ -1933,8 +2677,9 @@
       // Mark story as completed
       markStoryCompleted(currentStory.id);
 
+      const trans = getTranslation();
       completeRhyme.innerHTML = '';
-      currentStory.lines.forEach(line => {
+      trans.lines.forEach(line => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'rhyme-line';
         if (line.word) {
@@ -1953,17 +2698,18 @@
     let speechSynth = window.speechSynthesis;
     let currentUtterance = null;
 
-    function getSpanishVoice() {
+    function getVoice() {
       const voices = speechSynth.getVoices();
-      // Prioritize Spain Spanish + Enhanced voices
-      const spanishVoice =
-        voices.find(v => v.lang === 'es-ES' && v.name.toLowerCase().includes('enhanced')) ||
-        voices.find(v => v.lang === 'es-ES' && v.name.toLowerCase().includes('monica')) ||
-        voices.find(v => v.lang === 'es-ES' && v.name.toLowerCase().includes('mónica')) ||
-        voices.find(v => v.lang.startsWith('es') && v.name.toLowerCase().includes('enhanced')) ||
-        voices.find(v => v.lang === 'es-ES') ||
-        voices.find(v => v.lang.startsWith('es'));
-      return spanishVoice || voices[0];
+      const langCode = LANG_VOICES[currentLanguage];
+      const langPrefix = langCode.split('-')[0];
+
+      // Prioritize enhanced voices for the current language
+      const voice =
+        voices.find(v => v.lang === langCode && v.name.toLowerCase().includes('enhanced')) ||
+        voices.find(v => v.lang === langCode) ||
+        voices.find(v => v.lang.startsWith(langPrefix) && v.name.toLowerCase().includes('enhanced')) ||
+        voices.find(v => v.lang.startsWith(langPrefix));
+      return voice || voices[0];
     }
 
     function getLineText(line) {
@@ -1981,7 +2727,8 @@
       speakBtn.classList.add('speaking');
       speakBtn.textContent = '■';
 
-      const lines = currentStory.lines;
+      const trans = getTranslation();
+      const lines = trans.lines;
       let lineIndex = 0;
 
       function speakNextLine() {
@@ -1998,8 +2745,8 @@
 
         const text = getLineText(lines[lineIndex]);
         currentUtterance = new SpeechSynthesisUtterance(text);
-        currentUtterance.voice = getSpanishVoice();
-        currentUtterance.lang = 'es-ES';
+        currentUtterance.voice = getVoice();
+        currentUtterance.lang = LANG_VOICES[currentLanguage];
         currentUtterance.rate = 0.8; // Slower for kids
         currentUtterance.pitch = 1.1;
 
@@ -2030,7 +2777,7 @@
     }
 
     // Load voices (needed for some browsers)
-    speechSynth.onvoiceschanged = () => getSpanishVoice();
+    speechSynth.onvoiceschanged = () => getVoice();
 
     // Simple click to play/stop
     speakBtn.onclick = speakStory;
