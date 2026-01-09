@@ -851,6 +851,30 @@
       color: #888 !important;
     }
 
+    /* iPad landscape - use full screen */
+    @media (min-width: 768px) and (max-width: 1400px) and (orientation: landscape) {
+      body { padding: 15px 30px; }
+      .screen { max-width: 100%; }
+      .game-container { max-width: 100%; gap: 40px; padding: 0 20px; }
+      .level-image, .level-video { max-width: 420px; max-height: 480px; }
+      .rhyme-container { font-size: 28px; padding: 20px 30px; line-height: 1.8; }
+      .rhyme-line { margin: 6px 0; }
+      .answers-container { max-width: 100%; gap: 20px; padding: 20px 30px; }
+      .answer-btn { font-size: 30px; padding: 16px 40px; min-width: 160px; }
+      .header { max-width: 100%; padding: 15px 30px 12px; }
+      .title { font-size: 32px; }
+      .main-title { font-size: 42px; }
+      .story-selection { gap: 35px; }
+      .story-card { width: 280px; padding: 22px; }
+      .story-card img, .story-card video { height: 200px; }
+      .story-card h3 { font-size: 22px; }
+      .story-card p { font-size: 16px; }
+      .blank { min-width: 100px; padding: 5px 12px; }
+      .letter-btn { width: 55px; height: 55px; font-size: 32px; }
+      .spelling-slot { min-width: 40px; height: 52px; font-size: 32px; }
+      .spelling-progress { gap: 6px; }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       body { font-size: 20px; padding: 8px; }
