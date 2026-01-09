@@ -1186,6 +1186,36 @@
           { lineIndex: 8, word: 'amistad', options: ['amistad', 'felicidad', 'libertad'] },
           { type: 'review' }
         ]
+      },
+      tortoise: {
+        id: 'tortoise',
+        hash: 'tr7ga',
+        title: 'la liebre y la tortuga',
+        description: 'una carrera con sorpresa',
+        video: 'https://cdn.midjourney.com/video/7eca4076-f208-41ad-b6bf-c995652a1840/0.mp4',
+        lines: [
+          { text: 'la liebre muy', word: 'veloz' },
+          { text: 'se burla con su', word: 'voz' },
+          { text: 'de la tortuga', word: 'lenta' },
+          { text: 'que nunca se', word: 'lamenta' },
+          { text: 'hacen una', word: 'carrera' },
+          { text: 'la liebre va', word: 'primera' },
+          { text: 'se para a', word: 'descansar' },
+          { text: 'segura de', word: 'ganar' },
+          { text: '¡gana la', word: 'tortuga', suffix: '!' }
+        ],
+        levels: [
+          { lineIndex: 0, word: 'veloz', options: ['veloz', 'feroz', 'atroz'] },
+          { lineIndex: 1, word: 'voz', options: ['voz', 'arroz', 'hoz'] },
+          { lineIndex: 2, word: 'lenta', options: ['lenta', 'atenta', 'contenta'] },
+          { lineIndex: 3, word: 'lamenta', options: ['lamenta', 'inventa', 'aumenta'] },
+          { lineIndex: 4, word: 'carrera', options: ['carrera', 'espera', 'manera'] },
+          { lineIndex: 5, word: 'primera', options: ['primera', 'ligera', 'sincera'] },
+          { lineIndex: 6, word: 'descansar', options: ['descansar', 'caminar', 'saltar'] },
+          { lineIndex: 7, word: 'ganar', options: ['ganar', 'pasar', 'llegar'] },
+          { lineIndex: 8, word: 'tortuga', options: ['tortuga', 'arruga', 'lechuga'] },
+          { type: 'review' }
+        ]
       }
     };
 
@@ -1258,10 +1288,10 @@
     function unlockAllStories() {
       const progress = loadProgress();
       // Toggle: if all unlocked, reset to empty; otherwise unlock all
-      if (progress.completedStories.length === 5) {
+      if (progress.completedStories.length === 6) {
         progress.completedStories = [];
       } else {
-        progress.completedStories = ['snow', 'bird', 'swan', 'cabin', 'manta'];
+        progress.completedStories = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise'];
       }
       saveProgress(progress);
       renderStorySelection();
@@ -1273,7 +1303,7 @@
     }
 
     function isStoryUnlocked(storyId) {
-      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta'];
+      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise'];
       const storyIndex = storyOrder.indexOf(storyId);
 
       // First two stories always unlocked
