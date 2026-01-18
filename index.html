@@ -948,6 +948,7 @@
       <button class="lang-btn" data-lang="it">IT</button>
       <button class="lang-btn" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="fi">FI</button>
+      <button class="lang-btn" data-lang="ru">RU</button>
     </div>
     <h1 class="main-title" id="main-title">elige una <span id="secret-unlock" style="cursor: text;">historia</span></h1>
     <div class="decorative-line"></div>
@@ -1120,6 +1121,17 @@
         congrats: 'hienoa!',
         readAloud: 'Lue ääneen',
         spellingMode: 'Tavausmoodi'
+      },
+      ru: {
+        chooseStory: 'выбери',
+        storyWord: 'историю',
+        instructions: 'инструкции',
+        author: 'автор',
+        playAgain: 'играть снова',
+        otherStories: 'другие истории',
+        congrats: 'молодец!',
+        readAloud: 'Читать вслух',
+        spellingMode: 'Режим правописания'
       }
     };
 
@@ -1127,7 +1139,8 @@
       es: 'es-ES',
       it: 'it-IT',
       en: 'en-GB',
-      fi: 'fi-FI'
+      fi: 'fi-FI',
+      ru: 'ru-RU'
     };
 
     // ============ STORIES DATA ============
@@ -1242,6 +1255,33 @@
               { lineIndex: 6, word: 'haittaa', options: ['haittaa', 'lämmitä', 'auta'] },
               { lineIndex: 7, word: 'lunta', options: ['lunta', 'sadetta', 'aurinkoa'] },
               { lineIndex: 8, word: 'päivä', options: ['päivä', 'yö', 'hetki'] },
+              { type: 'review' }
+            ]
+          },
+          ru: {
+            title: 'братья и сёстры в снегу',
+            description: 'Джулия, Джакомо и Джованни',
+            lines: [
+              { text: 'Джулия играет с', word: 'братьями' },
+              { text: 'они держатся за', word: 'руки' },
+              { text: 'у них цветные', word: 'перчатки' },
+              { text: 'три смелых', word: 'исследователя' },
+              { text: 'они поднимаются на', word: 'гору' },
+              { text: 'с радостью и', word: 'смелостью' },
+              { text: 'холод им не', word: 'мешает' },
+              { text: 'они любят', word: 'снег' },
+              { text: 'какой чудесный', word: 'день', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'братьями', options: ['братьями', 'сёстрами', 'друзьями'] },
+              { lineIndex: 1, word: 'руки', options: ['руки', 'ноги', 'головы'] },
+              { lineIndex: 2, word: 'перчатки', options: ['перчатки', 'шапки', 'ботинки'] },
+              { lineIndex: 3, word: 'исследователя', options: ['исследователя', 'ребёнка', 'друга'] },
+              { lineIndex: 4, word: 'гору', options: ['гору', 'лес', 'дом'] },
+              { lineIndex: 5, word: 'смелостью', options: ['смелостью', 'усталостью', 'грустью'] },
+              { lineIndex: 6, word: 'мешает', options: ['мешает', 'помогает', 'греет'] },
+              { lineIndex: 7, word: 'снег', options: ['снег', 'дождь', 'солнце'] },
+              { lineIndex: 8, word: 'день', options: ['день', 'ночь', 'момент'] },
               { type: 'review' }
             ]
           }
@@ -1359,6 +1399,33 @@
               { lineIndex: 8, word: 'lintu', options: ['lintu', 'kukka', 'puu'] },
               { type: 'review' }
             ]
+          },
+          ru: {
+            title: 'красная птица',
+            description: 'птица среди роз',
+            lines: [
+              { text: 'я вижу птицу, она', word: 'красная' },
+              { text: 'смотрю на неё', word: 'внимательно' },
+              { text: 'она живёт среди', word: 'цветов' },
+              { text: 'её перья очень', word: 'красивые' },
+              { text: 'она поёт свою', word: 'песню' },
+              { text: 'полную радости и', word: 'счастья' },
+              { text: 'она летит к', word: 'небу' },
+              { text: 'и возвращается', word: 'домой' },
+              { text: 'какая красивая', word: 'птица', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'красная', options: ['красная', 'синяя', 'зелёная'] },
+              { lineIndex: 1, word: 'внимательно', options: ['внимательно', 'быстро', 'медленно'] },
+              { lineIndex: 2, word: 'цветов', options: ['цветов', 'деревьев', 'домов'] },
+              { lineIndex: 3, word: 'красивые', options: ['красивые', 'маленькие', 'большие'] },
+              { lineIndex: 4, word: 'песню', options: ['песню', 'танец', 'игру'] },
+              { lineIndex: 5, word: 'счастья', options: ['счастья', 'грусти', 'страха'] },
+              { lineIndex: 6, word: 'небу', options: ['небу', 'земле', 'воде'] },
+              { lineIndex: 7, word: 'домой', options: ['домой', 'прочь', 'далеко'] },
+              { lineIndex: 8, word: 'птица', options: ['птица', 'цветок', 'дерево'] },
+              { type: 'review' }
+            ]
           }
         }
       },
@@ -1472,6 +1539,33 @@
               { lineIndex: 6, word: 'aarre', options: ['aarre', 'koti', 'ruoka'] },
               { lineIndex: 7, word: 'kulta', options: ['kulta', 'hopea', 'rauta'] },
               { lineIndex: 8, word: 'joutsen', options: ['joutsen', 'ankka', 'lintu'] },
+              { type: 'review' }
+            ]
+          },
+          ru: {
+            title: 'лебедь и монета',
+            description: 'лебедь находит сокровище',
+            lines: [
+              { text: 'лебедь такой', word: 'белый' },
+              { text: 'плывёт без', word: 'отдыха' },
+              { text: 'в синем', word: 'озере' },
+              { text: 'под ясным', word: 'небом' },
+              { text: 'он находит блестящую', word: 'монету' },
+              { text: 'какая', word: 'удача' },
+              { text: 'это его', word: 'сокровище' },
+              { text: 'дороже чем', word: 'золото' },
+              { text: 'счастливый', word: 'лебедь', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'белый', options: ['белый', 'чёрный', 'серый'] },
+              { lineIndex: 1, word: 'отдыха', options: ['отдыха', 'помощи', 'воды'] },
+              { lineIndex: 2, word: 'озере', options: ['озере', 'море', 'реке'] },
+              { lineIndex: 3, word: 'небом', options: ['небом', 'над', 'рядом'] },
+              { lineIndex: 4, word: 'монету', options: ['монету', 'камень', 'лист'] },
+              { lineIndex: 5, word: 'удача', options: ['удача', 'находка', 'радость'] },
+              { lineIndex: 6, word: 'сокровище', options: ['сокровище', 'дом', 'еда'] },
+              { lineIndex: 7, word: 'золото', options: ['золото', 'серебро', 'железо'] },
+              { lineIndex: 8, word: 'лебедь', options: ['лебедь', 'утка', 'птица'] },
               { type: 'review' }
             ]
           }
@@ -1589,6 +1683,33 @@
               { lineIndex: 8, word: 'äiti', options: ['äiti', 'isä', 'lapsi'] },
               { type: 'review' }
             ]
+          },
+          ru: {
+            title: 'купание в проруби',
+            description: 'Валентина плавает в замёрзшем озере',
+            lines: [
+              { text: 'утро', word: 'Рождества' },
+              { text: 'Валентина очень', word: 'спокойна' },
+              { text: 'она идёт к', word: 'озеру' },
+              { text: 'всё покрыто', word: 'снегом' },
+              { text: 'она ломает', word: 'лёд' },
+              { text: 'под ясным', word: 'небом' },
+              { text: 'она идёт', word: 'плавать' },
+              { text: 'в ледяную', word: 'воду' },
+              { text: 'какая смелая', word: 'мама', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'Рождества', options: ['Рождества', 'вечера', 'ночи'] },
+              { lineIndex: 1, word: 'спокойна', options: ['спокойна', 'занята', 'устала'] },
+              { lineIndex: 2, word: 'озеру', options: ['озеру', 'лесу', 'дому'] },
+              { lineIndex: 3, word: 'снегом', options: ['снегом', 'травой', 'песком'] },
+              { lineIndex: 4, word: 'лёд', options: ['лёд', 'снег', 'воду'] },
+              { lineIndex: 5, word: 'небом', options: ['небом', 'над', 'рядом'] },
+              { lineIndex: 6, word: 'плавать', options: ['плавать', 'бегать', 'гулять'] },
+              { lineIndex: 7, word: 'воду', options: ['воду', 'снег', 'землю'] },
+              { lineIndex: 8, word: 'мама', options: ['мама', 'папа', 'ребёнок'] },
+              { type: 'review' }
+            ]
           }
         }
       },
@@ -1702,6 +1823,33 @@
               { lineIndex: 6, word: 'meren', options: ['meren', 'järven', 'joen'] },
               { lineIndex: 7, word: 'etsimässä', options: ['etsimässä', 'unelmoimassa', 'nukkumassa'] },
               { lineIndex: 8, word: 'ystävyys', options: ['ystävyys', 'rakkaus', 'onni'] },
+              { type: 'review' }
+            ]
+          },
+          ru: {
+            title: 'манта и принцесса',
+            description: 'приключения в море',
+            lines: [
+              { text: 'гигантская белая', word: 'манта' },
+              { text: 'плавает красиво в', word: 'море' },
+              { text: 'её подруга это', word: 'принцесса' },
+              { text: 'принцесса цветов, какая', word: 'красота' },
+              { text: 'она приплывает её', word: 'забрать' },
+              { text: 'на спине её', word: 'везти' },
+              { text: 'вместе они пересекают', word: 'море' },
+              { text: 'в поисках', word: 'приключений' },
+              { text: 'какая прекрасная', word: 'дружба', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'манта', options: ['манта', 'кит', 'акула'] },
+              { lineIndex: 1, word: 'море', options: ['море', 'озере', 'реке'] },
+              { lineIndex: 2, word: 'принцесса', options: ['принцесса', 'королева', 'девочка'] },
+              { lineIndex: 3, word: 'красота', options: ['красота', 'любовь', 'дружба'] },
+              { lineIndex: 4, word: 'забрать', options: ['забрать', 'оставить', 'увидеть'] },
+              { lineIndex: 5, word: 'везти', options: ['везти', 'нести', 'держать'] },
+              { lineIndex: 6, word: 'море', options: ['море', 'озеро', 'реку'] },
+              { lineIndex: 7, word: 'приключений', options: ['приключений', 'мечтаний', 'снов'] },
+              { lineIndex: 8, word: 'дружба', options: ['дружба', 'любовь', 'радость'] },
               { type: 'review' }
             ]
           }
@@ -1819,6 +1967,33 @@
               { lineIndex: 8, word: 'voittaa', options: ['voittaa', 'häviää', 'luovuttaa'] },
               { type: 'review' }
             ]
+          },
+          ru: {
+            title: 'заяц и черепаха',
+            description: 'гонка с сюрпризом',
+            lines: [
+              { text: 'заяц бежит очень', word: 'быстро' },
+              { text: 'он думает что будет', word: 'первым' },
+              { text: 'черепаха идёт без', word: 'спешки' },
+              { text: 'она идёт', word: 'улыбаясь' },
+              { text: 'заяц останавливается', word: 'отдохнуть' },
+              { text: 'он уверен в своей', word: 'победе' },
+              { text: 'черепаха никогда не', word: 'устаёт' },
+              { text: 'и в конце она', word: 'побеждает' },
+              { text: 'черепаха', word: 'побеждает', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'быстро', options: ['быстро', 'медленно', 'тихо'] },
+              { lineIndex: 1, word: 'первым', options: ['первым', 'последним', 'вторым'] },
+              { lineIndex: 2, word: 'спешки', options: ['спешки', 'времени', 'силы'] },
+              { lineIndex: 3, word: 'улыбаясь', options: ['улыбаясь', 'плача', 'крича'] },
+              { lineIndex: 4, word: 'отдохнуть', options: ['отдохнуть', 'бежать', 'прыгать'] },
+              { lineIndex: 5, word: 'победе', options: ['победе', 'поражении', 'пути'] },
+              { lineIndex: 6, word: 'устаёт', options: ['устаёт', 'просыпается', 'сдаётся'] },
+              { lineIndex: 7, word: 'побеждает', options: ['побеждает', 'проигрывает', 'останавливается'] },
+              { lineIndex: 8, word: 'побеждает', options: ['побеждает', 'проигрывает', 'сдаётся'] },
+              { type: 'review' }
+            ]
           }
         }
       },
@@ -1932,6 +2107,33 @@
               { lineIndex: 6, word: 'pannastani', options: ['pannastani', 'kaulakoristani', 'ketjustani'] },
               { lineIndex: 7, word: 'poistaa', options: ['poistaa', 'pitää', 'ottaa'] },
               { lineIndex: 8, word: 'vapauden', options: ['vapauden', 'mukavuuden', 'turvallisuuden'] },
+              { type: 'review' }
+            ]
+          },
+          ru: {
+            title: 'волк и собака',
+            description: 'свобода или комфорт',
+            lines: [
+              { text: 'волк видит толстую', word: 'собаку' },
+              { text: 'собака ест вкусную', word: 'еду' },
+              { text: 'пойдём со мной, говорит', word: 'друг' },
+              { text: 'получишь еду и', word: 'укрытие' },
+              { text: 'но волк видит', word: 'шею' },
+              { text: 'она помечена, не', word: 'красиво' },
+              { text: 'это от моего', word: 'ошейника' },
+              { text: 'я не могу его', word: 'снять' },
+              { text: 'я выбираю', word: 'свободу', suffix: '!' }
+            ],
+            levels: [
+              { lineIndex: 0, word: 'собаку', options: ['собаку', 'кошку', 'кролика'] },
+              { lineIndex: 1, word: 'еду', options: ['еду', 'воду', 'хлеб'] },
+              { lineIndex: 2, word: 'друг', options: ['друг', 'чужой', 'враг'] },
+              { lineIndex: 3, word: 'укрытие', options: ['укрытие', 'опасность', 'страх'] },
+              { lineIndex: 4, word: 'шею', options: ['шею', 'голову', 'спину'] },
+              { lineIndex: 5, word: 'красиво', options: ['красиво', 'хорошо', 'плохо'] },
+              { lineIndex: 6, word: 'ошейника', options: ['ошейника', 'украшения', 'цепи'] },
+              { lineIndex: 7, word: 'снять', options: ['снять', 'надеть', 'взять'] },
+              { lineIndex: 8, word: 'свободу', options: ['свободу', 'комфорт', 'безопасность'] },
               { type: 'review' }
             ]
           }
@@ -2708,7 +2910,8 @@
         es: ['mónica', 'monica', 'jorge'],
         it: ['federica', 'alice', 'luca'],
         en: ['siri', 'samantha', 'daniel'],
-        fi: ['satu', 'onni']
+        fi: ['satu', 'onni'],
+        ru: ['milena', 'yuri', 'katya']
       };
 
       const preferred = preferredVoices[currentLanguage] || [];
