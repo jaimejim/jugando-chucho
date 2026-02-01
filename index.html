@@ -882,6 +882,97 @@
       color: #fff;
     }
 
+    /* Word Search */
+    .ws-layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      gap: 12px;
+      padding: 0 10px;
+    }
+
+    .ws-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #e0e0e0;
+    }
+
+    .ws-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 2px;
+      background: #d4c5a9;
+      border: 2px solid #3a3a3a;
+      border-radius: 8px;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .ws-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #faf6ee;
+      font-family: 'Borel', cursive;
+      font-size: 16px;
+      color: #3a3a3a;
+      cursor: pointer;
+      transition: background-color 0.15s;
+      text-transform: uppercase;
+    }
+
+    .ws-cell.selecting {
+      background: #FFF3CD;
+    }
+
+    .ws-cell.found { color: #fff; }
+    .ws-cell.found-0 { background: #E8B4B8; }
+    .ws-cell.found-1 { background: #7CB68E; }
+    .ws-cell.found-2 { background: #7BA3D4; }
+    .ws-cell.found-3 { background: #D4A017; }
+    .ws-cell.found-4 { background: #A088C4; }
+    .ws-cell.found-5 { background: #5CB8A0; }
+    .ws-cell.found-6 { background: #D4956A; }
+    .ws-cell.found-7 { background: #8BC470; }
+
+    .ws-wordlist {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 12px;
+      padding: 8px 5px;
+      max-width: 400px;
+    }
+
+    .ws-word {
+      font-size: 14px;
+      color: #3a3a3a;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #f5f0e8;
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .ws-word.found {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    .ws-congrats {
+      text-align: center;
+      margin-top: 15px;
+    }
+
     /* iPad landscape - use full screen */
     @media (min-width: 768px) and (max-width: 1400px) and (orientation: landscape) {
       body { padding: 15px 30px; }
@@ -904,6 +995,10 @@
       .letter-btn { width: 55px; height: 55px; font-size: 32px; }
       .spelling-slot { min-width: 40px; height: 52px; font-size: 32px; }
       .spelling-progress { gap: 6px; }
+      .ws-layout { max-width: 700px; }
+      .ws-grid { max-width: 450px; }
+      .ws-cell { font-size: 20px; }
+      .ws-image { width: 120px; height: 120px; }
     }
 
     /* Responsive */
@@ -933,6 +1028,9 @@
       .mode-toggle.active .mode-toggle-switch::after { transform: translateX(14px); }
       .letter-btn { width: 40px; height: 40px; font-size: 22px; padding-top: 6px; }
       .spelling-slot { min-width: 28px; height: 38px; font-size: 22px; }
+      .ws-cell { font-size: 14px; }
+      .ws-image { width: 70px; height: 70px; }
+      .ws-word { font-size: 12px; padding: 2px 8px; }
     }
   </style>
 </head>
@@ -958,6 +1056,8 @@
     </div>
 
     <div class="footer-links">
+      <a href="#" id="link-wordsearch">sopa de letras</a>
+      <span class="footer-dot">·</span>
       <a href="#" id="link-instrucciones">instrucciones</a>
       <span class="footer-dot">·</span>
       <a href="#" id="link-autor">autor</a>
@@ -1072,6 +1172,28 @@
     </div>
   </div>
 
+  <!-- Word Search Screen -->
+  <div class="screen" id="ws-screen">
+    <div class="header">
+      <button class="back-btn" id="ws-back-btn">☜</button>
+      <div class="title" id="ws-title">sopa de letras</div>
+    </div>
+
+    <div class="ws-layout">
+      <img class="ws-image" src="https://cdn.midjourney.com/4da837d4-e31b-42e9-aa83-842da7979443/0_0.jpeg" alt="">
+      <div class="ws-wordlist" id="ws-wordlist"></div>
+      <div class="ws-grid" id="ws-grid"></div>
+    </div>
+
+    <div class="ws-congrats" id="ws-congrats" style="display:none;">
+      <h2 class="congrats-title" id="ws-congrats-title"></h2>
+      <div class="button-group">
+        <button class="play-btn" id="ws-play-again">jugar de nuevo</button>
+        <button class="play-btn secondary" id="ws-menu-btn">otras historias</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ============ LANGUAGE SYSTEM ============
     const LANG_KEY = 'cuentos-language';
@@ -1087,7 +1209,8 @@
         otherStories: 'otras historias',
         congrats: '¡muy bien!',
         readAloud: 'Leer en voz alta',
-        spellingMode: 'Modo deletreo'
+        spellingMode: 'Modo deletreo',
+        wordSearch: 'sopa de letras'
       },
       it: {
         chooseStory: 'scegli una',
@@ -1098,7 +1221,8 @@
         otherStories: 'altre storie',
         congrats: 'molto bene!',
         readAloud: 'Leggi ad alta voce',
-        spellingMode: 'Modo ortografia'
+        spellingMode: 'Modo ortografia',
+        wordSearch: 'crucipuzzle'
       },
       en: {
         chooseStory: 'choose a',
@@ -1109,7 +1233,8 @@
         otherStories: 'other stories',
         congrats: 'well done!',
         readAloud: 'Read aloud',
-        spellingMode: 'Spelling mode'
+        spellingMode: 'Spelling mode',
+        wordSearch: 'word search'
       },
       fi: {
         chooseStory: 'valitse',
@@ -1120,7 +1245,8 @@
         otherStories: 'muut tarinat',
         congrats: 'hienoa!',
         readAloud: 'Lue ääneen',
-        spellingMode: 'Tavausmoodi'
+        spellingMode: 'Tavausmoodi',
+        wordSearch: 'sanahaku'
       },
       ru: {
         chooseStory: 'выбери',
@@ -1131,7 +1257,8 @@
         otherStories: 'другие истории',
         congrats: 'молодец!',
         readAloud: 'Читать вслух',
-        spellingMode: 'Режим правописания'
+        spellingMode: 'Режим правописания',
+        wordSearch: 'поиск слов'
       }
     };
 
@@ -2567,6 +2694,32 @@
       }
     };
 
+    // ============ WORD SEARCH DATA ============
+    const WORDSEARCH_DATA = {
+      es: {
+        words: ['SOL', 'LUNA', 'GATO', 'PERRO', 'CASA', 'FLOR', 'OSO', 'NIEVE'],
+        alphabet: 'ABCDEFGHIJLMNOPRSTUVZ'
+      },
+      it: {
+        words: ['SOLE', 'LUNA', 'GATTO', 'CANE', 'CASA', 'FIORE', 'ORSO', 'NEVE'],
+        alphabet: 'ABCDEFGHILMNOPRSTUVZ'
+      },
+      en: {
+        words: ['SUN', 'MOON', 'CAT', 'DOG', 'HOUSE', 'TREE', 'BEAR', 'SNOW'],
+        alphabet: 'ABCDEFGHIJKLMNOPRSTUVWXYZ'
+      },
+      fi: {
+        words: ['KUU', 'KISSA', 'KOIRA', 'TALO', 'PUU', 'KALA', 'KUKKA', 'LUMI'],
+        alphabet: 'AEHIJKLMNOPRSTUVYÄÖ'
+      },
+      ru: {
+        words: ['КОТ', 'ДОМ', 'ЛУНА', 'ВОДА', 'РЫБА', 'СНЕГ', 'ЛИСА', 'ЗИМА'],
+        alphabet: 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЯ'
+      }
+    };
+
+    const WS_GRID_SIZE = 10;
+
     // ============ COLOR FUNCTIONS ============
     const VOWELS = 'aeiouáéíóúüäöåàèìòù';
 
@@ -2635,11 +2788,12 @@
 
     function unlockAllStories() {
       const progress = loadProgress();
+      const allStories = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise', 'wolf', 'robin', 'grasshopper', 'goldcoin'];
       // Toggle: if all unlocked, reset to empty; otherwise unlock all
-      if (progress.completedStories.length === 7) {
+      if (progress.completedStories.length === allStories.length) {
         progress.completedStories = [];
       } else {
-        progress.completedStories = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise', 'wolf'];
+        progress.completedStories = allStories;
       }
       saveProgress(progress);
       renderStorySelection();
@@ -2651,7 +2805,7 @@
     }
 
     function isStoryUnlocked(storyId) {
-      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise', 'wolf'];
+      const storyOrder = ['snow', 'bird', 'swan', 'cabin', 'manta', 'tortoise', 'wolf', 'robin', 'grasshopper', 'goldcoin'];
       const storyIndex = storyOrder.indexOf(storyId);
 
       // First two stories always unlocked
@@ -2689,12 +2843,252 @@
     const linkAutor = document.getElementById('link-autor');
     const backInstructions = document.getElementById('back-instructions');
     const backAuthor = document.getElementById('back-author');
+    const wsScreen = document.getElementById('ws-screen');
+    const wsGrid = document.getElementById('ws-grid');
+    const wsWordlist = document.getElementById('ws-wordlist');
+    const wsCongrats = document.getElementById('ws-congrats');
+    const linkWordsearch = document.getElementById('link-wordsearch');
+
+    // ============ WORD SEARCH STATE ============
+    let wsState = {
+      grid: [],
+      words: [],
+      foundWords: [],
+      isSelecting: false,
+      startCell: null,
+      selectedCells: [],
+      foundCellMap: {}  // row-col -> colorIndex
+    };
+
+    function generateWSGrid(words, size, alphabet) {
+      const grid = Array.from({length: size}, () => Array(size).fill(''));
+      const sortedWords = [...words].sort((a, b) => b.length - a.length);
+
+      for (const word of sortedWords) {
+        let placed = false;
+        for (let attempt = 0; attempt < 200 && !placed; attempt++) {
+          const dir = Math.random() < 0.5 ? 0 : 1; // 0=horizontal, 1=vertical
+          const dr = dir === 1 ? 1 : 0;
+          const dc = dir === 0 ? 1 : 0;
+          const maxR = size - dr * (word.length - 1);
+          const maxC = size - dc * (word.length - 1);
+          if (maxR <= 0 || maxC <= 0) continue;
+
+          const startR = Math.floor(Math.random() * maxR);
+          const startC = Math.floor(Math.random() * maxC);
+
+          let fits = true;
+          for (let i = 0; i < word.length; i++) {
+            const existing = grid[startR + dr * i][startC + dc * i];
+            if (existing !== '' && existing !== word[i]) { fits = false; break; }
+          }
+
+          if (fits) {
+            for (let i = 0; i < word.length; i++) {
+              grid[startR + dr * i][startC + dc * i] = word[i];
+            }
+            placed = true;
+          }
+        }
+      }
+
+      // Fill empty cells with random letters
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (grid[r][c] === '') {
+            grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
+          }
+        }
+      }
+      return grid;
+    }
+
+    function startWordSearch() {
+      const data = WORDSEARCH_DATA[currentLanguage];
+      wsState.words = [...data.words];
+      wsState.foundWords = [];
+      wsState.foundCellMap = {};
+      wsState.grid = generateWSGrid(data.words, WS_GRID_SIZE, data.alphabet);
+      wsCongrats.style.display = 'none';
+      renderWSGrid();
+      renderWSWordlist();
+      showScreen('wordsearch');
+    }
+
+    function renderWSGrid() {
+      wsGrid.innerHTML = '';
+      for (let r = 0; r < WS_GRID_SIZE; r++) {
+        for (let c = 0; c < WS_GRID_SIZE; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'ws-cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.textContent = wsState.grid[r][c];
+          const key = r + '-' + c;
+          if (wsState.foundCellMap[key] !== undefined) {
+            cell.classList.add('found', 'found-' + wsState.foundCellMap[key]);
+          }
+          wsGrid.appendChild(cell);
+        }
+      }
+    }
+
+    function renderWSWordlist() {
+      wsWordlist.innerHTML = '';
+      wsState.words.forEach(word => {
+        const span = document.createElement('span');
+        span.className = 'ws-word' + (wsState.foundWords.includes(word) ? ' found' : '');
+        span.textContent = word;
+        wsWordlist.appendChild(span);
+      });
+    }
+
+    function getWSCellFromPoint(x, y) {
+      const rect = wsGrid.getBoundingClientRect();
+      const cellW = rect.width / WS_GRID_SIZE;
+      const cellH = rect.height / WS_GRID_SIZE;
+      const col = Math.floor((x - rect.left) / cellW);
+      const row = Math.floor((y - rect.top) / cellH);
+      if (row >= 0 && row < WS_GRID_SIZE && col >= 0 && col < WS_GRID_SIZE) {
+        return { row, col };
+      }
+      return null;
+    }
+
+    function getWSLineCells(start, targetRow, targetCol) {
+      const dr = targetRow - start.row;
+      const dc = targetCol - start.col;
+      if (dr === 0 && dc === 0) return [{ row: start.row, col: start.col }];
+
+      const absDr = Math.abs(dr);
+      const absDc = Math.abs(dc);
+      let dirR, dirC, steps;
+
+      if (absDc > absDr * 1.5) {
+        dirR = 0; dirC = dc > 0 ? 1 : -1; steps = absDc;
+      } else if (absDr > absDc * 1.5) {
+        dirR = dr > 0 ? 1 : -1; dirC = 0; steps = absDr;
+      } else {
+        dirR = dr > 0 ? 1 : -1; dirC = dc > 0 ? 1 : -1; steps = Math.min(absDr, absDc);
+      }
+
+      const cells = [];
+      for (let i = 0; i <= steps; i++) {
+        const r = start.row + dirR * i;
+        const c = start.col + dirC * i;
+        if (r >= 0 && r < WS_GRID_SIZE && c >= 0 && c < WS_GRID_SIZE) {
+          cells.push({ row: r, col: c });
+        } else break;
+      }
+      return cells;
+    }
+
+    function highlightWSCells(cells) {
+      // Clear previous selection styling
+      wsGrid.querySelectorAll('.ws-cell.selecting').forEach(el => el.classList.remove('selecting'));
+      cells.forEach(c => {
+        const idx = c.row * WS_GRID_SIZE + c.col;
+        const cell = wsGrid.children[idx];
+        if (cell) cell.classList.add('selecting');
+      });
+    }
+
+    function checkWSSelection() {
+      const selected = wsState.selectedCells.map(c => wsState.grid[c.row][c.col]).join('');
+      const reversed = selected.split('').reverse().join('');
+
+      let foundWord = null;
+      for (const word of wsState.words) {
+        if (wsState.foundWords.includes(word)) continue;
+        if (word === selected || word === reversed) {
+          foundWord = word;
+          break;
+        }
+      }
+
+      if (foundWord) {
+        const colorIdx = wsState.foundWords.length % 8;
+        wsState.foundWords.push(foundWord);
+
+        wsState.selectedCells.forEach(c => {
+          wsState.foundCellMap[c.row + '-' + c.col] = colorIdx;
+        });
+
+        renderWSGrid();
+        renderWSWordlist();
+
+        if (wsState.foundWords.length === wsState.words.length) {
+          setTimeout(() => {
+            wsCongrats.style.display = 'block';
+            showConfetti();
+          }, 500);
+        }
+      }
+
+      // Clear selection styling
+      wsGrid.querySelectorAll('.ws-cell.selecting').forEach(el => el.classList.remove('selecting'));
+      wsState.selectedCells = [];
+    }
+
+    function setupWSEvents() {
+      // Touch events
+      wsGrid.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const cell = getWSCellFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+        if (!cell) return;
+        wsState.isSelecting = true;
+        wsState.startCell = cell;
+        wsState.selectedCells = [cell];
+        highlightWSCells(wsState.selectedCells);
+      }, { passive: false });
+
+      wsGrid.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (!wsState.isSelecting) return;
+        const cell = getWSCellFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+        if (!cell) return;
+        wsState.selectedCells = getWSLineCells(wsState.startCell, cell.row, cell.col);
+        highlightWSCells(wsState.selectedCells);
+      }, { passive: false });
+
+      wsGrid.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (!wsState.isSelecting) return;
+        wsState.isSelecting = false;
+        checkWSSelection();
+      }, { passive: false });
+
+      // Mouse events for desktop
+      wsGrid.addEventListener('mousedown', (e) => {
+        const cell = getWSCellFromPoint(e.clientX, e.clientY);
+        if (!cell) return;
+        wsState.isSelecting = true;
+        wsState.startCell = cell;
+        wsState.selectedCells = [cell];
+        highlightWSCells(wsState.selectedCells);
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!wsState.isSelecting) return;
+        const cell = getWSCellFromPoint(e.clientX, e.clientY);
+        if (!cell) return;
+        wsState.selectedCells = getWSLineCells(wsState.startCell, cell.row, cell.col);
+        highlightWSCells(wsState.selectedCells);
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (!wsState.isSelecting) return;
+        wsState.isSelecting = false;
+        checkWSSelection();
+      });
+    }
 
     // ============ INITIALIZATION ============
     function init() {
       updateLanguageUI();
       renderStorySelection();
       setupEventListeners();
+      setupWSEvents();
     }
 
     function renderStorySelection() {
@@ -2767,6 +3161,10 @@
       };
 
       // Footer links
+      linkWordsearch.onclick = (e) => {
+        e.preventDefault();
+        startWordSearch();
+      };
       linkInstrucciones.onclick = (e) => {
         e.preventDefault();
         showScreen('instructions');
@@ -2777,6 +3175,11 @@
       };
       backInstructions.onclick = () => showScreen('title');
       backAuthor.onclick = () => showScreen('title');
+
+      // Word search buttons
+      document.getElementById('ws-back-btn').onclick = () => showScreen('title');
+      document.getElementById('ws-play-again').onclick = () => startWordSearch();
+      document.getElementById('ws-menu-btn').onclick = () => showScreen('title');
 
       // Secret easter egg: click "historia" to unlock all stories
       document.getElementById('secret-unlock').onclick = unlockAllStories;
@@ -2810,6 +3213,7 @@
       document.getElementById('secret-unlock').onclick = unlockAllStories;
 
       // Update footer links
+      document.getElementById('link-wordsearch').textContent = ui.wordSearch;
       document.getElementById('link-instrucciones').textContent = ui.instructions;
       document.getElementById('link-autor').textContent = ui.author;
 
@@ -2823,6 +3227,12 @@
       document.getElementById('replay-btn').textContent = ui.playAgain;
       document.getElementById('menu-btn').textContent = ui.otherStories;
 
+      // Update word search screen text
+      document.getElementById('ws-title').textContent = ui.wordSearch;
+      document.getElementById('ws-congrats-title').textContent = ui.congrats;
+      document.getElementById('ws-play-again').textContent = ui.playAgain;
+      document.getElementById('ws-menu-btn').textContent = ui.otherStories;
+
       // Update congrats title
       document.querySelector('.congrats-title').textContent = ui.congrats;
     }
@@ -2834,6 +3244,7 @@
       completeScreen.classList.remove('active');
       instructionsScreen.classList.remove('active');
       authorScreen.classList.remove('active');
+      wsScreen.classList.remove('active');
 
       switch (screenName) {
         case 'title':
@@ -2857,6 +3268,10 @@
           authorScreen.classList.add('active');
           updateURL('/autor');
           break;
+        case 'wordsearch':
+          wsScreen.classList.add('active');
+          updateURL('/sopa');
+          break;
       }
     }
 
@@ -2876,6 +3291,11 @@
 
       if (path === '/autor') {
         showScreen('author');
+        return;
+      }
+
+      if (path === '/sopa') {
+        startWordSearch();
         return;
       }
 
