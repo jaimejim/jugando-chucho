@@ -2896,19 +2896,25 @@
     function generateWSGrid(words, size, alphabet) {
       const grid = Array.from({length: size}, () => Array(size).fill(''));
       const sortedWords = [...words].sort((a, b) => b.length - a.length);
+      // All 8 directions: →  ←  ↓  ↑  ↘  ↖  ↙  ↗
+      const directions = [
+        [0,1], [0,-1], [1,0], [-1,0],
+        [1,1], [-1,-1], [1,-1], [-1,1]
+      ];
 
       for (const word of sortedWords) {
         let placed = false;
-        for (let attempt = 0; attempt < 200 && !placed; attempt++) {
-          const dir = Math.random() < 0.5 ? 0 : 1; // 0=horizontal, 1=vertical
-          const dr = dir === 1 ? 1 : 0;
-          const dc = dir === 0 ? 1 : 0;
-          const maxR = size - dr * (word.length - 1);
-          const maxC = size - dc * (word.length - 1);
-          if (maxR <= 0 || maxC <= 0) continue;
+        for (let attempt = 0; attempt < 300 && !placed; attempt++) {
+          const [dr, dc] = directions[Math.floor(Math.random() * directions.length)];
+          // Calculate valid start range for this direction
+          const minR = dr < 0 ? word.length - 1 : 0;
+          const maxR = dr > 0 ? size - word.length : size - 1;
+          const minC = dc < 0 ? word.length - 1 : 0;
+          const maxC = dc > 0 ? size - word.length : size - 1;
+          if (maxR < minR || maxC < minC) continue;
 
-          const startR = Math.floor(Math.random() * maxR);
-          const startC = Math.floor(Math.random() * maxC);
+          const startR = minR + Math.floor(Math.random() * (maxR - minR + 1));
+          const startC = minC + Math.floor(Math.random() * (maxC - minC + 1));
 
           let fits = true;
           for (let i = 0; i < word.length; i++) {
