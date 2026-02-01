@@ -903,7 +903,7 @@
 
     .ws-grid {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(12, 1fr);
       gap: 2px;
       background: #d4c5a9;
       border: 2px solid #3a3a3a;
@@ -913,7 +913,7 @@
       user-select: none;
       -webkit-user-select: none;
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
     }
 
     .ws-cell {
@@ -923,12 +923,12 @@
       justify-content: center;
       background: #faf6ee;
       font-family: 'Borel', cursive;
-      font-size: 16px;
-      color: #3a3a3a;
+      font-size: 15px;
       cursor: pointer;
       transition: background-color 0.15s;
-      text-transform: uppercase;
     }
+
+    .ws-cell.found span { color: #fff !important; }
 
     .ws-cell.selecting {
       background: #FFF3CD;
@@ -996,8 +996,8 @@
       .spelling-slot { min-width: 40px; height: 52px; font-size: 32px; }
       .spelling-progress { gap: 6px; }
       .ws-layout { max-width: 700px; }
-      .ws-grid { max-width: 450px; }
-      .ws-cell { font-size: 20px; }
+      .ws-grid { max-width: 500px; }
+      .ws-cell { font-size: 18px; }
       .ws-image { width: 120px; height: 120px; }
     }
 
@@ -1028,7 +1028,7 @@
       .mode-toggle.active .mode-toggle-switch::after { transform: translateX(14px); }
       .letter-btn { width: 40px; height: 40px; font-size: 22px; padding-top: 6px; }
       .spelling-slot { min-width: 28px; height: 38px; font-size: 22px; }
-      .ws-cell { font-size: 14px; }
+      .ws-cell { font-size: 12px; }
       .ws-image { width: 70px; height: 70px; }
       .ws-word { font-size: 12px; padding: 2px 8px; }
     }
@@ -1056,7 +1056,7 @@
     </div>
 
     <div class="footer-links">
-      <a href="#" id="link-wordsearch">sopa de letras</a>
+      <a href="#" id="link-wordsearch">trovaridù</a>
       <span class="footer-dot">·</span>
       <a href="#" id="link-instrucciones">instrucciones</a>
       <span class="footer-dot">·</span>
@@ -1176,7 +1176,7 @@
   <div class="screen" id="ws-screen">
     <div class="header">
       <button class="back-btn" id="ws-back-btn">☜</button>
-      <div class="title" id="ws-title">sopa de letras</div>
+      <div class="title" id="ws-title">trovaridù</div>
     </div>
 
     <div class="ws-layout">
@@ -1186,10 +1186,10 @@
     </div>
 
     <div class="ws-congrats" id="ws-congrats" style="display:none;">
-      <h2 class="congrats-title" id="ws-congrats-title"></h2>
+      <h2 class="congrats-title" id="ws-congrats-title">molto bene!</h2>
       <div class="button-group">
-        <button class="play-btn" id="ws-play-again">jugar de nuevo</button>
-        <button class="play-btn secondary" id="ws-menu-btn">otras historias</button>
+        <button class="play-btn" id="ws-play-again">gioca ancora</button>
+        <button class="play-btn secondary" id="ws-menu-btn">altre storie</button>
       </div>
     </div>
   </div>
@@ -1209,8 +1209,7 @@
         otherStories: 'otras historias',
         congrats: '¡muy bien!',
         readAloud: 'Leer en voz alta',
-        spellingMode: 'Modo deletreo',
-        wordSearch: 'sopa de letras'
+        spellingMode: 'Modo deletreo'
       },
       it: {
         chooseStory: 'scegli una',
@@ -1221,8 +1220,7 @@
         otherStories: 'altre storie',
         congrats: 'molto bene!',
         readAloud: 'Leggi ad alta voce',
-        spellingMode: 'Modo ortografia',
-        wordSearch: 'crucipuzzle'
+        spellingMode: 'Modo ortografia'
       },
       en: {
         chooseStory: 'choose a',
@@ -1233,8 +1231,7 @@
         otherStories: 'other stories',
         congrats: 'well done!',
         readAloud: 'Read aloud',
-        spellingMode: 'Spelling mode',
-        wordSearch: 'word search'
+        spellingMode: 'Spelling mode'
       },
       fi: {
         chooseStory: 'valitse',
@@ -1245,8 +1242,7 @@
         otherStories: 'muut tarinat',
         congrats: 'hienoa!',
         readAloud: 'Lue ääneen',
-        spellingMode: 'Tavausmoodi',
-        wordSearch: 'sanahaku'
+        spellingMode: 'Tavausmoodi'
       },
       ru: {
         chooseStory: 'выбери',
@@ -1257,8 +1253,7 @@
         otherStories: 'другие истории',
         congrats: 'молодец!',
         readAloud: 'Читать вслух',
-        spellingMode: 'Режим правописания',
-        wordSearch: 'поиск слов'
+        spellingMode: 'Режим правописания'
       }
     };
 
@@ -2695,30 +2690,9 @@
     };
 
     // ============ WORD SEARCH DATA ============
-    const WORDSEARCH_DATA = {
-      es: {
-        words: ['SOL', 'LUNA', 'GATO', 'PERRO', 'CASA', 'FLOR', 'OSO', 'NIEVE'],
-        alphabet: 'ABCDEFGHIJLMNOPRSTUVZ'
-      },
-      it: {
-        words: ['SOLE', 'LUNA', 'GATTO', 'CANE', 'CASA', 'FIORE', 'ORSO', 'NEVE'],
-        alphabet: 'ABCDEFGHILMNOPRSTUVZ'
-      },
-      en: {
-        words: ['SUN', 'MOON', 'CAT', 'DOG', 'HOUSE', 'TREE', 'BEAR', 'SNOW'],
-        alphabet: 'ABCDEFGHIJKLMNOPRSTUVWXYZ'
-      },
-      fi: {
-        words: ['KUU', 'KISSA', 'KOIRA', 'TALO', 'PUU', 'KALA', 'KUKKA', 'LUMI'],
-        alphabet: 'AEHIJKLMNOPRSTUVYÄÖ'
-      },
-      ru: {
-        words: ['КОТ', 'ДОМ', 'ЛУНА', 'ВОДА', 'РЫБА', 'СНЕГ', 'ЛИСА', 'ЗИМА'],
-        alphabet: 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЯ'
-      }
-    };
-
-    const WS_GRID_SIZE = 10;
+    const WS_WORDS = ['APP', 'BOMBA', 'ARCOBALENO', 'SPAGHETTI', 'BRILLANTINI', 'INCANTESIMO', 'OMBRELLO', 'UNICORNO'];
+    const WS_ALPHABET = 'ABCDEFGHILMNOPQRSTUVZ';
+    const WS_GRID_SIZE = 12;
 
     // ============ COLOR FUNCTIONS ============
     const VOWELS = 'aeiouáéíóúüäöåàèìòù';
@@ -2904,11 +2878,10 @@
     }
 
     function startWordSearch() {
-      const data = WORDSEARCH_DATA[currentLanguage];
-      wsState.words = [...data.words];
+      wsState.words = [...WS_WORDS];
       wsState.foundWords = [];
       wsState.foundCellMap = {};
-      wsState.grid = generateWSGrid(data.words, WS_GRID_SIZE, data.alphabet);
+      wsState.grid = generateWSGrid(WS_WORDS, WS_GRID_SIZE, WS_ALPHABET);
       wsCongrats.style.display = 'none';
       renderWSGrid();
       renderWSWordlist();
@@ -2923,7 +2896,9 @@
           cell.className = 'ws-cell';
           cell.dataset.row = r;
           cell.dataset.col = c;
-          cell.textContent = wsState.grid[r][c];
+          const letter = wsState.grid[r][c];
+          const cls = getLetterClass(letter);
+          cell.innerHTML = `<span class="${cls}">${letter}</span>`;
           const key = r + '-' + c;
           if (wsState.foundCellMap[key] !== undefined) {
             cell.classList.add('found', 'found-' + wsState.foundCellMap[key]);
@@ -2938,7 +2913,7 @@
       wsState.words.forEach(word => {
         const span = document.createElement('span');
         span.className = 'ws-word' + (wsState.foundWords.includes(word) ? ' found' : '');
-        span.textContent = word;
+        span.innerHTML = colorizeText(word.toLowerCase());
         wsWordlist.appendChild(span);
       });
     }
@@ -3213,7 +3188,6 @@
       document.getElementById('secret-unlock').onclick = unlockAllStories;
 
       // Update footer links
-      document.getElementById('link-wordsearch').textContent = ui.wordSearch;
       document.getElementById('link-instrucciones').textContent = ui.instructions;
       document.getElementById('link-autor').textContent = ui.author;
 
@@ -3227,11 +3201,10 @@
       document.getElementById('replay-btn').textContent = ui.playAgain;
       document.getElementById('menu-btn').textContent = ui.otherStories;
 
-      // Update word search screen text
-      document.getElementById('ws-title').textContent = ui.wordSearch;
-      document.getElementById('ws-congrats-title').textContent = ui.congrats;
-      document.getElementById('ws-play-again').textContent = ui.playAgain;
-      document.getElementById('ws-menu-btn').textContent = ui.otherStories;
+      // Update word search screen buttons (Italian only)
+      document.getElementById('ws-congrats-title').textContent = 'molto bene!';
+      document.getElementById('ws-play-again').textContent = 'gioca ancora';
+      document.getElementById('ws-menu-btn').textContent = 'altre storie';
 
       // Update congrats title
       document.querySelector('.congrats-title').textContent = ui.congrats;
