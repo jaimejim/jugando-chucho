@@ -893,12 +893,22 @@
       padding: 0 10px;
     }
 
-    .ws-image {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 2px solid #e0e0e0;
+    .ws-refresh-btn {
+      position: absolute;
+      right: 20px;
+      top: 12px;
+      font-size: 28px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888;
+      transition: all 0.3s ease;
+    }
+
+    .ws-refresh-btn:hover {
+      color: #3a3a3a;
+      transform: rotate(180deg);
     }
 
     .ws-grid {
@@ -926,6 +936,8 @@
       font-size: 15px;
       cursor: pointer;
       transition: background-color 0.15s;
+      padding-top: 6px;
+      line-height: 1;
     }
 
     .ws-cell.found span { color: #fff !important; }
@@ -998,7 +1010,6 @@
       .ws-layout { max-width: 700px; }
       .ws-grid { max-width: 500px; }
       .ws-cell { font-size: 18px; }
-      .ws-image { width: 120px; height: 120px; }
     }
 
     /* Responsive */
@@ -1029,7 +1040,6 @@
       .letter-btn { width: 40px; height: 40px; font-size: 22px; padding-top: 6px; }
       .spelling-slot { min-width: 28px; height: 38px; font-size: 22px; }
       .ws-cell { font-size: 12px; }
-      .ws-image { width: 70px; height: 70px; }
       .ws-word { font-size: 12px; padding: 2px 8px; }
     }
   </style>
@@ -1177,10 +1187,10 @@
     <div class="header">
       <button class="back-btn" id="ws-back-btn">☜</button>
       <div class="title" id="ws-title">trovaridù</div>
+      <button class="ws-refresh-btn" id="ws-refresh-btn" title="Nuovo gioco">↻</button>
     </div>
 
     <div class="ws-layout">
-      <img class="ws-image" src="https://cdn.midjourney.com/4da837d4-e31b-42e9-aa83-842da7979443/0_0.jpeg" alt="">
       <div class="ws-wordlist" id="ws-wordlist"></div>
       <div class="ws-grid" id="ws-grid"></div>
     </div>
@@ -2989,6 +2999,7 @@
           wsState.foundCellMap[c.row + '-' + c.col] = colorIdx;
         });
 
+        showStars();
         renderWSGrid();
         renderWSWordlist();
 
@@ -3153,6 +3164,7 @@
 
       // Word search buttons
       document.getElementById('ws-back-btn').onclick = () => showScreen('title');
+      document.getElementById('ws-refresh-btn').onclick = () => startWordSearch();
       document.getElementById('ws-play-again').onclick = () => startWordSearch();
       document.getElementById('ws-menu-btn').onclick = () => showScreen('title');
 
@@ -3218,6 +3230,9 @@
       instructionsScreen.classList.remove('active');
       authorScreen.classList.remove('active');
       wsScreen.classList.remove('active');
+
+      // Only show speak button on game/complete screens
+      document.getElementById('speak-btn').style.display = (screenName === 'game' || screenName === 'complete') ? '' : 'none';
 
       switch (screenName) {
         case 'title':
