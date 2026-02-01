@@ -2700,9 +2700,26 @@
     };
 
     // ============ WORD SEARCH DATA ============
-    const WS_WORDS = ['APP', 'BOMBA', 'ARCOBALENO', 'SPAGHETTI', 'BRILLANTINI', 'INCANTESIMO', 'OMBRELLO', 'UNICORNO'];
+    const WS_WORD_POOL = [
+      'APP', 'BOMBA', 'ARCOBALENO', 'SPAGHETTI', 'BRILLANTINI', 'INCANTESIMO', 'OMBRELLO', 'UNICORNO',
+      'FARFALLA', 'GELATO', 'STELLA', 'CIOCCOLATO', 'PRINCIPESSA', 'DRAGO', 'CASTELLO', 'SIRENA',
+      'FIORE', 'LEONE', 'GATTO', 'SOLE', 'LUNA', 'NEVE', 'ORSO', 'PESCE',
+      'CONIGLIO', 'COCCINELLA', 'ARANCIA', 'FRAGOLA', 'DELFINO', 'AQUILONE', 'PIRATA', 'TESORO',
+      'DIAMANTE', 'CORONA', 'BALENA', 'GIRAFFA', 'PINGUINO', 'TIGRE', 'CAVALLO', 'ELEFANTE'
+    ];
     const WS_ALPHABET = 'ABCDEFGHILMNOPQRSTUVZ';
     const WS_GRID_SIZE = 12;
+    const WS_PICK_COUNT = 8;
+
+    function pickWSWords() {
+      const pool = [...WS_WORD_POOL];
+      const picked = [];
+      while (picked.length < WS_PICK_COUNT && pool.length > 0) {
+        const idx = Math.floor(Math.random() * pool.length);
+        picked.push(pool.splice(idx, 1)[0]);
+      }
+      return picked;
+    }
 
     // ============ COLOR FUNCTIONS ============
     const VOWELS = 'aeiouáéíóúüäöåàèìòù';
@@ -2888,10 +2905,11 @@
     }
 
     function startWordSearch() {
-      wsState.words = [...WS_WORDS];
+      const words = pickWSWords();
+      wsState.words = words;
       wsState.foundWords = [];
       wsState.foundCellMap = {};
-      wsState.grid = generateWSGrid(WS_WORDS, WS_GRID_SIZE, WS_ALPHABET);
+      wsState.grid = generateWSGrid(words, WS_GRID_SIZE, WS_ALPHABET);
       wsCongrats.style.display = 'none';
       renderWSGrid();
       renderWSWordlist();
